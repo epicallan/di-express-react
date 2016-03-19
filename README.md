@@ -1,7 +1,7 @@
-# React Redux Universal Hot Example
+# DI Datahub Express React Redux test app
 
 [![build status](https://img.shields.io/travis/epicallan/di-express-react/master.svg?style=flat-square)](https://travis-ci.org/epicallan/di-express-react)
-[![Dependency Status](https://david-dm.org//epicallan/di-express-react.svg?style=flat-square)](https://david-dm.org/epicallan/di-express-react)
+[![Dependency Status](https://david-dm.org/epicallan/di-express-react.svg?style=flat-square)](https://david-dm.org/epicallan/di-express-react)
 [![devDependency Status](https://david-dm.org/epicallan/di-express-react/dev-status.svg?style=flat-square)](https://david-dm.org/epicallan/di-express-react#info=devDependencies)
 ---
 
