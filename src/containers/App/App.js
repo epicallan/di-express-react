@@ -16,7 +16,6 @@ import { asyncConnect } from 'redux-async-connect';
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
     const promises = [];
-
     if (!isInfoLoaded(getState())) {
       promises.push(dispatch(loadInfo()));
     }
@@ -90,7 +89,9 @@ export default class App extends Component {
               <LinkContainer to="/about">
                 <NavItem eventKey={4}>About Us</NavItem>
               </LinkContainer>
-
+              <LinkContainer to="/uganda">
+                <NavItem eventKey={7}>Uganda</NavItem>
+              </LinkContainer>
               {!user &&
               <LinkContainer to="/login">
                 <NavItem eventKey={5}>Login</NavItem>

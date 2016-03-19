@@ -10,6 +10,7 @@ import {
     Login,
     LoginSuccess,
     Survey,
+    Uganda,
     NotFound,
   } from 'containers';
 
@@ -49,8 +50,8 @@ export default (store) => {
       <Route path="about" component={About}/>
       <Route path="login" component={Login}/>
       <Route path="survey" component={Survey}/>
+      <Route path="uganda" component={Uganda}/>
       <Route path="widgets" component={Widgets}/>
-
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />
     </Route>

@@ -6,4 +6,5 @@ export About from './About/About';
 export Login from './Login/Login';
 export LoginSuccess from './LoginSuccess/LoginSuccess';
 export Survey from './Survey/Survey';
+export Uganda from './Uganda/Uganda';
 export NotFound from './NotFound/NotFound';

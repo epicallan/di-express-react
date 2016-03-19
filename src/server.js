@@ -11,7 +11,6 @@ import ApiClient from './helpers/ApiClient';
 import Html from './helpers/Html';
 import PrettyError from 'pretty-error';
 import http from 'http';
-
 import { match } from 'react-router';
 import { ReduxAsyncConnect, loadOnServer } from 'redux-async-connect';
 import createHistory from 'react-router/lib/createMemoryHistory';
@@ -34,6 +33,7 @@ app.use(Express.static(path.join(__dirname, '..', 'static')));
 
 // Proxy to API server
 app.use('/api', (req, res) => {
+  console.log('api call');
   proxy.web(req, res, {target: targetUrl});
 });
 
@@ -65,8 +65,11 @@ app.use((req, res) => {
     // hot module replacement is enabled in the development env
     webpackIsomorphicTools.refresh();
   }
+  // console.log(req);
   const client = new ApiClient(req);
+
   const history = createHistory(req.originalUrl);
+  // console.log(`history: ${history}`);
 
   const store = createStore(history, client);
 

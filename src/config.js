@@ -1,5 +1,5 @@
 require('babel-polyfill');
-
+require('d3');
 const environment = {
   development: {
     isProduction: false
