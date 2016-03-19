@@ -29,13 +29,14 @@ app.use((req, res) => {
   const splittedUrlPath = req.url.split('?')[0].split('/').slice(1);
   // console.log(req.url);
   const {action, params} = mapUrl(actions, splittedUrlPath);
-  // console.log(`request action: ${action} params ${params}`);
+  console.log(`params: ${params}`);
   if (action) {
     action(req, params)
       .then((result) => {
         if (result instanceof Function) {
           result(res);
         } else {
+          // console.log(result);
           res.json(result);
         }
       }, (reason) => {

@@ -1,0 +1,34 @@
+{
+  "meta": [
+    {
+      "_id": "56dad98ea45d1aa322d56510",
+      "series": "country-year",
+      "id": "uganda-poverty-headcount",
+      "type": "simple",
+      "parent": "",
+      "name": "Poverty headcount",
+      "columns": "id, year, value",
+      "description": "Poverty headcount",
+      "default-scale": "lin",
+      "themes": "uganda-poverty",
+      "map-theme": "uganda-poverty",
+      "theme-order": "1",
+      "global-picture-color-ramp": "darkred",
+      "uom": "unit",
+      "uom_display": "",
+      "source": "Profiles of higher (district and municipal) local governments 2014 – Uganda Bureau of Statistics",
+      "calculation": "",
+      "format": "",
+      "highorlow": "lowisbetter",
+      "range": "30, 50, 70, 90",
+      "interpolated": "",
+      "missing-donor": "",
+      "missing-recipient": "",
+      "laymans-decription": "Percentage of people in poverty, in relation to the total population in a given area, based on the national poverty line. It does not take into account the depth of poverty. The data year is given as the document publication date, but is based on estimates from previous household surveys by the Uganda Bureau of Statistics.",
+      "laymans-heading": "Poverty headcount",
+      "source-link": "http://www.ubos.org/onlinefiles/uploads/ubos/2009_HLG_%20Abstract_printed/CIS+UPLOADS/Profiles%20of%20Higher%20Local%20Governments_June_2014.pdf",
+      "staging": "",
+      "theme-year": ""
+    }
+  ]
+}

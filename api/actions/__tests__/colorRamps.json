@@ -1,0 +1,99 @@
+[{
+  "_id": "56dada06a45d1aa32209428e",
+  "id": "red",
+  "very-high": "#820820",
+  "high": "#ba0c2f",
+  "mid": "#d66d82",
+  "low": "#f7ced5"
+}, {
+  "_id": "56dada06a45d1aa32209428f",
+  "id": "darkred",
+  "very-high": "#5b0516",
+  "high": "#820820",
+  "mid": "#ba0c2f",
+  "low": "#f7ced5"
+}, {
+  "_id": "56dada06a45d1aa322094290",
+  "id": "grey",
+  "very-high": "#000000",
+  "high": "#333333",
+  "mid": "#7f7f7f",
+  "low": "#cccccc"
+}, {
+  "_id": "56dada06a45d1aa322094291",
+  "id": "black",
+  "very-high": "#000000",
+  "high": "#000000",
+  "mid": "#666666",
+  "low": "#cccccc"
+}, {
+  "_id": "56dada06a45d1aa322094292",
+  "id": "yellow",
+  "very-high": "#80850b",
+  "high": "#b7bf10",
+  "mid": "#d4d970",
+  "low": "#f7f2cf"
+}, {
+  "_id": "56dada06a45d1aa322094293",
+  "id": "darkyellow",
+  "very-high": "#595d07",
+  "high": "#80850b",
+  "mid": "#b7bf10",
+  "low": "#f7f2cf"
+}, {
+  "_id": "56dada06a45d1aa322094294",
+  "id": "orange",
+  "very-high": "#a35200",
+  "high": "#ea7600",
+  "mid": "#f2ad66",
+  "low": "#fbe4cc"
+}, {
+  "_id": "56dada06a45d1aa322094295",
+  "id": "darkorange",
+  "very-high": "#723900",
+  "high": "#a35200",
+  "mid": "#ea7600",
+  "low": "#fbe4cc"
+}, {
+  "_id": "56dada06a45d1aa322094296",
+  "id": "purple",
+  "very-high": "#662363",
+  "high": "#93328e",
+  "mid": "#be84bb",
+  "low": "#e9d6e8"
+}, {
+  "_id": "56dada06a45d1aa322094297",
+  "id": "darkpurple",
+  "very-high": "#471845",
+  "high": "#662363",
+  "mid": "#93328e",
+  "low": "#e9d6e8"
+}, {
+  "_id": "56dada06a45d1aa322094298",
+  "id": "blue",
+  "very-high": "#122541",
+  "high": "#1b365d",
+  "mid": "#76869e",
+  "low": "#d1d7df"
+}, {
+  "_id": "56dada06a45d1aa322094299",
+  "id": "darkblue",
+  "very-high": "#0c192d",
+  "high": "#122541",
+  "mid": "#1b365d",
+  "low": "#d1d7df"
+}, {
+  "_id": "56dada06a45d1aa32209429a",
+  "id": "lightblue",
+  "very-high": "#00688c",
+  "high": "#0095c8",
+  "mid": "#66bfde",
+  "low": "#cceaf4"
+}, {
+  "_id": "56dada06a45d1aa32209429b",
+  "id": "darklightblue",
+  "very-high": "#004862",
+  "high": "#00688c",
+  "mid": "#0095c8",
+  "low": "#cceaf4"
+}]
