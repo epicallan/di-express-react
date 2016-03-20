@@ -1,7 +1,5 @@
 import fetch from 'node-fetch';
 import d3 from 'd3';
-/* eslint-disable id-length*/
-// import _ from 'lodash';
 import {DI_API_BASE} from '../config';
 
 class Spotlight {
@@ -13,7 +11,7 @@ class Spotlight {
     return res.json();
   }
 
-  async getAllData(params) {
+  getAllData(params) {
     const indicatorDataApi = `indicator?query={"concept":"${params}"}&fields={"_id":0}`;
     const promises = [
       this.get(indicatorDataApi),
@@ -23,6 +21,20 @@ class Spotlight {
     return Promise.all(promises);
   }
 
+  async spotlightData(params) {
+    const allData = await this.getAllData(params);
+    const indicatorData = allData[0].data;
+    const metaData = allData[0].meta[0];
+    const colorRamps = allData[1];
+    const scale = this.createColorScale(colorRamps, metaData);
+    const choroplethData = this.choroplethUpdateData(indicatorData, scale);
+    const themeData = allData[2];
+    return {
+      meta: metaData,
+      data: choroplethData,
+      themes: themeData
+    };
+  }
   createColorScale(colorRamps, meta) {
     const domain = meta.range.replace(/ /g, '').split(',').map(val => parseFloat(val));
     const rampToUse = meta['global-picture-color-ramp'];
@@ -49,16 +61,18 @@ class Spotlight {
           .domain(domain)
           .range(range);
   }
-  // get themes data
-  // get meta data
-  // get actual data
-  // get color ramps
-  // create color scale
-  // create and return chorolepth data
+  /**
+  * I am making an assumption that all the
+  * indicatorData is for one specific year
+  */
+  choroplethUpdateData(indicatorData, scale) {
+    indicatorData.forEach(data => data.color = scale(data.value));
+    return indicatorData;
+  }
 }
 
 export const spotlight = new Spotlight();
 
 export default function(req, params) {
-  return spotlight.getAllData(params);
+  return spotlight.spotlightData(params);
 }

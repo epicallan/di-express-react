@@ -8,7 +8,9 @@ import counter from './counter';
 import {reducer as form} from 'redux-form';
 import info from './info';
 import widgets from './widgets';
-// TODO we have 2 reducer variables and one not being used
+import spotlight from './spotlight';
+
+// TODO we have 2 reducer variables and one not being used line  4 and line 8
 export default combineReducers({
   routing: routeReducer,
   reduxAsyncConnect,
@@ -20,5 +22,6 @@ export default combineReducers({
     counter3: counter
   }),
   info,
+  spotlight,
   widgets
 });

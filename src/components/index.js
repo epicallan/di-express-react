@@ -10,5 +10,5 @@ export GithubButton from './GithubButton/GithubButton';
 export InfoBar from './InfoBar/InfoBar';
 export MiniInfoBar from './MiniInfoBar/MiniInfoBar';
 export SurveyForm from './SurveyForm/SurveyForm';
-export Maps from './Maps/Maps';
+export Spotlight from './Spotlight/Spotlight';
 export WidgetForm from './WidgetForm/WidgetForm';

@@ -9,6 +9,11 @@
 
 This project was built on top of this [starter kit](https://github.com/erikras/react-redux-universal-hot-example)
 
+## TODO / Good to have
+
+- Cache some of the data on the server via redis.
+- Cache data on the client via session storage
+
 ## Installation
 
 ```bash

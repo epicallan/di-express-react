@@ -29,7 +29,7 @@ app.use((req, res) => {
   const splittedUrlPath = req.url.split('?')[0].split('/').slice(1);
   // console.log(req.url);
   const {action, params} = mapUrl(actions, splittedUrlPath);
-  console.log(`params: ${params}`);
+  // if (params) console.log(`sever: params: ${params}`);
   if (action) {
     action(req, params)
       .then((result) => {
