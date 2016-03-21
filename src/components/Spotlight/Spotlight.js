@@ -11,13 +11,15 @@ import * as spotlightActions from 'redux/modules/spotlight';
   state => ({
     mapData: state.spotlight.mapData,
     data: state.spotlight.data,
+    entities: state.spotlight.entities
   }),
   dispatch => bindActionCreators(spotlightActions, dispatch)
 )
 export default class Spotlight extends Component {
   static propTypes = {
     mapData: PropTypes.object,
-    data: PropTypes.array
+    data: PropTypes.array,
+    entities: PropTypes.array
   };
   // draw map when component loads
   componentDidMount() {
@@ -61,10 +63,11 @@ export default class Spotlight extends Component {
         // only do something if same area is clicked
         if (Math.abs(this.mouseDownPosition[0] - this.mouseUpPosition[0]) > 3 ||
             Math.abs(this.mouseDownPosition[1] - this.mouseUpPosition[1]) > 3) return;
-        const region = this.props.data.find(obj => obj.id === node.id).name;
+        const district = this.props.entities.find(obj => obj.id === node.id).slug;
         // create region / country url
-        if (!region) return;
-        // route to page
+        if (!district) return;
+        console.log(district);
+        // route to district page
       });
     }
   }

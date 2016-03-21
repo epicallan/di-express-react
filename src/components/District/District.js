@@ -4,62 +4,53 @@ import React, {Component, PropTypes} from 'react';
 import Datamaps from 'datamaps';
 import 'topojson';
 import {connect} from 'react-redux';
-import styles from './District.scss';
+import styles from './Spotlight.scss';
 import * as spotlightActions from 'redux/modules/spotlight';
 
 @connect(
-  state => ({
-    mapData: state.spotlight.mapData
-  }),
   dispatch => bindActionCreators(spotlightActions, dispatch)
 )
-export default class District extends Component {
+export default class Spotlight extends Component {
   static propTypes = {
-    mapData: PropTypes.object
+    district: PropTypes.string,
   };
-  state = {
-    map: null,
-    mapOptions: {
-      height: 900,
-      responsive: true,
-      projection: 'eckert3',
-      setProjection: (element) => {
-        const projection = d3.geo.eckert3()
-               .center([33, 1])
-               .scale(element.offsetWidth * 3.2)
-               .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
-        const path = d3.geo.path().projection(projection);
-        return {path, projection};
-      },
-      fills: {
-        defaultFill: '#bbb'
-      },
-      geographyConfig: {
-        popupOnHover: false,
-        highlightOnHover: false,
-        borderWidth: 1,
-        borderColor: '#eee',
-        dataUrl: '/uganda.json'
-      },
-      done: (datamap) => {
-        datamap.updateChoropleth(this.props.mapData);
-      }
-    }
-  }
-
+  // draw map when component loads
   componentDidMount() {
     this.draw();
   }
+  // component variables
+  map = null;
+  // datamap options
+  mapOptions = {
+    height: 900,
+    responsive: true,
+    projection: 'eckert3',
+    setProjection: (element) => {
+      const projection = d3.geo.eckert3()
+             .center([33, 1])
+             .scale(element.offsetWidth * 3.2)
+             .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+      const path = d3.geo.path().projection(projection);
+      return {path, projection};
+    },
+    fills: {
+      defaultFill: '#bbb'
+    },
+    geographyConfig: {
+      popupOnHover: false,
+      highlightOnHover: false,
+      borderWidth: 1,
+      borderColor: '#eee',
+      dataUrl: '/uganda.json'
+    }
+  }
 
   draw = () => {
-    const container = document.getElementById('maps');
-    const map = new Datamaps({
-      element: container,
-      ...this.state.mapOptions,
-      width: this.refs.maps.offsetWidth,
-      data: this.props.mapData
+    this.map = new Datamaps({
+      element: this.refs.maps,
+      ...this.mapOptions,
+      width: this.refs.maps.offsetWidth
     });
-    this.setState({map});
   };
 
   render() {

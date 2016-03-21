@@ -8,7 +8,7 @@ const LOAD_FAIL = 'maps/LOAD_FAIL';
 const initialState = {
   loaded: false,
   loading: true,
-  data: null,
+  entities: null,
   mapData: null,
   error: null,
   themes: null,
@@ -43,8 +43,9 @@ export default function reducer(state = initialState, action = {}) {
         loaded: true,
         meta: action.result.meta,
         themes: action.result.themes,
-        mapData: getMapData(action.result.data),
         data: action.result.data,
+        mapData: getMapData(action.result.data),
+        entities: action.result.entities,
         error: null
       };
     case LOAD_FAIL:

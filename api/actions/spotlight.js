@@ -16,7 +16,8 @@ class SpotlightAction {
     const promises = [
       this.get(indicatorDataApi),
       this.get('reference/colorRamp'),
-      this.get('reference/uganda-theme')
+      this.get('reference/uganda-theme'),
+      this.get('reference/uganda-district-entity')
     ];
     return Promise.all(promises);
   }
@@ -32,7 +33,8 @@ class SpotlightAction {
     return {
       meta: metaData,
       data: choroplethData,
-      themes: themeData
+      themes: themeData,
+      entities: allData[3]
     };
   }
   createColorScale(colorRamps, meta) {
