@@ -5,6 +5,7 @@ import Datamaps from 'datamaps';
 import 'topojson';
 import {connect} from 'react-redux';
 import styles from './Spotlight.scss';
+import { routeActions } from 'react-router-redux';
 import * as spotlightActions from 'redux/modules/spotlight';
 
 @connect(
@@ -13,13 +14,13 @@ import * as spotlightActions from 'redux/modules/spotlight';
     data: state.spotlight.data,
     entities: state.spotlight.entities
   }),
-  dispatch => bindActionCreators(spotlightActions, dispatch)
+  dispatch => bindActionCreators(spotlightActions, dispatch),
 )
 export default class Spotlight extends Component {
   static propTypes = {
     mapData: PropTypes.object,
     data: PropTypes.array,
-    entities: PropTypes.array
+    entities: PropTypes.array,
   };
   // draw map when component loads
   componentDidMount() {
@@ -67,6 +68,7 @@ export default class Spotlight extends Component {
         // create region / country url
         if (!district) return;
         console.log(district);
+        routeActions.push('/');
         // route to district page
       });
     }
