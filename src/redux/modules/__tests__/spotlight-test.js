@@ -1,5 +1,5 @@
 import { expect} from 'chai';
-import { browserHistory } from 'react-router';
+import { createMemoryHistory } from 'react-router';
 import createStore from '../../create';
 import ApiClient from '../../../helpers/ApiClient';
 import * as spotlightActions from '../spotlight';
@@ -7,7 +7,7 @@ import * as spotlightActions from '../spotlight';
 const client = new ApiClient();
 
 describe('spotlight store', () => {
-  const store = createStore(browserHistory, client);
+  const store = createStore(createMemoryHistory, client);
   before(()=>{
     expect(store).to.be.an('object');
     expect(store).to.have.ownProperty('dispatch');

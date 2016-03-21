@@ -12,6 +12,7 @@ import {
     Survey,
     Uganda,
     NotFound,
+    Profile,
   } from 'containers';
 
 export default (store) => {
@@ -50,7 +51,10 @@ export default (store) => {
       <Route path="about" component={About}/>
       <Route path="login" component={Login}/>
       <Route path="survey" component={Survey}/>
-      <Route path="uganda" component={Uganda}/>
+      <Route path="uganda" component={Uganda}>
+        {/* resulting route is like /uganda/district/kampala*/}
+        <Route path="district/:name" component={Profile}/>
+      </Route>
       <Route path="widgets" component={Widgets}/>
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />
