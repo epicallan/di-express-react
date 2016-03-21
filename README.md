@@ -13,6 +13,8 @@ This project was built on top of this [starter kit](https://github.com/erikras/r
 
 - Cache some of the data on the server via redis.
 - Cache data on the client via session storage
+- bundle repo with current di-api or use the heroku api-end points
+- docker build
 
 ## Installation
 

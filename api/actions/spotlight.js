@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import d3 from 'd3';
 import {DI_API_BASE} from '../config';
 
-class Spotlight {
+class SpotlightAction {
 
   async get(urlPart) {
     const url = `${DI_API_BASE}/${urlPart}`;
@@ -71,8 +71,8 @@ class Spotlight {
   }
 }
 
-export const spotlight = new Spotlight();
+export const spotlightAction = new SpotlightAction();
 
-export default function(req, params) {
-  return spotlight.spotlightData(params);
+export default function spotlight(req, params) {
+  return spotlightAction.spotlightData(params);
 }
