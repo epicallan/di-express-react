@@ -9,8 +9,9 @@ import { asyncConnect } from 'redux-async-connect';
   deferred: true,
   promise: ({store: {dispatch, getState}}) => {
     if (!isLoaded(getState())) {
-      // console.log(getState.params);
-      return dispatch(load('d314'));
+      const location = getState().routing.location.pathname;
+      const district = location.split('/')[2];
+      return dispatch(load(district));
     }
   }
 }])

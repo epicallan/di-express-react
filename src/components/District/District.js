@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
   state => ({
     id: state.profile.id,
     name: state.profile.name,
+    slug: state.profile.slug
   })
 )
 export default class Spotlight extends Component {

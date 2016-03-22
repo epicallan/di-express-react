@@ -27,13 +27,18 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        name: action.name,
+        slug: action.result.slug,
+        name: action.result.name,
         id: action.result.id,
         error: null
       };
     case UPDATE:
+      console.log(action);
       return Object.assign({}, state, {
+        loaded: true,
+        loading: false,
         name: action.name,
+        slug: action.slug,
         id: action.id,
         error: null
       });
@@ -56,15 +61,14 @@ export function isLoaded(globalState) {
 export function load(slug) {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    name: slug,
     promise: (client) => client.get(`/profile/${slug}`)
   };
 }
-export function update(name, slug, id) {
+export function update(entity) {
   return {
     type: UPDATE,
-    slug,
-    name,
-    id
+    slug: entity.slug,
+    name: entity.name,
+    id: entity.id
   };
 }

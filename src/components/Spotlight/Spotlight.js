@@ -13,19 +13,22 @@ import {update} from 'redux/modules/profile';
     mapData: state.spotlight.mapData,
     data: state.spotlight.data,
     entities: state.spotlight.entities,
+    dispatch: state.dispatch,
   })
 )
 export default class Spotlight extends Component {
   static propTypes = {
-    mapData: PropTypes.object,
-    data: PropTypes.array,
-    entities: PropTypes.array,
-    pushState: PropTypes.func
+    mapData: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
+    entities: PropTypes.array.isRequired,
+    dispatch: PropTypes.func.isRequired,
   };
   // draw map when component loads
   componentDidMount() {
-    if (__CLIENT__) this.draw();
-    // this.mapMouseHandler(this.map);
+    if (__CLIENT__) {
+      this.draw();
+      // this.mapMouseHandler();
+    }
   }
   // component variables
   map = null;
@@ -56,6 +59,7 @@ export default class Spotlight extends Component {
     },
     done: (datamap) => {
       datamap.updateChoropleth(this.props.mapData);
+      this.mapMouseHandler(datamap);
     }
   }
 
@@ -67,10 +71,6 @@ export default class Spotlight extends Component {
     });
   };
   mapMouseHandler(datamap) {
-    if (!datamap) {
-      console.log('datamap undefined');
-      return;
-    }
     datamap.svg.selectAll('.datamaps-subunit')
     .on('mousedown', () => {
       this.mouseDownPosition = d3.mouse(datamap.svg.node());
@@ -83,10 +83,11 @@ export default class Spotlight extends Component {
       const selected = this.props.entities.find(obj => obj.id === node.id);
       // create region / country url
       if (!selected.slug) return;
+      // console.log(selected);
       // dsitpatch update to profile store
-      update(selected.name, selected.slug, selected.slug.id);
+      this.props.dispatch(update(selected));
       // console.log(district);
-      browserHistory.push(`/uganda/district/${selected.slug}`);
+      browserHistory.push(`/district/${selected.slug}`);
     });
   }
   render() {

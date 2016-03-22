@@ -4,8 +4,8 @@ class ProfileAction {
   getEntities() {
     return get('reference/uganda-district-entity');
   }
-  getEntity(entities, id) {
-    return entities.find(row => row.id === id);
+  getEntity(entities, slug) {
+    return entities.find(row => row.slug === slug);
   }
 }
 
