@@ -4,7 +4,6 @@ import React, {Component, PropTypes} from 'react';
 import Datamaps from 'datamaps';
 import 'topojson';
 import {connect} from 'react-redux';
-import styles from './Spotlight.scss';
 import { browserHistory } from 'react-router';
 // import * as spotlightActions from 'redux/modules/spotlight';
 import {update} from 'redux/modules/profile';
@@ -26,7 +25,8 @@ export default class Spotlight extends Component {
   };
   // draw map when component loads
   componentDidMount() {
-    this.draw();
+    if (__CLIENT__) this.draw();
+    this.mapMouseHandler(this.map);
   }
   // component variables
   map = null;
@@ -57,23 +57,6 @@ export default class Spotlight extends Component {
     },
     done: (datamap) => {
       datamap.updateChoropleth(this.props.mapData);
-      datamap.svg.selectAll('.datamaps-subunit')
-      .on('mousedown', () => {
-        this.mouseDownPosition = d3.mouse(datamap.svg.node());
-      })
-      .on('mouseup', (node) => {
-        this.mouseUpPosition = d3.mouse(datamap.svg.node());
-        // only do something if same area is clicked
-        if (Math.abs(this.mouseDownPosition[0] - this.mouseUpPosition[0]) > 3 ||
-            Math.abs(this.mouseDownPosition[1] - this.mouseUpPosition[1]) > 3) return;
-        const selected = this.props.entities.find(obj => obj.id === node.id);
-        // create region / country url
-        if (!selected.slug) return;
-        // dsitpatch update to profile store
-        update(selected.slug, selected.slug.id);
-        // console.log(district);
-        browserHistory.push(`/uganda/district/${selected.slug}`);
-      });
     }
   }
 
@@ -84,8 +67,31 @@ export default class Spotlight extends Component {
       width: this.refs.maps.offsetWidth
     });
   };
-
+  mapMouseHandler(datamap) {
+    if (!datamap) {
+      console.log('datamap undefined');
+      return;
+    }
+    datamap.svg.selectAll('.datamaps-subunit')
+    .on('mousedown', () => {
+      this.mouseDownPosition = d3.mouse(datamap.svg.node());
+    })
+    .on('mouseup', (node) => {
+      this.mouseUpPosition = d3.mouse(datamap.svg.node());
+      // only do something if same area is clicked
+      if (Math.abs(this.mouseDownPosition[0] - this.mouseUpPosition[0]) > 3 ||
+          Math.abs(this.mouseDownPosition[1] - this.mouseUpPosition[1]) > 3) return;
+      const selected = this.props.entities.find(obj => obj.id === node.id);
+      // create region / country url
+      if (!selected.slug) return;
+      // dsitpatch update to profile store
+      update(selected.name, selected.slug, selected.slug.id);
+      // console.log(district);
+      browserHistory.push(`/uganda/district/${selected.slug}`);
+    });
+  }
   render() {
+    const styles = require('./Spotlight.scss');
     return (
       <div>
         <section id="maps" ref="maps" className={styles.maps} ></section>

@@ -2,13 +2,12 @@ import d3 from 'd3-geo-projection';
 import React, {Component, PropTypes} from 'react';
 import Datamaps from 'datamaps';
 import 'topojson';
-import styles from './District.scss';
 import {connect} from 'react-redux';
 
 @connect(
   state => ({
-    name: 'd314',
-    id: state.profile.id
+    id: state.profile.id,
+    name: state.profile.name,
   })
 )
 export default class Spotlight extends Component {
@@ -18,7 +17,7 @@ export default class Spotlight extends Component {
   }
   // draw map when component loads
   componentDidMount() {
-    this.draw();
+    if (__CLIENT__) this.draw();
   }
   // component variables
   map = null;
@@ -30,7 +29,7 @@ export default class Spotlight extends Component {
     setProjection: (element) => {
       const projection = d3.geo.eckert3()
              .center([33, 1])
-             .scale(element.offsetWidth * 3.2)
+             .scale(element.offsetWidth * 2)
              .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
       const path = d3.geo.path().projection(projection);
       return {path, projection};
@@ -56,8 +55,10 @@ export default class Spotlight extends Component {
   };
 
   render() {
+    const styles = require('./District.scss');
     return (
       <div>
+        <h1>District Profile {this.props.name} </h1>
         <section id="maps" ref="maps" className={styles.maps} ></section>
       </div>
     );

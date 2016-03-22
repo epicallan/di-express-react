@@ -9,7 +9,7 @@ import { asyncConnect } from 'redux-async-connect';
   deferred: true,
   promise: ({store: {dispatch, getState}}) => {
     if (!isLoaded(getState())) {
-      console.log(getState.params);
+      // console.log(getState.params);
       return dispatch(load('d314'));
     }
   }
@@ -20,7 +20,6 @@ export default class Uganda extends Component {
     return (
       <div className="container">
         <Helmet title="Profile"/>
-        <h1>District Profile {name} </h1>
         <District />
       </div>
     );

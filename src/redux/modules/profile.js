@@ -9,6 +9,7 @@ const LOAD_FAIL = 'profile/LOAD_FAIL';
 const initialState = {
   loaded: false,
   loading: true,
+  slug: null,
   name: null,
   id: null,
   error: null
@@ -31,14 +32,11 @@ export default function reducer(state = initialState, action = {}) {
         error: null
       };
     case UPDATE:
-      return {
-        ...state,
-        loading: false,
-        loaded: true,
+      return Object.assign({}, state, {
         name: action.name,
         id: action.id,
         error: null
-      };
+      });
     case LOAD_FAIL:
       return {
         ...state,
@@ -52,7 +50,7 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 export function isLoaded(globalState) {
-  return globalState.profile && globalState.profile.loaded;
+  return globalState.profile.id && globalState.profile.loaded;
 }
 
 export function load(slug) {
@@ -62,10 +60,11 @@ export function load(slug) {
     promise: (client) => client.get(`/profile/${slug}`)
   };
 }
-export function update(slug, id) {
+export function update(name, slug, id) {
   return {
-    types: [UPDATE],
-    name: slug,
+    type: UPDATE,
+    slug,
+    name,
     id
   };
 }
