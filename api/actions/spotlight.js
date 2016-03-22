@@ -1,23 +1,14 @@
-import fetch from 'node-fetch';
 import d3 from 'd3';
-import {DI_API_BASE} from '../config';
+import {get} from '../utils/externalApiClient';
 
 class SpotlightAction {
-
-  async get(urlPart) {
-    const url = `${DI_API_BASE}/${urlPart}`;
-    const res = await fetch(url);
-    // we are returning a promise
-    return res.json();
-  }
-
   getAllData(params) {
     const indicatorDataApi = `indicator?query={"concept":"${params}"}&fields={"_id":0}`;
     const promises = [
-      this.get(indicatorDataApi),
-      this.get('reference/colorRamp'),
-      this.get('reference/uganda-theme'),
-      this.get('reference/uganda-district-entity')
+      get(indicatorDataApi),
+      get('reference/colorRamp'),
+      get('reference/uganda-theme'),
+      get('reference/uganda-district-entity')
     ];
     return Promise.all(promises);
   }

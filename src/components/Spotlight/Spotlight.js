@@ -6,15 +6,16 @@ import 'topojson';
 import {connect} from 'react-redux';
 import styles from './Spotlight.scss';
 import { browserHistory } from 'react-router';
-import * as spotlightActions from 'redux/modules/spotlight';
+// import * as spotlightActions from 'redux/modules/spotlight';
+import {update} from 'redux/modules/profile';
 
 @connect(
   state => ({
     mapData: state.spotlight.mapData,
     data: state.spotlight.data,
-    entities: state.spotlight.entities
+    entities: state.spotlight.entities,
   }),
-  dispatch => bindActionCreators(spotlightActions, dispatch),
+  dispatch => bindActionCreators(update, dispatch),
 )
 export default class Spotlight extends Component {
   static propTypes = {
@@ -65,13 +66,13 @@ export default class Spotlight extends Component {
         // only do something if same area is clicked
         if (Math.abs(this.mouseDownPosition[0] - this.mouseUpPosition[0]) > 3 ||
             Math.abs(this.mouseDownPosition[1] - this.mouseUpPosition[1]) > 3) return;
-        const district = this.props.entities.find(obj => obj.id === node.id).slug;
+        const selected = this.props.entities.find(obj => obj.id === node.id);
         // create region / country url
-        if (!district) return;
+        if (!selected.slug) return;
+        // dsitpatch update to profile store
+        update(selected.slug, selected.slug.id);
         // console.log(district);
-        browserHistory.push('/');
-        // this.props.pushState('/');
-        // route to district page
+        browserHistory.push(`/uganda/district/${selected.slug}`);
       });
     }
   }

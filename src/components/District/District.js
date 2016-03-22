@@ -1,19 +1,21 @@
 import d3 from 'd3-geo-projection';
-import {bindActionCreators} from 'redux';
 import React, {Component, PropTypes} from 'react';
 import Datamaps from 'datamaps';
 import 'topojson';
+import styles from './District.scss';
 import {connect} from 'react-redux';
-import styles from './Spotlight.scss';
-import * as spotlightActions from 'redux/modules/spotlight';
 
 @connect(
-  dispatch => bindActionCreators(spotlightActions, dispatch)
+  state => ({
+    name: 'd314',
+    id: state.profile.id
+  })
 )
 export default class Spotlight extends Component {
   static propTypes = {
-    district: PropTypes.string,
-  };
+    name: PropTypes.string,
+    id: PropTypes.string
+  }
   // draw map when component loads
   componentDidMount() {
     this.draw();
