@@ -1,5 +1,5 @@
 import d3 from 'd3-geo-projection';
-import {bindActionCreators} from 'redux';
+// import {bindActionCreators} from 'redux';
 import React, {Component, PropTypes} from 'react';
 import Datamaps from 'datamaps';
 import 'topojson';
@@ -13,8 +13,7 @@ import {update} from 'redux/modules/profile';
     mapData: state.spotlight.mapData,
     data: state.spotlight.data,
     entities: state.spotlight.entities,
-  }),
-  dispatch => bindActionCreators(update, dispatch),
+  })
 )
 export default class Spotlight extends Component {
   static propTypes = {
@@ -26,7 +25,7 @@ export default class Spotlight extends Component {
   // draw map when component loads
   componentDidMount() {
     if (__CLIENT__) this.draw();
-    this.mapMouseHandler(this.map);
+    // this.mapMouseHandler(this.map);
   }
   // component variables
   map = null;

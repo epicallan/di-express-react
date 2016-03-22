@@ -8,7 +8,7 @@ import {
     Profile,
   } from 'containers';
 
-export default () => {
+export default (store) => {
   /**
    * Please keep routes in alphabetical order
    */
