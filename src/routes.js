@@ -16,6 +16,8 @@ export default () => {
       { /* Home (main) route */ }
       <IndexRoute component={Uganda} />
       <Route path="district/:name" component={Profile}/>
+      { /* SEO change address bar as indicator changes */ }
+      <Route path="indicator/:name" component={Uganda}/>
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />
     </Route>

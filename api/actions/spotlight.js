@@ -25,11 +25,16 @@ class SpotlightAction {
       meta: metaData,
       data: choroplethData,
       themes: themeData,
-      entities: allData[3]
+      entities: allData[3],
+      domain: this.getIndicatorDomain(metaData),
+      range: scale.range()
     };
   }
+  getIndicatorDomain(meta) {
+    return meta.range.replace(/ /g, '').split(',').map(val => parseFloat(val));
+  }
   createColorScale(colorRamps, meta) {
-    const domain = meta.range.replace(/ /g, '').split(',').map(val => parseFloat(val));
+    const domain = this.getIndicatorDomain(meta);
     const rampToUse = meta['global-picture-color-ramp'];
     const ramp = colorRamps.find(obj => obj.id === rampToUse);
     // const highorlow = meta.highorlow;

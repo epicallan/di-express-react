@@ -1,15 +1,16 @@
-const LOAD = 'maps/LOAD';
-const LOAD_SUCCESS = 'maps/LOAD_SUCCESS';
-const LOAD_FAIL = 'maps/LOAD_FAIL';
-// const CHANGE_SUCCESS = 'maps/CHANGE_SUCCESS';
-// const CHANGE_FAIL = 'maps/CHANGE_FAIL';
-// const CHANGE = 'maps/CHANGE';
+const LOAD = 'spotlight/LOAD';
+const LOAD_SUCCESS = 'spotlight/LOAD_SUCCESS';
+const LOAD_FAIL = 'spotlight/LOAD_FAIL';
 
 const initialState = {
   loaded: false,
   loading: true,
   entities: null,
   mapData: null,
+  indicator: null,
+  defaultFill: '#bbb',
+  domain: null,
+  range: null,
   error: null,
   themes: null,
   meta: null
@@ -41,6 +42,9 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
+        indicator: action.indicator,
+        domain: action.result.domain,
+        range: action.result.range,
         meta: action.result.meta,
         themes: action.result.themes,
         data: action.result.data,
@@ -65,9 +69,10 @@ export function isLoaded(globalState) {
   return globalState.spotlight && globalState.spotlight.loaded;
 }
 
-export function load() {
+export function load(indicator = '/spotlight/uganda-poverty-headcount') {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: (client) => client.get('/spotlight/uganda-poverty-headcount')
+    indicator: indicator.split('/')[2],
+    promise: (client) => client.get(indicator)
   };
 }

@@ -5,7 +5,8 @@ import Datamaps from 'datamaps';
 import 'topojson';
 import {connect} from 'react-redux';
 import { browserHistory } from 'react-router';
-// import * as spotlightActions from 'redux/modules/spotlight';
+import {load} from 'redux/modules/spotlight';
+import Legend from '../Legend/Legend';
 import {update} from 'redux/modules/profile';
 
 @connect(
@@ -14,6 +15,10 @@ import {update} from 'redux/modules/profile';
     data: state.spotlight.data,
     entities: state.spotlight.entities,
     dispatch: state.dispatch,
+    domain: state.spotlight.domain,
+    range: state.spotlight.range,
+    indicator: state.spotlight.indicator,
+    defaultFill: state.spotlight.defaultFill
   })
 )
 export default class Spotlight extends Component {
@@ -22,13 +27,18 @@ export default class Spotlight extends Component {
     data: PropTypes.array.isRequired,
     entities: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
+    indicator: PropTypes.string,
+    defaultFill: PropTypes.string,
+    domain: PropTypes.array,
+    range: PropTypes.array,
   };
   // draw map when component loads
   componentDidMount() {
-    if (__CLIENT__) {
-      this.draw();
-      // this.mapMouseHandler();
-    }
+    if (__CLIENT__) this.draw();
+  }
+  componentWillUpdate(nextProps) {
+    // console.log('component will update props');
+    this.map.updateChoropleth(nextProps.mapData);
   }
   // component variables
   map = null;
@@ -70,6 +80,11 @@ export default class Spotlight extends Component {
       width: this.refs.maps.offsetWidth
     });
   };
+
+  updateMap = () =>{
+    // dispatch action for new data
+    this.props.dispatch(load('/spotlight/uganda-deprivation-living'));
+  }
   mapMouseHandler(datamap) {
     datamap.svg.selectAll('.datamaps-subunit')
     .on('mousedown', () => {
@@ -83,17 +98,23 @@ export default class Spotlight extends Component {
       const selected = this.props.entities.find(obj => obj.id === node.id);
       // create region / country url
       if (!selected.slug) return;
-      // console.log(selected);
       // dsitpatch update to profile store
       this.props.dispatch(update(selected));
-      // console.log(district);
+      // go to district page
       browserHistory.push(`/district/${selected.slug}`);
     });
   }
   render() {
     const styles = require('./Spotlight.scss');
+    const { defaultFill, range, domain, indicator} = this.props;
     return (
       <div>
+        <button className="btn btn-primary" onClick={this.updateMap}>updateMap</button>
+        <Legend
+          defaultFill = {defaultFill}
+          range = {range}
+          domain = {domain}
+          indicator= {indicator} />
         <section id="maps" ref="maps" className={styles.maps} ></section>
       </div>
     );
