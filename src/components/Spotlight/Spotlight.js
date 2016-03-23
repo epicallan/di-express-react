@@ -1,5 +1,4 @@
 import d3 from 'd3-geo-projection';
-// import {bindActionCreators} from 'redux';
 import React, {Component, PropTypes} from 'react';
 import Datamaps from 'datamaps';
 import 'topojson';
@@ -25,8 +24,20 @@ import cx from 'classnames';
   })
 )
 export default class Spotlight extends Component {
+  static propTypes = {
+    heading: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    mapData: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
+    entities: PropTypes.array.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    indicator: PropTypes.string,
+    defaultFill: PropTypes.string,
+    domain: PropTypes.array,
+    range: PropTypes.array,
+  };
   constructor() {
-    // component variables
+    super();
     this.map = null;
     this.mouseDownPosition = null;
     this.mouseUpPosition = null;
@@ -55,7 +66,7 @@ export default class Spotlight extends Component {
       },
       done: (datamap) => {
         datamap.updateChoropleth(this.props.mapData);
-        this.mapMouseHandler(datamap);
+        this.mapMouseHandlers(datamap);
       }
     };
   }
@@ -70,11 +81,11 @@ export default class Spotlight extends Component {
   }
 
   getTipTemplate(node) {
-    const data = this.props.data.find((obj) => obj.id === node.id);
-    const entity = this.props.entities.find((obj) => obj.id === node.id);
-    const template = '<span class="name">' + entity.name + '</span>';
+    const data = this.props.data.find(obj => obj.id === node.id);
+    const entity = this.props.entities.find(obj => obj.id === node.id);
+    let template = '<span class="name">' + entity.name + '</span>';
     if (data) {
-      template += '<em>' + data.indicator.name + ': ' + ' <b class="value">' + data.niceValue + '</b>' +
+      template += '<em>' + this.props.indicator + ': ' + ' <b class="value">' + data.value + '</b>' +
                     ' in ' + data.year + '</em>';
     } else {
       template += '<em>No data</em>';
@@ -95,11 +106,12 @@ export default class Spotlight extends Component {
     return pos;
   }
 
-  mapMouseHandler(datamap) {
+  mapMouseHandlers = (datamap) => {
     /* eslint-disable func-names*/
     const tooltip = d3.select('#tooltip');
-    const svgSize = null;
-    const tooltipSize = null;
+    const self = this;
+    let svgSize = null;
+    let tooltipSize = null;
     datamap.svg.selectAll('.datamaps-subunit')
     .on('mousedown', () => {
       this.mouseDownPosition = d3.mouse(datamap.svg.node());
@@ -123,15 +135,14 @@ export default class Spotlight extends Component {
       const pos = this.getTipPosition(svgSize, tooltipSize);
       tooltip.attr('style', 'left:' + pos[0] + 'px; top:' + pos[1] + 'px');
     })
-    .on('mouseover', function(item) {
-      const self = this;
+    .on('mouseover', function(datum) {
       const node = d3.select(this);
-      tooltip.classed('hidden', false).html(this.getTipTemplate.call(self, item));
-      svgSize = this.map.svg.node().getBoundingClientRect();
+      tooltip.classed('hidden', false).html(self.getTipTemplate(datum));
+      svgSize = self.map.svg.node().getBoundingClientRect();
       tooltipSize = tooltip.node().getBoundingClientRect();
       node.style('fill', d3.hsl(node.style('fill')).darker(0.5));
     })
-    .on('mouseout', () => {
+    .on('mouseout', function() {
       const node = d3.select(this);
       tooltip.classed('hidden', true);
       node.style('fill', d3.hsl(node.style('fill')).brighter(0.5));
@@ -157,7 +168,7 @@ export default class Spotlight extends Component {
     return (
       <div>
         <button className="btn btn-primary" onClick={this.updateMapClickHandler}>updateMap</button>
-        <article className = {styles.mapDescription}>
+        <article className = {styles.description}>
           <h3>{heading}</h3>
           <p>{description}</p>
         </article>
@@ -167,20 +178,8 @@ export default class Spotlight extends Component {
           domain = {domain}
           indicator= {indicator} />
         <section id="maps" ref="maps" className={styles.maps} ></section>
-        <div id="tooltip" className={cx(styles.tooltip, styles.hidden)}></div>
+        <div id="tooltip" className={cx(styles.tooltip, 'hidden')}></div>
       </div>
     );
   }
 }
-Spotlight.propTypes = {
-  heading: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  mapData: PropTypes.object.isRequired,
-  data: PropTypes.array.isRequired,
-  entities: PropTypes.array.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  indicator: PropTypes.string,
-  defaultFill: PropTypes.string,
-  domain: PropTypes.array,
-  range: PropTypes.array,
-};
