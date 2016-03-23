@@ -11,7 +11,6 @@ export default class Legend extends Component {
 
   componentDidMount() {
     const {range, domain} = this.props;
-    console.log(this.props);
     this.draw(range, domain);
   }
 
@@ -22,7 +21,6 @@ export default class Legend extends Component {
 
   draw(range, domain) {
     const scale = this.createScale(range, domain);
-    // console.log(scale.range());
     const legendElement = d3.select('#legend');
     this.creatColorLegend(scale, legendElement);
   }
@@ -39,7 +37,7 @@ export default class Legend extends Component {
     legend.selectAll('li').remove();
     const keys = legend.selectAll('li').data(scale.range());
     keys.enter().append('li')
-    .style('background-color', (value) => value) // TODO not sure how this works got from angular code
+    .style('background-color', (value) => value)
     .style('color', (value) => {
       const col = d3.hsl(value);
       if (col.l > 0.7) {
