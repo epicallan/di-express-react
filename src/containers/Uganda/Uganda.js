@@ -28,9 +28,8 @@ export default class Uganda extends Component {
   };
   render() {
     return (
-      <div className="container">
+      <div>
         <Helmet title="Spotlight on Uganda"/>
-        <h1>Spotlight on Uganda</h1>
         <Spotlight />
       </div>
     );

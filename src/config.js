@@ -16,20 +16,20 @@ module.exports = Object.assign({
   apiPort: process.env.APIPORT,
   app: {
     title: 'Data Hub',
-    description: 'All the modern best practices in one example.',
+    description: 'Datahub development Initiatives',
     head: {
       titleTemplate: 'Data hub: %s',
+      link: [
+         {'rel': 'stylesheet', 'href': 'https://fonts.googleapis.com/css?family=Fira+Sans'}
+      ],
       meta: [
-        {name: 'description', content: 'All the modern best practices in one example.'},
+        {name: 'description', content: 'Development Data Hub'},
         {charset: 'utf-8'},
         {property: 'og:site_name', content: 'data hub'},
-        {property: 'og:image', content: 'https://react-redux.herokuapp.com/logo.jpg'},
+        {property: 'og:image', content: 'https://localhost:3000/og-image.jpg'},
         {property: 'og:locale', content: 'en_US'},
-        {property: 'og:title', content: 'React Redux Example'},
-        {property: 'og:description', content: 'All the modern best practices in one example.'},
-        {property: 'og:card', content: 'summary'},
-        {property: 'og:site', content: '@erikras'},
-        {property: 'og:creator', content: '@erikras'},
+        {property: 'og:title', content: 'Development Data Hub'},
+        {property: 'og:description', content: 'Development Data Hub'},
         {property: 'og:image:width', content: '200'},
         {property: 'og:image:height', content: '200'}
       ]

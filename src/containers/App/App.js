@@ -18,14 +18,15 @@ export default class App extends Component {
 
   render() {
     const styles = require('./App.scss');
+    const logoImage = require('./logo.png');
     return (
       <div className={styles.app}>
         <Helmet {...config.app.head}/>
         <Navbar fixedTop>
           <Navbar.Header>
             <Navbar.Brand>
-              <IndexLink to="/" activeStyle={{color: '#33e0ff'}}>
-                <span>{config.app.title}</span>
+              <IndexLink to="/">
+                <img className={styles.logo} src={logoImage}/>
               </IndexLink>
             </Navbar.Brand>
             <Navbar.Toggle/>
@@ -34,13 +35,19 @@ export default class App extends Component {
           <Navbar.Collapse eventKey={0}>
             <Nav navbar>
               <LinkContainer to="/uganda">
-                <NavItem eventKey={7}>Uganda</NavItem>
+                <NavItem eventKey={1}>EXPLORE THE DATA</NavItem>
               </LinkContainer>
             </Nav>
             <Nav navbar pullRight>
-              <NavItem eventKey={1} target="_blank" title="View on Github" href="https://github.com/epicallan/di-express-react">
-                <i className="fa fa-github"/>
-              </NavItem>
+              <LinkContainer to="/uganda">
+                <NavItem eventKey={2}>DATA STORIES</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/uganda">
+                <NavItem eventKey={3}>DOWNLOAD DATA</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/uganda">
+                <NavItem eventKey={4}>ABOUT</NavItem>
+              </LinkContainer>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

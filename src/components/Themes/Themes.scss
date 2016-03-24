@@ -1,0 +1,21 @@
+@import "../../theme/variables.scss";
+.themes {
+  a{
+    padding: 0.5em;
+  }
+}
+.main{
+  margin-right: 20%;
+  margin-left: 20%;
+  a{
+    color: $primary-black;
+  }
+}
+.sub{
+  background-color:$primary-black;
+  li{
+    text-align: center;
+    width: 100%;
+    background-color:$primary-black;
+  }
+}

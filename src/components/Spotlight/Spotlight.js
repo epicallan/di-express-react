@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import { browserHistory } from 'react-router';
 import {load} from 'redux/modules/spotlight';
 import Legend from '../Legend/Legend';
+import Themes from '../Themes/Themes';
 import {update} from 'redux/modules/profile';
 import cx from 'classnames';
 
@@ -20,7 +21,8 @@ import cx from 'classnames';
     domain: state.spotlight.domain,
     range: state.spotlight.range,
     indicator: state.spotlight.indicator,
-    defaultFill: state.spotlight.defaultFill
+    defaultFill: state.spotlight.defaultFill,
+    themes: state.spotlight.themes
   })
 )
 export default class Spotlight extends Component {
@@ -34,6 +36,7 @@ export default class Spotlight extends Component {
     indicator: PropTypes.string,
     defaultFill: PropTypes.string,
     domain: PropTypes.array,
+    themes: PropTypes.array.isRequired,
     range: PropTypes.array,
   };
   constructor() {
@@ -49,8 +52,8 @@ export default class Spotlight extends Component {
       setProjection: (element) => {
         const projection = d3.geo.eckert3()
                .center([33, 1])
-               .scale(element.offsetWidth * 3.2)
-               .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+               .scale(element.offsetWidth * 3)
+               .translate([element.offsetWidth / 2, element.offsetHeight / 3]);
         const path = d3.geo.path().projection(projection);
         return {path, projection};
       },
@@ -164,21 +167,25 @@ export default class Spotlight extends Component {
 
   render() {
     const styles = require('./Spotlight.scss');
-    const { defaultFill, range, domain, indicator, description, heading} = this.props;
+    const { defaultFill, range, domain, indicator, description, heading, themes} = this.props;
     return (
-      <div>
-        <button className="btn btn-primary" onClick={this.updateMapClickHandler}>updateMap</button>
-        <article className = {styles.description}>
-          <h3>{heading}</h3>
-          <p>{description}</p>
-        </article>
-        <Legend
-          defaultFill = {defaultFill}
-          range = {range}
-          domain = {domain}
-          indicator= {indicator} />
+      <div className= {styles.spotlight}>
+        <section className= {styles.mapSupport}>
+          <Themes
+            indicator= {indicator}
+            themes = {themes} />
+          <article className = {styles.description}>
+            <h3>{heading}</h3>
+            <p>{description}</p>
+          </article>
+          <Legend
+            defaultFill = {defaultFill}
+            range = {range}
+            domain = {domain}
+            indicator= {indicator} />
+          <div id="tooltip" className={cx(styles.tooltip, 'hidden')}></div>
+        </section>
         <section id="maps" ref="maps" className={styles.maps} ></section>
-        <div id="tooltip" className={cx(styles.tooltip, 'hidden')}></div>
       </div>
     );
   }
