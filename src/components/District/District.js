@@ -3,6 +3,7 @@ import React, {Component, PropTypes} from 'react';
 import Datamaps from 'datamaps';
 import 'topojson';
 import {connect} from 'react-redux';
+import cx from 'classnames';
 
 @connect(
   state => ({
@@ -106,9 +107,22 @@ export default class Spotlight extends Component {
   render() {
     const styles = require('./District.scss');
     return (
-      <div>
-        <h1>District Profile {this.props.name} </h1>
-        <section id="maps" ref="maps" className={styles.maps} ></section>
+      <div className= "container-fluid">
+        <div className ={cx('row', styles.head)}>
+          <div className={cx('col-md-7', styles.content)}>
+            <h1>{this.props.name}</h1>
+            <article>
+              <p>
+                Explore this in-depth profile to find out about poverty,
+                population, education, health, water,
+                sanitation and hygiene, and district public resources in Mukono
+              </p>
+            </article>
+          </div>
+          <div className="col-md-5">
+            <section id="maps" ref="maps" className={styles.maps} ></section>
+          </div>
+        </div>
       </div>
     );
   }

@@ -1,4 +1,29 @@
+.head{
+  margin-top: 3em;
+  h1{
+    font-weight: 700;
+  }
+}
 .maps{
   position: relative;
   width: 100%;
+}
+.content{
+    background: rgba(255,255,255,.6);
+    shadow: 0 1px 4px rgba(0,0,0,.1);
+    box-shadow: 0 1px 4px rgba(0,0,0,.1);
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    padding-bottom: 1.5em;
+    overflow: hidden;
+    display: block;
+    p{
+      line-height: 1.5;
+      text-align: justify;
+      font-size: 2.2rem;
+      font-weight: 300;
+    }
+    article{
+      margin-top: 3em;
+    }
 }

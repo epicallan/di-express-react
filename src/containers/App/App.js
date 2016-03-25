@@ -55,10 +55,13 @@ export default class App extends Component {
         <div className={styles.appContent}>
           {this.props.children}
         </div>
-
-        <div className="well text-center">
-          <p> footer goes here </p>
-        </div>
+        <footer clasName="footer navbar-fixed-bottom" style={{display: 'none'}}>
+          <div className="container">
+            <div className="well text-center">
+              <p>Footer goes here</p>
+            </div>
+          </div>
+        </footer>
       </div>
     );
   }
