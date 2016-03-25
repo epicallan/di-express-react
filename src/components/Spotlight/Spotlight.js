@@ -152,9 +152,9 @@ export default class Spotlight extends Component {
     });
   }
 
-  updateMapClickHandler = () =>{
+  updateMapClickHandler = (indicator) =>{
     // dispatch action for new data on mouse event
-    this.props.dispatch(load('/spotlight/uganda-deprivation-living'));
+    this.props.dispatch(load(`/spotlight/${indicator}`));
   }
 
   draw = () => {
@@ -173,6 +173,7 @@ export default class Spotlight extends Component {
         <section className= {styles.mapSupport}>
           <Themes
             indicator= {indicator}
+            clickHandler={this.updateMapClickHandler}
             themes = {themes} />
           <article className = {styles.description}>
             <h3>{heading}</h3>
