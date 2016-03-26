@@ -14,8 +14,6 @@ import cx from 'classnames';
   state => ({
     mapData: state.spotlight.mapData,
     data: state.spotlight.data,
-    heading: state.spotlight.meta['laymans-heading'],
-    description: state.spotlight.meta['laymans-decription'],
     entities: state.spotlight.entities,
     dispatch: state.dispatch,
     domain: state.spotlight.domain,
@@ -27,8 +25,6 @@ import cx from 'classnames';
 )
 export default class Spotlight extends Component {
   static propTypes = {
-    heading: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
     mapData: PropTypes.object.isRequired,
     data: PropTypes.array.isRequired,
     entities: PropTypes.array.isRequired,
@@ -165,9 +161,12 @@ export default class Spotlight extends Component {
     });
   };
 
+  indicatorData = () => this.props.themes.find(theme => theme.slug === this.props.indicator);
+
   render() {
     const styles = require('./Spotlight.scss');
-    const { defaultFill, range, domain, indicator, description, heading, themes} = this.props;
+    const {heading, description} = this.indicatorData();
+    const { defaultFill, range, domain, indicator, themes} = this.props;
     return (
       <div className= {styles.spotlight}>
         <section className= {styles.mapSupport}>

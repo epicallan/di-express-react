@@ -1,8 +1,8 @@
 import {get} from '../utils/externalApiClient';
-
+import {DI_API} from '../config';
 class ProfileAction {
   getEntities() {
-    return get('reference/uganda-district-entity');
+    return get(DI_API, 'reference/uganda-district-entity');
   }
   getEntity(entities, slug) {
     return entities.find(row => row.slug === slug);

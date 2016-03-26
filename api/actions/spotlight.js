@@ -1,20 +1,19 @@
 import d3 from 'd3';
 import {get} from '../utils/externalApiClient';
-import {DI_API} from '../config';
+import {DI_API, CMS_API} from '../config';
 
 class SpotlightAction {
   getAllData(params) {
     const indicatorDataApi = `indicator?query={"concept":"${params}"}&fields={"_id":0}`;
     const promises = [
-      get(indicatorDataApi),
+      get(DI_API, indicatorDataApi),
       get(DI_API, 'reference/colorRamp'),
-      get(DI_API, 'reference/uganda-theme'),
+      get(CMS_API, 'api/indicator/?format=json'),
       get(DI_API, 'reference/uganda-district-entity')
     ];
     return Promise.all(promises);
   }
-  // create a separate url for theme data so that there is no
-  // need it for refetching it
+
   async spotlightData(params) {
     const allData = await this.getAllData(params);
     const indicatorData = allData[0].data;
@@ -22,11 +21,10 @@ class SpotlightAction {
     const colorRamps = allData[1];
     const scale = this.createColorScale(colorRamps, metaData);
     const choroplethData = this.choroplethUpdateData(indicatorData, scale);
-    const themeData = allData[2];
     return {
-      meta: metaData,
+      // meta: metaData,
       data: choroplethData,
-      themes: themeData,
+      themes: allData[2],
       entities: allData[3],
       domain: this.getIndicatorDomain(metaData),
       range: scale.range()
@@ -64,6 +62,7 @@ class SpotlightAction {
   /**
   * I am making an assumption that all the
   * indicatorData is for one specific year
+  * we are getting color values for arbitrary values
   */
   choroplethUpdateData(indicatorData, scale) {
     indicatorData.forEach(data => data.color = scale(data.value));

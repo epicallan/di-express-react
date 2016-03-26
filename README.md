@@ -12,7 +12,7 @@ This project was built on top of this [starter kit](https://github.com/erikras/r
 ## TODO / Good to have
 
 - Cache some of the data on the server via redis.
-- Cache data on the client via session storage
+- Cache data on the client via session storage eg color ramp and themes data
 - bundle repo with current di-api or use the heroku api-end points
 - docker build
 

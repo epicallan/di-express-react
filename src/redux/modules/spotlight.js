@@ -12,8 +12,7 @@ const initialState = {
   domain: null,
   range: null,
   error: null,
-  themes: null,
-  meta: null
+  themes: null
 };
 
 // exported for testing purposes
@@ -45,7 +44,6 @@ export default function reducer(state = initialState, action = {}) {
         indicator: action.indicator,
         domain: action.result.domain,
         range: action.result.range,
-        meta: action.result.meta,
         themes: action.result.themes,
         data: action.result.data,
         mapData: getMapData(action.result.data),

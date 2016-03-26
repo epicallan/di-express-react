@@ -9,18 +9,21 @@ export default class Themes extends Component {
     clickHandler: PropTypes.func.isRequired
   };
 
+  themeName = () => this.props.themes.
+                find(theme => theme.slug === this.props.indicator).name
   render() {
     const styles = require('./Themes.scss');
     const menu = this.props.themes.map(
       item => (
         <NavItem
-        key ={item._id}
-        eventKey={item.default}
+        key ={item.id}
+        eventKey={item.slug}
         title={item.name}>
         {item.name}
         </NavItem>
       )
     );
+    const subMenuName = this.themeName();
     return (
       <div className ="text-center">
         <Nav bsStyle="pills"
@@ -32,7 +35,7 @@ export default class Themes extends Component {
           <NavItem
           eventKey={this.props.indicator}
           title={this.props.indicator}>
-          {this.props.indicator}
+          {subMenuName}
           </NavItem>
         </Nav>
       </div>
