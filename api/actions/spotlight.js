@@ -1,18 +1,20 @@
 import d3 from 'd3';
 import {get} from '../utils/externalApiClient';
+import {DI_API} from '../config';
 
 class SpotlightAction {
   getAllData(params) {
     const indicatorDataApi = `indicator?query={"concept":"${params}"}&fields={"_id":0}`;
     const promises = [
       get(indicatorDataApi),
-      get('reference/colorRamp'),
-      get('reference/uganda-theme'),
-      get('reference/uganda-district-entity')
+      get(DI_API, 'reference/colorRamp'),
+      get(DI_API, 'reference/uganda-theme'),
+      get(DI_API, 'reference/uganda-district-entity')
     ];
     return Promise.all(promises);
   }
-
+  // create a separate url for theme data so that there is no
+  // need it for refetching it
   async spotlightData(params) {
     const allData = await this.getAllData(params);
     const indicatorData = allData[0].data;
