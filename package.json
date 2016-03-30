@@ -40,7 +40,7 @@
   },
   "betterScripts": {
     "start-prod": {
-      "command": "node ./bin/server.js",
+      "command": "pm2 start ./bin/server.js",
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "production",
@@ -49,7 +49,7 @@
       }
     },
     "start-prod-api": {
-      "command": "node ./bin/api.js",
+      "command": "pm2 start ./bin/api.js",
       "env": {
         "NODE_PATH": "./api",
         "NODE_ENV": "production",
@@ -129,6 +129,7 @@
     "react-dom": "^0.14.1",
     "react-helmet": "^2.2.0",
     "react-inline-css": "^2.0.0",
+    "react-progress-bar-plus": "^0.2.3",
     "react-redux": "^4.0.0",
     "react-router": "2.0.0",
     "react-router-bootstrap": "^0.20.1",
@@ -145,7 +146,8 @@
     "topojson": "^1.6.24",
     "url-loader": "^0.5.7",
     "warning": "^2.1.0",
-    "webpack-isomorphic-tools": "^2.2.18"
+    "webpack-isomorphic-tools": "^2.2.18",
+    "pm2": "^1.0.2"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",

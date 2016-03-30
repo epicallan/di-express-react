@@ -16,6 +16,7 @@ import {connect} from 'react-redux';
 @connect(
   state => ({
     themes: state.spotlight.themes,
+    loaded: state.spotlight.loaded,
     meta: state.spotlight.meta,
   })
 )
@@ -23,7 +24,6 @@ export default class Uganda extends Component {
   static propTypes = {
     themes: PropTypes.array,
     meta: PropTypes.object,
-    loading: PropTypes.bool,
     loaded: PropTypes.bool,
   };
   render() {

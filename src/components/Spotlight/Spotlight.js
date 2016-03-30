@@ -6,12 +6,14 @@ import {connect} from 'react-redux';
 import { browserHistory } from 'react-router';
 import {load} from 'redux/modules/spotlight';
 import Legend from '../Legend/Legend';
+import ProgressBar from '../ProgressBar/ProgressBar';
 import Themes from '../Themes/Themes';
 import {update} from 'redux/modules/profile';
 import cx from 'classnames';
 
 @connect(
   state => ({
+    loaded: state.spotlight.loaded,
     mapData: state.spotlight.mapData,
     data: state.spotlight.data,
     entities: state.spotlight.entities,
@@ -33,7 +35,8 @@ export default class Spotlight extends Component {
     defaultFill: PropTypes.string,
     domain: PropTypes.array,
     themes: PropTypes.array.isRequired,
-    range: PropTypes.array,
+    range: PropTypes.array.isRequired,
+    loaded: PropTypes.bool.isRequired
   };
   constructor() {
     super();
@@ -168,24 +171,27 @@ export default class Spotlight extends Component {
     const {heading, description} = this.indicatorData();
     const { defaultFill, range, domain, indicator, themes} = this.props;
     return (
-      <div className= {styles.spotlight}>
-        <section className= {styles.mapSupport}>
-          <Themes
-            indicator= {indicator}
-            clickHandler={this.updateMapClickHandler}
-            themes = {themes} />
-          <article className = {styles.description}>
-            <h3>{heading}</h3>
-            <p>{description}</p>
-          </article>
-          <Legend
-            defaultFill = {defaultFill}
-            range = {range}
-            domain = {domain}
-            indicator= {indicator} />
-          <div id="tooltip" className={cx(styles.tooltip, 'hidden')}></div>
-        </section>
-        <section id="maps" ref="maps" className={styles.maps} ></section>
+      <div>
+        <ProgressBar />
+        <div className= {styles.spotlight}>
+          <section className= {styles.mapSupport}>
+            <Themes
+              indicator= {indicator}
+              clickHandler={this.updateMapClickHandler}
+              themes = {themes} />
+            <article className = {styles.description}>
+              <h3>{heading}</h3>
+              <p>{description}</p>
+            </article>
+            <Legend
+              defaultFill = {defaultFill}
+              range = {range}
+              domain = {domain}
+              indicator= {indicator} />
+            <div id="tooltip" className={cx(styles.tooltip, 'hidden')}></div>
+          </section>
+          <section id="maps" ref="maps" className={styles.maps} ></section>
+        </div>
       </div>
     );
   }
