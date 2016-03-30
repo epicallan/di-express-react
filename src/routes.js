@@ -15,8 +15,11 @@ export default () => {
     <Route path="/" component={App}>
       { /* Home (main) route */ }
       <IndexRoute component={Uganda} />
+      { /* TODO  These should be route re-directs */ }
+      <Route path="district" component={Uganda}/>
+      <Route path="uganda" component={Uganda}/>
       <Route path="district/:name" component={Profile}/>
-      { /* SEO change address bar as indicator changes */ }
+      { /* TODO SEO change address bar as indicator changes  */ }
       <Route path="indicator/:name" component={Uganda}/>
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />
