@@ -1,5 +1,5 @@
 import React from 'react';
-import {IndexRoute, Route} from 'react-router';
+import {IndexRoute, Route, Redirect} from 'react-router';
 import {
     App,
     Uganda,
@@ -13,11 +13,10 @@ export default () => {
    */
   return (
     <Route path="/" component={App}>
+      <Redirect from="uganda" to="/" />
+      <Redirect from="district" to="/" />
       { /* Home (main) route */ }
       <IndexRoute component={Uganda} />
-      { /* TODO  These should be route re-directs */ }
-      <Route path="district" component={Uganda}/>
-      <Route path="uganda" component={Uganda}/>
       <Route path="district/:name" component={Profile}/>
       { /* TODO SEO change address bar as indicator changes  */ }
       <Route path="indicator/:name" component={Uganda}/>
