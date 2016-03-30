@@ -18,14 +18,18 @@ export default class ProgressBar extends Component {
     intervalTime: (Math.random() * 500)
   };
 
-  componentWillUpdate(nextProps) {
-    if (nextProps.loaded) this.state.percent = 100;
-    console.log(nextProps);
+  componentWillUpdate() {
+  }
+
+  loadProgress = () => {
+    let percent = this.state.percent;
+    if (this.props.loaded === true) percent = 100;
+    return percent;
   }
 
   render() {
     return (
-      <ProgressBarPlus percent={this.state.percent}
+      <ProgressBarPlus percent={this.loadProgress()}
                autoIncrement={this.state.autoIncrement}
                intervalTime={this.state.intervalTime}/>
     );
