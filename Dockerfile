@@ -6,7 +6,6 @@ WORKDIR /src
 ADD . /src
 ENV NODE_ENV production
 RUN npm install
-RUN npm run build
 
 EXPOSE 8000
 
