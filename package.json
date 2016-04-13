@@ -150,7 +150,8 @@
     "url-loader": "^0.5.7",
     "warning": "^2.1.0",
     "webpack-isomorphic-tools": "^2.2.18",
-    "concurrently": "^0.1.1",
+    "pm2": "^1.0.2",
+    "concurrently": "^0.1.1"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
