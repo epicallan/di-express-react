@@ -12,7 +12,7 @@ export default function clientMiddleware(client) {
       }
 
       const [REQUEST, SUCCESS, FAILURE] = types;
-      next({...rest, type: REQUEST}); // distpatch for loadsuccess or fail not sure
+      next({...rest, type: REQUEST}); // distpatch for loading
 
       const actionPromise = promise(client);
       actionPromise.then(

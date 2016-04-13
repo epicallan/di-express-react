@@ -66,7 +66,11 @@ export default function reducer(state = initialState, action = {}) {
 export function isLoaded(globalState) {
   return globalState.spotlight && globalState.spotlight.loaded;
 }
-
+/**
+ * performs an http request for spotlight data
+ * @param  {string} indicator api-url part
+ * @return {object}
+ */
 export function load(indicator = '/spotlight/uganda-poverty-headcount') {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],

@@ -5,8 +5,8 @@ RUN mkdir /src
 WORKDIR /src
 ADD . /src
 ENV NODE_ENV production
-RUN npm install
-RUN npm build
+RUN npm install -g pm2
+RUN npm install --production
 
 EXPOSE 8000
 

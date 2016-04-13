@@ -18,9 +18,12 @@
     "hot reloading",
     "react-hot-reloader",
     "redux",
-    "starter",
-    "boilerplate",
-    "babel"
+    "babel",
+    "development Initiative",
+    "DI",
+    "visualisation",
+    "datamaps",
+    "d3"
   ],
   "main": "bin/server.js",
   "scripts": {
@@ -40,7 +43,7 @@
   },
   "betterScripts": {
     "start-prod": {
-      "command": "pm2 start ./bin/server.js",
+      "command": "pm2 start ./bin/server.js --watch",
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "production",
@@ -49,7 +52,7 @@
       }
     },
     "start-prod-api": {
-      "command": "pm2 start ./bin/api.js",
+      "command": "pm2 start ./bin/api.js --watch",
       "env": {
         "NODE_PATH": "./api",
         "NODE_ENV": "production",
