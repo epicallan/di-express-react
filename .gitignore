@@ -3,4 +3,3 @@ node_modules/
 *.iml
 npm-debug.log
 .DS_Store
-webpack-assets.json
