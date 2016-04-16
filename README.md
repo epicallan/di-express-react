@@ -9,6 +9,20 @@
 
 This project was built on top of this [starter kit](https://github.com/erikras/react-redux-universal-hot-example)
 NODE_PATH=./src NODE_ENV=production PORT=8000 APIPORT=3030 HOST=0.0.0.0 APIHOST=178.79.174.33 forever start ./bin/server.js
+## Tips
+- unbundling API post signture based on the heroku di-api app
+  ```
+  {
+      "match": {
+          "year":2013,
+          "id-to":"NG"
+      },
+      "group":{
+          "_id":"$id-from",
+          "total":{"$sum":"$value"}
+      }
+  }
+  ```
 ## TODO / Good to have
 - Cache some of the data on the server via redis.
 - Cache data on the client via session storage eg color ramp and themes data
