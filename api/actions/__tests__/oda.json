@@ -1,0 +1,697 @@
+{
+  "meta": [
+    {
+      "_id": "56d2968d9fce924b6da9da65",
+      "series": "country-year",
+      "id": "oda",
+      "type": "multi",
+      "parent": "",
+      "name": "Official development assistance",
+      "columns": "id-from,id-to, year, sector, bundle, channel, value",
+      "description": "Gross ODA",
+      "default-scale": "lin",
+      "themes": "official",
+      "map-theme": "",
+      "theme-order": "",
+      "global-picture-color-ramp": "",
+      "uom": "USD",
+      "uom_display": "USD",
+      "source": "Development Initiatives based on OECD-DAC data",
+      "calculation": "",
+      "format": "",
+      "highorlow": "highisbetter",
+      "range": "",
+      "interpolated": "",
+      "missing-donor": "NA",
+      "missing-recipient": "NA",
+      "laymans-decription": "",
+      "laymans-heading": "",
+      "source-link": "",
+      "staging": "",
+      "theme-year": ""
+    }
+  ],
+  "data": [
+    {
+      "_id": "WF",
+      "total": 101996403
+    },
+    {
+      "_id": "west-indies",
+      "total": 135189883
+    },
+    {
+      "_id": "AI",
+      "total": 7667233
+    },
+    {
+      "_id": "south-central-asia",
+      "total": 158517330
+    },
+    {
+      "_id": "VC",
+      "total": 11318208
+    },
+    {
+      "_id": "BA",
+      "total": 562226019
+    },
+    {
+      "_id": "SR",
+      "total": 30435807
+    },
+    {
+      "_id": "south-of-sahara",
+      "total": 2407413996
+    },
+    {
+      "_id": "south-asia",
+      "total": 69097489
+    },
+    {
+      "_id": "SB",
+      "total": 306982835
+    },
+    {
+      "_id": "RS",
+      "total": 922215782
+    },
+    {
+      "_id": "PW",
+      "total": 39191026
+    },
+    {
+      "_id": "NR",
+      "total": 30177203
+    },
+    {
+      "_id": "ST",
+      "total": 51981151
+    },
+    {
+      "_id": "north-central-america",
+      "total": 432094701
+    },
+    {
+      "_id": "asia",
+      "total": 1086303715
+    },
+    {
+      "_id": "america",
+      "total": 1694900656
+    },
+    {
+      "_id": "central-asia",
+      "total": 210653453
+    },
+    {
+      "_id": "middle-east",
+      "total": 875862990
+    },
+    {
+      "_id": "MD",
+      "total": 342584588
+    },
+    {
+      "_id": "MS",
+      "total": 54627417
+    },
+    {
+      "_id": "oceania",
+      "total": 268921740
+    },
+    {
+      "_id": "LC",
+      "total": 26761895
+    },
+    {
+      "_id": "KP",
+      "total": 76421543
+    },
+    {
+      "_id": "PA",
+      "total": 52833820
+    },
+    {
+      "_id": "HT",
+      "total": 1124389674
+    },
+    {
+      "_id": "AF",
+      "total": 5287519273
+    },
+    {
+      "_id": "AL",
+      "total": 315602888
+    },
+    {
+      "_id": "TL",
+      "total": 264598482
+    },
+    {
+      "_id": "GY",
+      "total": 115902063
+    },
+    {
+      "_id": "SZ",
+      "total": 123261453
+    },
+    {
+      "_id": "DM",
+      "total": 22939726
+    },
+    {
+      "_id": "CK",
+      "total": 19101991
+    },
+    {
+      "_id": "BT",
+      "total": 141628137
+    },
+    {
+      "_id": "ID",
+      "total": 2658216168
+    },
+    {
+      "_id": "BY",
+      "total": 100264387
+    },
+    {
+      "_id": "AO",
+      "total": 334474036
+    },
+    {
+      "_id": "AG",
+      "total": 2646904
+    },
+    {
+      "_id": "NI",
+      "total": 515032191
+    },
+    {
+      "_id": "LS",
+      "total": 337567682
+    },
+    {
+      "_id": "CI",
+      "total": 2100144571
+    },
+    {
+      "_id": "MG",
+      "total": 699519370
+    },
+    {
+      "_id": "GA",
+      "total": 102965987
+    },
+    {
+      "_id": "BW",
+      "total": 125658042
+    },
+    {
+      "_id": "SC",
+      "total": 29196263
+    },
+    {
+      "_id": "ZW",
+      "total": 839475068
+    },
+    {
+      "_id": "ZA",
+      "total": 1421154637
+    },
+    {
+      "_id": "CU",
+      "total": 101123961
+    },
+    {
+      "_id": "YE",
+      "total": 1157734696
+    },
+    {
+      "_id": "XK",
+      "total": 538243254
+    },
+    {
+      "_id": "UZ",
+      "total": 340442981
+    },
+    {
+      "_id": "UY",
+      "total": 44428625
+    },
+    {
+      "_id": "UA",
+      "total": 737597793
+    },
+    {
+      "_id": "ex-yugoslavia",
+      "total": 3677820
+    },
+    {
+      "_id": "TV",
+      "total": 29244185
+    },
+    {
+      "_id": "TR",
+      "total": 3494658384
+    },
+    {
+      "_id": "TO",
+      "total": 85740305
+    },
+    {
+      "_id": "TN",
+      "total": 1012143246
+    },
+    {
+      "_id": "ZM",
+      "total": 1148179053
+    },
+    {
+      "_id": "LA",
+      "total": 471490213
+    },
+    {
+      "_id": "TH",
+      "total": 994311072
+    },
+    {
+      "_id": "TG",
+      "total": 229899034
+    },
+    {
+      "_id": "SS",
+      "total": 1394265248
+    },
+    {
+      "_id": "SY",
+      "total": 1981422325
+    },
+    {
+      "_id": "SN",
+      "total": 1041385584
+    },
+    {
+      "_id": "WS",
+      "total": 129588136
+    },
+    {
+      "_id": "north-of-sahara",
+      "total": 214041359
+    },
+    {
+      "_id": "SL",
+      "total": 549529177
+    },
+    {
+      "_id": "PK",
+      "total": 2974460536
+    },
+    {
+      "_id": "VE",
+      "total": 38365977
+    },
+    {
+      "_id": "ME",
+      "total": 126521051
+    },
+    {
+      "_id": "KN",
+      "total": 14698816
+    },
+    {
+      "_id": "PH",
+      "total": 1093974338
+    },
+    {
+      "_id": "TM",
+      "total": 23476312
+    },
+    {
+      "_id": "NE",
+      "total": 797505499
+    },
+    {
+      "_id": "NA",
+      "total": 296511865
+    },
+    {
+      "_id": "LR",
+      "total": 531929842
+    },
+    {
+      "_id": "BD",
+      "total": 3480991773
+    },
+    {
+      "_id": "IQ",
+      "total": 1673565090
+    },
+    {
+      "_id": "VN",
+      "total": 5077550467
+    },
+    {
+      "_id": "MZ",
+      "total": 2406149715
+    },
+    {
+      "_id": "GD",
+      "total": 14410677
+    },
+    {
+      "_id": "europe",
+      "total": 882423125
+    },
+    {
+      "_id": "south-america",
+      "total": 266396983
+    },
+    {
+      "_id": "BJ",
+      "total": 679266983
+    },
+    {
+      "_id": "MY",
+      "total": 226721803
+    },
+    {
+      "_id": "GQ",
+      "total": 9752358
+    },
+    {
+      "_id": "CD",
+      "total": 2595782773
+    },
+    {
+      "_id": "africa",
+      "total": 1943280517
+    },
+    {
+      "_id": "PG",
+      "total": 729939043
+    },
+    {
+      "_id": "NG",
+      "total": 2636867273
+    },
+    {
+      "_id": "KI",
+      "total": 69915446
+    },
+    {
+      "_id": "MX",
+      "total": 761059652
+    },
+    {
+      "_id": "CF",
+      "total": 203809851
+    },
+    {
+      "_id": "MR",
+      "total": 334440084
+    },
+    {
+      "_id": "ML",
+      "total": 1426015619
+    },
+    {
+      "_id": "LY",
+      "total": 137359845
+    },
+    {
+      "_id": "GW",
+      "total": 104395354
+    },
+    {
+      "_id": "east-asia",
+      "total": 257625386
+    },
+    {
+      "_id": "BO",
+      "total": 716760392
+    },
+    {
+      "_id": "KH",
+      "total": 887324037
+    },
+    {
+      "_id": "EC",
+      "total": 218481679
+    },
+    {
+      "_id": "MK",
+      "total": 246525048
+    },
+    {
+      "_id": "MH",
+      "total": 98200808
+    },
+    {
+      "_id": "PE",
+      "total": 529544179
+    },
+    {
+      "_id": "MA",
+      "total": 2537041700
+    },
+    {
+      "_id": "TD",
+      "total": 500791883
+    },
+    {
+      "_id": "FM",
+      "total": 148860251
+    },
+    {
+      "_id": "SD",
+      "total": 1537160936
+    },
+    {
+      "_id": "LB",
+      "total": 758556122
+    },
+    {
+      "_id": "MW",
+      "total": 1158630492
+    },
+    {
+      "_id": "GE",
+      "total": 704417743
+    },
+    {
+      "_id": "JO",
+      "total": 1589997915
+    },
+    {
+      "_id": "MV",
+      "total": 32865539
+    },
+    {
+      "_id": "NP",
+      "total": 1033025146
+    },
+    {
+      "_id": "LK",
+      "total": 945930958
+    },
+    {
+      "_id": "PY",
+      "total": 188894120
+    },
+    {
+      "_id": "CN",
+      "total": 1739799998
+    },
+    {
+      "_id": "IR",
+      "total": 125916965
+    },
+    {
+      "_id": "GH",
+      "total": 1400102812
+    },
+    {
+      "_id": "MU",
+      "total": 173389529
+    },
+    {
+      "_id": "KM",
+      "total": 173011186
+    },
+    {
+      "_id": "HN",
+      "total": 651661771
+    },
+    {
+      "_id": "SO",
+      "total": 936896403
+    },
+    {
+      "_id": "FJ",
+      "total": 96065642
+    },
+    {
+      "_id": "ET",
+      "total": 3892269610
+    },
+    {
+      "_id": "CR",
+      "total": 77614242
+    },
+    {
+      "_id": "CM",
+      "total": 769242444
+    },
+    {
+      "_id": "KE",
+      "total": 3637312346
+    },
+    {
+      "_id": "MM",
+      "total": 8814324874
+    },
+    {
+      "_id": "IN",
+      "total": 4812394855
+    },
+    {
+      "_id": "MN",
+      "total": 514676892
+    },
+    {
+      "_id": "KZ",
+      "total": 142165193
+    },
+    {
+      "_id": "SH",
+      "total": 138071984
+    },
+    {
+      "_id": "TJ",
+      "total": 399151081
+    },
+    {
+      "_id": "DO",
+      "total": 207448357
+    },
+    {
+      "_id": "KG",
+      "total": 384978349
+    },
+    {
+      "_id": "AM",
+      "total": 317213354
+    },
+    {
+      "_id": "BF",
+      "total": 1083347192
+    },
+    {
+      "_id": "SV",
+      "total": 230337587
+    },
+    {
+      "_id": "TK",
+      "total": 23221720
+    },
+    {
+      "_id": "AZ",
+      "total": 282702700
+    },
+    {
+      "_id": "DZ",
+      "total": 307534927
+    },
+    {
+      "_id": "GN",
+      "total": 675774465
+    },
+    {
+      "_id": "PS",
+      "total": 2464567223
+    },
+    {
+      "_id": "GM",
+      "total": 123584457
+    },
+    {
+      "_id": "bilateral-unspecified",
+      "total": 29283393992
+    },
+    {
+      "_id": "ER",
+      "total": 81946904
+    },
+    {
+      "_id": "GT",
+      "total": 540739331
+    },
+    {
+      "_id": "DJ",
+      "total": 160227621
+    },
+    {
+      "_id": "CV",
+      "total": 259700975
+    },
+    {
+      "_id": "CO",
+      "total": 877289574
+    },
+    {
+      "_id": "JM",
+      "total": 125312076
+    },
+    {
+      "_id": "CL",
+      "total": 92102871
+    },
+    {
+      "_id": "CG",
+      "total": 174420312
+    },
+    {
+      "_id": "VU",
+      "total": 99884004
+    },
+    {
+      "_id": "BZ",
+      "total": 49024462
+    },
+    {
+      "_id": "BI",
+      "total": 561258736
+    },
+    {
+      "_id": "TZ",
+      "total": 3669272408
+    },
+    {
+      "_id": "RW",
+      "total": 1081319638
+    },
+    {
+      "_id": "NU",
+      "total": 18104427
+    },
+    {
+      "_id": "UG",
+      "total": 1814565983
+    },
+    {
+      "_id": "EG",
+      "total": 5875622029
+    },
+    {
+      "_id": "BR",
+      "total": 1365329147
+    },
+    {
+      "_id": "AR",
+      "total": 81356051
+    }
+  ],
+  "err": null
+}
