@@ -32,8 +32,8 @@ class UnbundlingAction {
     return get(DI_API, url);
   }
 
-  getActiveLevelKey(match) {
-    return Object.keys(match).find( key => key !== 'year') || null;
+  getActiveLevelKey(group) {
+    return group._id.split('$')[1];
   }
 
   processODAData(odaData, activeData) {
@@ -59,7 +59,7 @@ export default async function unbundling(req) {
   const optionsRaw = await unbundlingAction.getOptionsData();
   const options = unbundlingAction.process0ptionsData(optionsRaw);
   const odaRaw = await unbundlingAction.getODAData(req.body);
-  const activeLevel = unbundlingAction.getActiveLevelKey(req.body.match);
+  const activeLevel = unbundlingAction.getActiveLevelKey(req.body.group);
   const activeData = activeLevel ? options[activeLevel] : options['id-to'];
   const oda = unbundlingAction.processODAData(odaRaw, activeData);
   return {...options, oda};
