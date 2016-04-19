@@ -7,7 +7,7 @@ import cx from 'classnames';
 
 @connect(
   state => ({
-    id: state.profile.id,
+    profileId: state.profile.id,
     name: state.profile.name,
     slug: state.profile.slug
   })
@@ -15,7 +15,7 @@ import cx from 'classnames';
 export default class Spotlight extends Component {
   static propTypes = {
     name: PropTypes.string,
-    id: PropTypes.string
+    profileId: PropTypes.string
   }
   // datamap options
   mapOptions = {
@@ -39,7 +39,7 @@ export default class Spotlight extends Component {
       const zoom = d3.behavior.zoom().on('zoom', zoomed);
       datamap.svg.call(zoom);
       const mapElm = document.getElementById('maps');
-      centerMap(datamap, this.mapOptions, mapElm, zoom, 'maps');
+      centerMap(datamap, this.mapOptions, mapElm, zoom, this.props.profileId);
     }
   }
 

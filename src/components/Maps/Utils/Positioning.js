@@ -7,7 +7,7 @@ import d3 from 'd3-geo-projection';
 export const zoomed = (datamap, geographyConfig, zoom) => {
   datamap.svg.selectAll('g')
   .attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
-  datamap.map.svg.selectAll('.datamaps-subunit')
+  datamap.svg.selectAll('.datamaps-subunit')
   .style('stroke-width', (geographyConfig.borderWidth / zoom.scale()) + 'px');
 };
 

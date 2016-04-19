@@ -33,7 +33,6 @@ export default function reducer(state = initialState, action = {}) {
         error: null
       };
     case UPDATE:
-      console.log(action);
       return Object.assign({}, state, {
         loaded: true,
         loading: false,
