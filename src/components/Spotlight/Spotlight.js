@@ -17,14 +17,13 @@ import cx from 'classnames';
     mapData: state.spotlight.mapData,
     data: state.spotlight.data,
     entities: state.spotlight.entities,
-    update: bindActionCreators(update, state.dispatch),
-    load: bindActionCreators(load, state.dispatch),
     domain: state.spotlight.domain,
     range: state.spotlight.range,
     indicator: state.spotlight.indicator,
     defaultFill: state.spotlight.defaultFill,
     themes: state.spotlight.themes
-  })
+  }),
+  dispatch => ({ actions: bindActionCreators({update, load}, dispatch)})
 )
 export default class Spotlight extends Component {
 
@@ -32,8 +31,7 @@ export default class Spotlight extends Component {
     mapData: PropTypes.object.isRequired,
     data: PropTypes.array.isRequired,
     entities: PropTypes.array.isRequired,
-    load: PropTypes.func.isRequired,
-    update: PropTypes.func.isRequired,
+    actions: PropTypes.object,
     indicator: PropTypes.string,
     defaultFill: PropTypes.string,
     domain: PropTypes.array,
@@ -41,26 +39,28 @@ export default class Spotlight extends Component {
     range: PropTypes.array.isRequired,
     loaded: PropTypes.bool.isRequired
   };
-  componentWillUpdate(nextProps) {
-    // updates map with new data from the spotlight store
-    this.map.updateChoropleth(nextProps.mapData);
-  }
+
+  // componentWillUpdate(nextProps) {
+  //   // updates map with new data from the spotlight store
+  //   this.map.updateChoropleth(nextProps.mapData);
+  // }
 
   mapOptions = {
     done: (datamap) => {
-      datamap.updateChoropleth(this.props.mapData);
+      const {actions, entities, data, indicator, mapData} = this.props;
+      datamap.updateChoropleth(mapData);
       mapMouseHandlers(datamap, {
-        update,
-        entities: this.props.entities,
-        data: this.props.data,
-        indicator: this.props.indicator
+        update: actions.update,
+        entities,
+        data,
+        indicator
       });
     }
   };
 
   updateMapClickHandler = (indicator) =>{
     // dispatch action for new data on mouse event
-    this.props.load(`/spotlight/${indicator}`);
+    this.props.actions.load(`/spotlight/${indicator}`);
   }
 
   indicatorData = () => this.props.themes.find(theme => theme.slug === this.props.indicator);

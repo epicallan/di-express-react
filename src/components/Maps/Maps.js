@@ -29,8 +29,8 @@ export default class Map extends Component {
     setProjection: (element) => {
       const projection = d3.geo.eckert3()
              .center([33, 1])
-             .scale(element.offsetWidth * 2)
-             .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+             .scale(element.offsetWidth * 3)
+             .translate([element.offsetWidth / 2, element.offsetHeight / 3]);
       const path = d3.geo.path().projection(projection);
       return {path, projection};
     },
