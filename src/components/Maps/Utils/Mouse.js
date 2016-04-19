@@ -30,7 +30,7 @@ export const getTipPosition = (svgSize, tooltipSize, datamap) => {
   return pos;
 };
 
-export const mapMouseHandlers = (datamap, {update, entities}) => {
+export const mapMouseHandlers = (datamap, {update, entities, mapData}) => {
   /* eslint-disable func-names*/
   const tooltip = d3.select('#tooltip') || throwError('missing tooltip selector');
   let svgSize = null;
@@ -56,12 +56,13 @@ export const mapMouseHandlers = (datamap, {update, entities}) => {
   })
   .on('mousemove', () => {
     if (tooltip.classed('hidden')) return;
-    const pos = getTipPosition(svgSize, tooltipSize);
+    const pos = getTipPosition(svgSize, tooltipSize, datamap);
     tooltip.attr('style', 'left:' + pos[0] + 'px; top:' + pos[1] + 'px');
   })
   .on('mouseover', function(datum) {
     const node = d3.select(this);
-    tooltip.classed('hidden', false).html(getTipTemplate(datum));
+    // console.log('mapData', mapData);
+    tooltip.classed('hidden', false).html(getTipTemplate(datum, mapData, entities));
     svgSize = datamap.svg.node().getBoundingClientRect();
     tooltipSize = tooltip.node().getBoundingClientRect();
     node.style('fill', d3.hsl(node.style('fill')).darker(0.5));
