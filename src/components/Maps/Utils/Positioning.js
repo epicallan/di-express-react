@@ -2,8 +2,6 @@ import d3 from 'd3-geo-projection';
 /**
  * zooming and centering util functions
  */
-
-
 export const zoomed = (datamap, geographyConfig, zoom) => {
   datamap.svg.selectAll('g')
   .attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
