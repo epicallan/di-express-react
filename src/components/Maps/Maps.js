@@ -4,7 +4,7 @@ import Datamaps from 'datamaps';
 import 'topojson';
 
 
-export default class Spotlight extends Component {
+export default class Map extends Component {
   static propTypes = {
     height: PropTypes.number,
     id: PropTypes.string
