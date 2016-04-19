@@ -20,6 +20,7 @@ export default class Map extends Component {
     // updates map with new data from the spotlight store
     this.map.updateChoropleth(nextProps.mapData);
   }
+
   map = null;
   // datamap options
   options = {

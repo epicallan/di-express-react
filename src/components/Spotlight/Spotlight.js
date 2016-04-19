@@ -39,12 +39,6 @@ export default class Spotlight extends Component {
     range: PropTypes.array.isRequired,
     loaded: PropTypes.bool.isRequired
   };
-
-  // componentWillUpdate(nextProps) {
-  //   // updates map with new data from the spotlight store
-  //   this.map.updateChoropleth(nextProps.mapData);
-  // }
-
   mapOptions = {
     done: (datamap) => {
       const {actions, entities, data, indicator, mapData} = this.props;
