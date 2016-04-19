@@ -26,7 +26,7 @@ export const centerMap = (datamap, mapOptions, mapElm, zoom, mapId) => {
   const width = mapElm.offsetWidth;
   const height = mapOptions.height;
   /* eslint-disable id-length*/
-  const node = datamap.svg.select('path.' + mapId); // gets us curret region / district node
+  const node = datamap.svg.select('path.' + mapId); // mapId represents the id of a district in interest
   node.style('fill', 'rgba(186,12,47,1)');
 
   if (!node) return;

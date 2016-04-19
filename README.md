@@ -8,7 +8,6 @@
 ## About
 
 This project was built on top of this [starter kit](https://github.com/erikras/react-redux-universal-hot-example)
-NODE_PATH=./src NODE_ENV=production PORT=8000 APIPORT=3030 HOST=0.0.0.0 APIHOST=178.79.174.33 forever start ./bin/server.js
 
 ## Tips
 unbundling API post signture based on the heroku di-api app
