@@ -3,6 +3,7 @@ import React, {Component, PropTypes} from 'react';
 import Datamaps from 'datamaps';
 import {throwError} from '../../utils/errorHandling';
 import 'topojson';
+import styles from './Maps.scss';
 
 
 export default class Map extends Component {
@@ -54,7 +55,6 @@ export default class Map extends Component {
     });
   };
   render() {
-    const styles = require('./Maps.scss');
     return (
       <section id="maps" ref="maps" className={styles.maps} />
     );

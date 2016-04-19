@@ -1,6 +1,4 @@
 import React, {Component, PropTypes} from 'react';
-import Datamaps from 'datamaps';
-import 'topojson';
 import {connect} from 'react-redux';
 import {load} from 'redux/modules/spotlight';
 import Legend from '../Legend/Legend';
@@ -43,39 +41,27 @@ export default class Spotlight extends Component {
     range: PropTypes.array.isRequired,
     loaded: PropTypes.bool.isRequired
   };
-
-  constructor() {
-    super();
-    // datamap options
-    this.mapOptions = {
-      done: (datamap) => {
-        datamap.updateChoropleth(this.props.mapData);
-        mapMouseHandlers(datamap, {
-          update,
-          entities: this.props.entities,
-          data: this.props.data
-        });
-      }
-    };
-  }
-
   componentWillUpdate(nextProps) {
     // updates map with new data from the spotlight store
     this.map.updateChoropleth(nextProps.mapData);
   }
 
+  mapOptions = {
+    done: (datamap) => {
+      datamap.updateChoropleth(this.props.mapData);
+      mapMouseHandlers(datamap, {
+        update,
+        entities: this.props.entities,
+        data: this.props.data,
+        indicator: this.props.indicator
+      });
+    }
+  };
+
   updateMapClickHandler = (indicator) =>{
     // dispatch action for new data on mouse event
     this.props.load(`/spotlight/${indicator}`);
   }
-
-  draw = () => {
-    this.map = new Datamaps({
-      element: this.refs.maps,
-      ...this.mapOptions,
-      width: this.refs.maps.offsetWidth
-    });
-  };
 
   indicatorData = () => this.props.themes.find(theme => theme.slug === this.props.indicator);
 

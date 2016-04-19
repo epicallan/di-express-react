@@ -4,13 +4,13 @@ import { browserHistory } from 'react-router';
 /**
  * Mouse handling functions
  */
-export const getTipTemplate = (node, mapData, entities) => {
-  const data = mapData.find(obj => obj.id === node.id);
+export const getTipTemplate = (node, data, entities, indicator) => {
+  const mapObj = data.find(obj => obj.id === node.id);
   const entity = entities.find(obj => obj.id === node.id);
   let template = '<span class="name">' + entity.name + '</span>';
   if (data) {
-    template += '<em>' + this.props.indicator + ': ' + ' <b class="value">' + data.value + '</b>' +
-                  ' in ' + data.year + '</em>';
+    template += '<em>' + indicator + ': ' + ' <b class="value">' + mapObj.value + '</b>' +
+                  ' in ' + mapObj.year + '</em>';
   } else {
     template += '<em>No data</em>';
   }
@@ -30,7 +30,7 @@ export const getTipPosition = (svgSize, tooltipSize, datamap) => {
   return pos;
 };
 
-export const mapMouseHandlers = (datamap, {update, entities, mapData}) => {
+export const mapMouseHandlers = (datamap, {update, entities, data, indicator}) => {
   /* eslint-disable func-names*/
   const tooltip = d3.select('#tooltip') || throwError('missing tooltip selector');
   let svgSize = null;
@@ -61,8 +61,7 @@ export const mapMouseHandlers = (datamap, {update, entities, mapData}) => {
   })
   .on('mouseover', function(datum) {
     const node = d3.select(this);
-    // console.log('mapData', mapData);
-    tooltip.classed('hidden', false).html(getTipTemplate(datum, mapData, entities));
+    tooltip.classed('hidden', false).html(getTipTemplate(datum, data, entities, indicator));
     svgSize = datamap.svg.node().getBoundingClientRect();
     tooltipSize = tooltip.node().getBoundingClientRect();
     node.style('fill', d3.hsl(node.style('fill')).darker(0.5));
