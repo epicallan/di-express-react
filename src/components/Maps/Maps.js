@@ -6,8 +6,8 @@ import 'topojson';
 
 export default class Map extends Component {
   static propTypes = {
-    height: PropTypes.number,
-    id: PropTypes.string
+    options: PropTypes.obj,
+    mapId: PropTypes.string
   }
   // draw map when component loads
   componentDidMount() {
@@ -17,7 +17,7 @@ export default class Map extends Component {
   map = null;
   // datamap options
   mapOptions = {
-    height: this.props.height,
+    height: 900,
     responsive: true,
     projection: 'eckert3',
     setProjection: (element) => {
@@ -37,26 +37,23 @@ export default class Map extends Component {
       borderWidth: 1,
       borderColor: '#eee',
       dataUrl: '/uganda.json'
-    },
-    done: (datamap) => {
-      this.zoom = d3.behavior.zoom().on('zoom', this.zoomed);
-      datamap.svg.call(this.zoom);
-      this.centerMap(datamap, this.interpolateZoom);
     }
   }
 
   draw = () => {
+    const mapOptions = Object.assign({}, this.mapOptions, this.props.options);
     this.map = new Datamaps({
       element: this.refs.maps,
-      ...this.mapOptions,
+      ...mapOptions,
       width: this.refs.maps.offsetWidth
     });
   };
+
   centerMap(datamap, interpolateZoom) {
     const width = this.refs.maps.offsetWidth;
     const height = this.mapOptions.height;
     /* eslint-disable id-length*/
-    const node = datamap.svg.select('path.' + this.props.id); // gets us curret region / district node
+    const node = datamap.svg.select('path.' + this.props.mapId); // gets us curret region / district node
     node.style('fill', 'rgba(186,12,47,1)');
 
     if (!node) return;

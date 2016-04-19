@@ -8,16 +8,19 @@ import {load} from 'redux/modules/spotlight';
 import Legend from '../Legend/Legend';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import Themes from '../Themes/Themes';
+import {bindActionCreators} from 'redux';
 import {update} from 'redux/modules/profile';
 import cx from 'classnames';
 
+// attaching store to Component
 @connect(
   state => ({
     loaded: state.spotlight.loaded,
     mapData: state.spotlight.mapData,
     data: state.spotlight.data,
     entities: state.spotlight.entities,
-    dispatch: state.dispatch,
+    update: bindActionCreators(update, state.dispatch),
+    load: bindActionCreators(load, state.dispatch),
     domain: state.spotlight.domain,
     range: state.spotlight.range,
     indicator: state.spotlight.indicator,
@@ -26,11 +29,13 @@ import cx from 'classnames';
   })
 )
 export default class Spotlight extends Component {
+
   static propTypes = {
     mapData: PropTypes.object.isRequired,
     data: PropTypes.array.isRequired,
     entities: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired,
+    load: PropTypes.func.isRequired,
+    update: PropTypes.func.isRequired,
     indicator: PropTypes.string,
     defaultFill: PropTypes.string,
     domain: PropTypes.array,
@@ -38,11 +43,10 @@ export default class Spotlight extends Component {
     range: PropTypes.array.isRequired,
     loaded: PropTypes.bool.isRequired
   };
+
   constructor() {
     super();
     this.map = null;
-    this.mouseDownPosition = null;
-    this.mouseUpPosition = null;
     // datamap options
     this.mapOptions = {
       height: 900,
@@ -114,20 +118,22 @@ export default class Spotlight extends Component {
     const self = this;
     let svgSize = null;
     let tooltipSize = null;
+    let mouseDownPosition = null;
+    let mouseUpPosition = null;
     datamap.svg.selectAll('.datamaps-subunit')
     .on('mousedown', () => {
-      this.mouseDownPosition = d3.mouse(datamap.svg.node());
+      mouseDownPosition = d3.mouse(datamap.svg.node());
     })
     .on('mouseup', (node) => {
-      this.mouseUpPosition = d3.mouse(datamap.svg.node());
+      mouseUpPosition = d3.mouse(datamap.svg.node());
       // only do something if same area is clicked
-      if (Math.abs(this.mouseDownPosition[0] - this.mouseUpPosition[0]) > 3 ||
-          Math.abs(this.mouseDownPosition[1] - this.mouseUpPosition[1]) > 3) return;
+      if (Math.abs(mouseDownPosition[0] - mouseUpPosition[0]) > 3 ||
+          Math.abs(mouseDownPosition[1] - mouseUpPosition[1]) > 3) return;
       const selected = this.props.entities.find(obj => obj.id === node.id);
       // create region / country url
       if (!selected.slug) return;
       // dsitpatch update to profile store
-      this.props.dispatch(update(selected));
+      this.props.update(selected);
       // go to district page
       browserHistory.push(`/district/${selected.slug}`);
     })
@@ -140,7 +146,7 @@ export default class Spotlight extends Component {
     .on('mouseover', function(datum) {
       const node = d3.select(this);
       tooltip.classed('hidden', false).html(self.getTipTemplate(datum));
-      svgSize = self.map.svg.node().getBoundingClientRect();
+      svgSize = datamap.svg.node().getBoundingClientRect();
       tooltipSize = tooltip.node().getBoundingClientRect();
       node.style('fill', d3.hsl(node.style('fill')).darker(0.5));
     })
@@ -153,7 +159,7 @@ export default class Spotlight extends Component {
 
   updateMapClickHandler = (indicator) =>{
     // dispatch action for new data on mouse event
-    this.props.dispatch(load(`/spotlight/${indicator}`));
+    this.props.load(`/spotlight/${indicator}`);
   }
 
   draw = () => {
