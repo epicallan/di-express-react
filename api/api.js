@@ -10,6 +10,8 @@ import PrettyError from 'pretty-error';
 const pretty = new PrettyError();
 const app = express();
 
+// if we are ever to use server side session cookies we will use redis for
+// a data store
 app.use(session({
   secret: 'react and redux rule!!!!',
   resave: false,

@@ -63,7 +63,6 @@ async function saveInitialAidData() {
  * sychronised the redis jobs so that i can close the client when they are done
  */
 export default () => {
-  console.log('starting cron jobs');
   saveInitialAidData();
   saveOptionsData();
 };

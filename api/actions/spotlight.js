@@ -1,38 +1,40 @@
 import d3 from 'd3';
-import {get} from '../utils/ApiClient';
-import {DI_API, CMS_API} from '../config';
+import {get, getFromRedis} from '../utils/ApiClient';
+import {DI_API} from '../config';
 
 class SpotlightAction {
-  getAllData(params) {
+
+  getIndicatorData(params) {
     const indicatorDataApi = `indicator?query={"concept":"${params}"}&fields={"_id":0}`;
-    const promises = [
-      get(DI_API, indicatorDataApi),
-      get(DI_API, 'reference/colorRamp'),
-      get(CMS_API, 'api/indicator/?format=json'),
-      get(DI_API, 'reference/uganda-district-entity')
-    ];
-    return Promise.all(promises);
+    return get(DI_API, indicatorDataApi);
+  }
+
+  async spotlightBaseData() {
+    const baseData = await getFromRedis('spotlight');
+    return {
+      themes: baseData.themes,
+      entities: baseData.entities
+    };
   }
 
   async spotlightData(params) {
-    const allData = await this.getAllData(params);
-    const indicatorData = allData[0].data;
-    const metaData = allData[0].meta[0];
-    const colorRamps = allData[1];
-    const scale = this.createColorScale(colorRamps, metaData);
+    const indicatorDataRaw = await this.getIndicatorData(params);
+    const indicatorData = indicatorDataRaw[0].data;
+    const metaData = indicatorDataRaw[0].meta[0];
+    const baseData = await getFromRedis('spotlight');
+    const scale = this.createColorScale(baseData.colorRamp, metaData);
     const choroplethData = this.choroplethUpdateData(indicatorData, scale);
     return {
-      // meta: metaData,
       data: choroplethData,
-      themes: allData[2],
-      entities: allData[3],
       domain: this.getIndicatorDomain(metaData),
       range: scale.range()
     };
   }
+
   getIndicatorDomain(meta) {
     return meta.range.replace(/ /g, '').split(',').map(val => parseFloat(val));
   }
+
   createColorScale(colorRamps, meta) {
     const domain = this.getIndicatorDomain(meta);
     const rampToUse = meta['global-picture-color-ramp'];
@@ -72,6 +74,10 @@ class SpotlightAction {
 
 export const spotlightAction = new SpotlightAction();
 
-export default function spotlight(req, params) {
+export function spotlight(req, params) {
   return spotlightAction.spotlightData(params);
+}
+
+export function base() {
+  return spotlightAction.spotlightBaseData();
 }
