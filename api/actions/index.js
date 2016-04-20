@@ -1,3 +1,3 @@
 export spotlight from './spotlight';
 export profile from './profile';
-export unbundling from './unbundling';
+export {oda, options} from './unbundling';

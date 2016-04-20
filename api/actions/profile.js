@@ -1,4 +1,4 @@
-import {get} from '../utils/externalApiClient';
+import {get} from '../utils/ApiClient';
 import {DI_API} from '../config';
 class ProfileAction {
   getEntities() {

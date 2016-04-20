@@ -1,5 +1,5 @@
 import d3 from 'd3';
-import {get} from '../utils/externalApiClient';
+import {get} from '../utils/ApiClient';
 import {DI_API, CMS_API} from '../config';
 
 class SpotlightAction {

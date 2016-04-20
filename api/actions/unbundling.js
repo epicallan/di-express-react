@@ -1,35 +1,22 @@
-import {get} from '../utils/externalApiClient';
-import {DI_API} from '../config';
+import {get, getFromRedis} from '../utils/ApiClient';
+import { DI_API } from '../config';
 
 class UnbundlingAction {
 
   async getOptionsData() {
-    const promises = ['entity', 'sector', 'bundle', 'channel'].
-                    map(id => get(DI_API, 'reference/' + id ));
-    return Promise.all(promises);
-  }
-
-  process0ptionsData(data) {
-    const options = {
-      sector: data[1],
-      bundle: data[2],
-      channel: data[3]
-    };
-    options['id-to'] = data[0].filter( obj => {
-      return obj['donor-recipient-type'] === 'recipient'
-      || obj['donor-recipient-type'] === 'crossover'
-      || obj['donor-recipient-type'] === 'region';
-    });
-    options['id-from'] = data[0].filter(obj => {
-      return obj['donor-recipient-type'] === 'donor'
-      || obj['donor-recipient-type'] === 'multilateral';
-    });
-    return options;
+    const data = await getFromRedis('options');
+    return new Promise((resolve) => resolve(JSON.parse(data)));
   }
 
   async getODAData({match, group}) {
+    if (group._id === '$id-to' && match['id-to'] === undefined) return this.getODAfromRedis();
     const url = this.urlBuilder('oda', { match, group});
     return get(DI_API, url);
+  }
+
+  async getODAfromRedis() {
+    const odaRaw = await getFromRedis('unbundling-initial');
+    return new Promise((resolve) => resolve(JSON.parse(odaRaw)));
   }
 
   getActiveLevelKey(group) {
@@ -55,12 +42,16 @@ class UnbundlingAction {
 
 export const unbundlingAction = new UnbundlingAction();
 
-export default async function unbundling(req) {
-  const optionsRaw = await unbundlingAction.getOptionsData();
-  const options = unbundlingAction.process0ptionsData(optionsRaw);
+export async function options() {
+  const data = await unbundlingAction.getOptionsData();
+  return data;
+}
+
+export async function oda(req) {
+  const optionsData = await unbundlingAction.getOptionsData();
   const odaRaw = await unbundlingAction.getODAData(req.body);
   const activeLevel = unbundlingAction.getActiveLevelKey(req.body.group);
-  const activeData = activeLevel ? options[activeLevel] : options['id-to'];
-  const oda = unbundlingAction.processODAData(odaRaw, activeData);
-  return {...options, oda};
+  const activeData = activeLevel ? optionsData[activeLevel] : optionsData['id-to'];
+  const data = unbundlingAction.processODAData(odaRaw, activeData);
+  return {oda: data};
 }
