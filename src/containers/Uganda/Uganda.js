@@ -1,9 +1,9 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import Helmet from 'react-helmet';
 import {isLoaded, load} from 'redux/modules/spotlight';
 import {Spotlight} from 'components';
 import { asyncConnect } from 'redux-async-connect';
-import {connect} from 'react-redux';
+// import {connect} from 'react-redux';
 
 @asyncConnect([{
   deferred: true,
@@ -13,19 +13,7 @@ import {connect} from 'react-redux';
     }
   }
 }])
-@connect(
-  state => ({
-    themes: state.spotlight.themes,
-    loaded: state.spotlight.loaded,
-    meta: state.spotlight.meta,
-  })
-)
 export default class Uganda extends Component {
-  static propTypes = {
-    themes: PropTypes.array,
-    meta: PropTypes.object,
-    loaded: PropTypes.bool,
-  };
   render() {
     return (
       <div>

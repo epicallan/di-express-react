@@ -7,18 +7,6 @@ const initialState = {
   loading: true
 };
 
-// exported for testing purposes
-export function getMapData(data) {
-  let mapData = {};
-  data.forEach(row => {
-    const obj = {};
-    obj[row.id] = row.color;
-    mapData = Object.assign({}, obj, mapData);
-  });
-  // console.log(data);
-  return mapData;
-}
-
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOAD:
@@ -27,20 +15,11 @@ export default function reducer(state = initialState, action = {}) {
         loading: true
       };
     case LOAD_SUCCESS:
-      // console.log('actions');
-      // console.log(action);
       return {
         ...state,
         loading: false,
         loaded: true,
-        indicator: action.indicator,
-        domain: action.result.domain,
-        range: action.result.range,
-        themes: action.result.themes,
-        data: action.result.data,
-        mapData: getMapData(action.result.data),
-        entities: action.result.entities,
-        error: null
+        ...action.result
       };
     case LOAD_FAIL:
       return {
@@ -48,7 +27,7 @@ export default function reducer(state = initialState, action = {}) {
         loading: false,
         loaded: false,
         data: null,
-        error: action.error
+        error: action.error || 'error loading data'
       };
     default:
       return state;
@@ -60,13 +39,15 @@ export function isLoaded(globalState) {
 }
 /**
  * performs an http request for unbundling data
- * @param  {string} indicator api-url part
+ * @param  {obj} unbundling api post request args
  * @return {object}
  */
-export function load(indicator = '/unbundling/uganda-poverty-headcount') {
+export function load(data = {
+  match: {'year': 2013},
+  group: {'_id': '$id-to', 'total': {'$sum': '$value'}}
+}) {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    indicator: indicator.split('/')[2],
-    promise: (client) => client.get(indicator)
+    promise: (client) => client.post('unbundling', {data})
   };
 }
