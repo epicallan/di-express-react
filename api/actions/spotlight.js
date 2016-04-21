@@ -8,20 +8,20 @@ class SpotlightAction {
     const indicatorDataApi = `indicator?query={"concept":"${params}"}&fields={"_id":0}`;
     return get(DI_API, indicatorDataApi);
   }
-
+  /**
+   * spotlightBaseData: resturns data that is used in all most every spotlight map
+   * such as entities & themes
+   * @return {object}
+   */
   async spotlightBaseData() {
     const baseData = await getFromRedis('spotlight');
-    return {
-      themes: baseData.themes,
-      entities: baseData.entities
-    };
+    delete baseData.colorRamp; // we dont need this key
+    return baseData;
   }
 
-  async spotlightData(params) {
-    const indicatorDataRaw = await this.getIndicatorData(params);
+  spotlightData(indicatorDataRaw, baseData ) {
     const indicatorData = indicatorDataRaw[0].data;
     const metaData = indicatorDataRaw[0].meta[0];
-    const baseData = await getFromRedis('spotlight');
     const scale = this.createColorScale(baseData.colorRamp, metaData);
     const choroplethData = this.choroplethUpdateData(indicatorData, scale);
     return {
@@ -74,10 +74,12 @@ class SpotlightAction {
 
 export const spotlightAction = new SpotlightAction();
 
-export function spotlight(req, params) {
-  return spotlightAction.spotlightData(params);
+export async function spotlight(req, params) {
+  const indicatorDataRaw = await spotlightAction.getIndicatorData(params);
+  const baseData = await getFromRedis('spotlight');
+  return spotlightAction.spotlightData(indicatorDataRaw, baseData);
 }
 
-export function base() {
+export async function base() {
   return spotlightAction.spotlightBaseData();
 }

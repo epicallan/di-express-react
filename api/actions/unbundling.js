@@ -5,7 +5,7 @@ class UnbundlingAction {
 
   async getOptionsData() {
     const data = await getFromRedis('options');
-    return new Promise((resolve) => resolve(JSON.parse(data)));
+    return new Promise((resolve) => resolve(data));
   }
 
   async getODAData({match, group}) {
@@ -16,7 +16,7 @@ class UnbundlingAction {
 
   async getODAfromRedis() {
     const odaRaw = await getFromRedis('unbundling-initial');
-    return new Promise((resolve) => resolve(JSON.parse(odaRaw)));
+    return new Promise((resolve) => resolve(odaRaw));
   }
 
   getActiveLevelKey(group) {

@@ -25,7 +25,7 @@ async function saveData() {
   return saveInRedis('spotlight', {
     colorRamp: data[0],
     themes: data[1],
-    etities: data[2]
+    entities: data[2]
   });
 }
 /**
