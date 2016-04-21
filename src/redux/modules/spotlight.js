@@ -1,18 +1,16 @@
 const LOAD = 'spotlight/LOAD';
 const LOAD_SUCCESS = 'spotlight/LOAD_SUCCESS';
 const LOAD_FAIL = 'spotlight/LOAD_FAIL';
+const BASE = 'spotlight/BASE';
+const BASE_SUCCESS = 'spotlight/BASE_SUCCESS';
+const BASE_FAIL = 'spotlight/BASE_FAIL';
 
 const initialState = {
   loaded: false,
   loading: true,
-  entities: null,
-  mapData: null,
-  indicator: null,
-  defaultFill: '#bbb',
-  domain: null,
-  range: null,
-  error: null,
-  themes: null
+  baseLoaded: false,
+  baseLoading: true,
+  defaultFill: '#bbb'
 };
 
 // exported for testing purposes
@@ -34,9 +32,12 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: true
       };
+    case BASE:
+      return {
+        ...state,
+        baseLoading: true
+      };
     case LOAD_SUCCESS:
-      // console.log('actions');
-      // console.log(action);
       return {
         ...state,
         loading: false,
@@ -44,11 +45,16 @@ export default function reducer(state = initialState, action = {}) {
         indicator: action.indicator,
         domain: action.result.domain,
         range: action.result.range,
-        themes: action.result.themes,
         data: action.result.data,
         mapData: getMapData(action.result.data),
-        entities: action.result.entities,
         error: null
+      };
+    case BASE_SUCCESS:
+      return {
+        ...state,
+        ...action.result,
+        baseLoading: false,
+        baseLoaded: true
       };
     case LOAD_FAIL:
       return {
@@ -58,6 +64,12 @@ export default function reducer(state = initialState, action = {}) {
         data: null,
         error: action.error
       };
+    case BASE_FAIL:
+      return {
+        ...state,
+        baseLoaded: false,
+        baseLoading: false
+      };
     default:
       return state;
   }
@@ -65,6 +77,9 @@ export default function reducer(state = initialState, action = {}) {
 
 export function isLoaded(globalState) {
   return globalState.spotlight && globalState.spotlight.loaded;
+}
+export function isBaseLoaded(globalState) {
+  return globalState.spotlight && globalState.spotlight.baseLoaded;
 }
 /**
  * performs an http request for spotlight data
@@ -76,5 +91,15 @@ export function load(indicator = '/spotlight/uganda-poverty-headcount') {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
     indicator: indicator.split('/')[2],
     promise: (client) => client.get(indicator)
+  };
+}
+/**
+ * loadBaseData : loads data that is used by all spotlight indicators
+ * such as the district entities and themes
+ */
+export function loadBaseData() {
+  return {
+    types: [BASE, BASE_SUCCESS, BASE_FAIL],
+    promise: (client) => client.get('/spotlight/base')
   };
 }

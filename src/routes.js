@@ -5,6 +5,7 @@ import {
     Uganda,
     NotFound,
     Profile,
+    Unbundling
   } from 'containers';
 
 export default () => {
@@ -18,9 +19,7 @@ export default () => {
       { /* Home (main) route */ }
       <IndexRoute component={Uganda} />
       <Route path="district/:name" component={Profile}/>
-      { /* TODO SEO change address bar as indicator changes  */ }
-      <Route path="indicator/:name" component={Uganda}/>
-      { /* Catch all route */ }
+      <Route path="unbundling" component={Unbundling}/>
       <Route path="*" component={NotFound} status={404} />
     </Route>
   );

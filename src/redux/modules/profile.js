@@ -8,11 +8,7 @@ const LOAD_FAIL = 'profile/LOAD_FAIL';
 
 const initialState = {
   loaded: false,
-  loading: true,
-  slug: null,
-  name: null,
-  id: null,
-  error: null
+  loading: true
 };
 
 export default function reducer(state = initialState, action = {}) {

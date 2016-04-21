@@ -42,12 +42,9 @@ class UnbundlingAction {
 
 export const unbundlingAction = new UnbundlingAction();
 
-export async function options() {
-  const data = await unbundlingAction.getOptionsData();
-  return data;
-}
 
-export async function oda(req) {
+export default async function unbundling(req, params) {
+  if (params[0] === 'options') return await unbundlingAction.getOptionsData();
   const optionsData = await unbundlingAction.getOptionsData();
   const odaRaw = await unbundlingAction.getODAData(req.body);
   const activeLevel = unbundlingAction.getActiveLevelKey(req.body.group);

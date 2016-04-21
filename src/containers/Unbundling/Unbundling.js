@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
 import Helmet from 'react-helmet';
-import {isLoaded, load} from 'redux/modules/unbundling';
+import {isLoaded, load, isOptionsLoaded, loadOptions} from 'redux/modules/unbundling';
 import { asyncConnect } from 'redux-async-connect';
 // import {connect} from 'react-redux';
 
 @asyncConnect([{
   deferred: true,
   promise: ({store: {dispatch, getState}}) => {
-    if (!isLoaded(getState())) {
-      return dispatch(load());
-    }
+    const promises = [];
+
+    if (!isLoaded(getState())) promises.push(dispatch(load()));
+
+    if (!isOptionsLoaded(getState())) promises.push(dispatch(loadOptions()));
+
+    return Promise.all(promises);
   }
 }])
 export default class Uganda extends Component {

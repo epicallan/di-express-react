@@ -1,10 +1,15 @@
 const LOAD = 'unbundling/LOAD';
 const LOAD_SUCCESS = 'unbundling/LOAD_SUCCESS';
 const LOAD_FAIL = 'unbundling/LOAD_FAIL';
+const OPTION = 'unbundling/OPTION';
+const OPTION_SUCCESS = 'unbundling/OPTION_SUCCESS';
+const OPTION_FAIL = 'unbundling/OPTION_FAIL';
 
 const initialState = {
   loaded: false,
-  loading: true
+  loading: true,
+  optionLoaded: false,
+  optionLoading: true
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -14,11 +19,23 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: true
       };
+    case OPTION:
+      return {
+        ...state,
+        optionLoading: true
+      };
     case LOAD_SUCCESS:
       return {
         ...state,
         loading: false,
         loaded: true,
+        ...action.result
+      };
+    case OPTION_SUCCESS:
+      return {
+        ...state,
+        optionLoading: false,
+        optionloaded: true,
         ...action.result
       };
     case LOAD_FAIL:
@@ -29,6 +46,13 @@ export default function reducer(state = initialState, action = {}) {
         data: null,
         error: action.error || 'error loading data'
       };
+    case OPTION_FAIL:
+      return {
+        ...state,
+        optionLoading: false,
+        optionloaded: false,
+        error: action.error || 'error loading options data'
+      };
     default:
       return state;
   }
@@ -36,6 +60,9 @@ export default function reducer(state = initialState, action = {}) {
 
 export function isLoaded(globalState) {
   return globalState.unbundling && globalState.unbundling.loaded;
+}
+export function isOptionsLoaded(globalState) {
+  return globalState.unbundling && globalState.unbundling.optionLoaded;
 }
 /**
  * performs an http request for unbundling data
@@ -49,5 +76,12 @@ export function load(data = {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
     promise: (client) => client.post('unbundling', {data})
+  };
+}
+
+export function loadOptions() {
+  return {
+    types: [OPTION, OPTION_SUCCESS, OPTION_FAIL],
+    promise: (client) => client.post('unbundling/options')
   };
 }

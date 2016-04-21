@@ -6,7 +6,6 @@ class SpotlightAction {
 
   getIndicatorData(params) {
     const indicatorDataApi = `indicator?query={"concept":"${params}"}&fields={"_id":0}`;
-    // console.log(indicatorDataApi);
     return get(DI_API, indicatorDataApi);
   }
   /**
@@ -75,12 +74,9 @@ class SpotlightAction {
 
 export const spotlightAction = new SpotlightAction();
 
-export async function spotlight(req, params) {
+export default async function spotlight(req, params) {
+  if (params[0] === 'base') return spotlightAction.spotlightBaseData();
   const indicatorDataRaw = await spotlightAction.getIndicatorData(params);
   const baseData = await getFromRedis('spotlight');
   return spotlightAction.spotlightData(indicatorDataRaw, baseData);
-}
-
-export async function base() {
-  return spotlightAction.spotlightBaseData();
 }
