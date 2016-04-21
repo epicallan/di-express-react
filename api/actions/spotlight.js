@@ -6,6 +6,7 @@ class SpotlightAction {
 
   getIndicatorData(params) {
     const indicatorDataApi = `indicator?query={"concept":"${params}"}&fields={"_id":0}`;
+    // console.log(indicatorDataApi);
     return get(DI_API, indicatorDataApi);
   }
   /**
@@ -20,8 +21,8 @@ class SpotlightAction {
   }
 
   spotlightData(indicatorDataRaw, baseData ) {
-    const indicatorData = indicatorDataRaw[0].data;
-    const metaData = indicatorDataRaw[0].meta[0];
+    const indicatorData = indicatorDataRaw.data;
+    const metaData = indicatorDataRaw.meta[0];
     const scale = this.createColorScale(baseData.colorRamp, metaData);
     const choroplethData = this.choroplethUpdateData(indicatorData, scale);
     return {
