@@ -9,9 +9,9 @@ import { asyncConnect } from 'redux-async-connect';
   promise: ({store: {dispatch, getState}}) => {
     const promises = [];
 
-    if (!isLoaded(getState())) promises.push(dispatch(load()));
+    if (!isLoaded(getState())) promises.push(dispatch(load())); // getting unbundling data
 
-    if (!isOptionsLoaded(getState())) promises.push(dispatch(loadOptions()));
+    if (!isOptionsLoaded(getState())) promises.push(dispatch(loadOptions())); // getting unbundling data options
 
     return Promise.all(promises);
   }
