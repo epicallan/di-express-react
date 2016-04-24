@@ -30,5 +30,5 @@ export function saveInRedis(key, data) {
 
 // kill redis connection incase application exits
 process.on('exit', () => {
-  client.close();
+  client.quit();
 });

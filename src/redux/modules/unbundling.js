@@ -9,7 +9,8 @@ const initialState = {
   loaded: false,
   loading: true,
   optionLoaded: false,
-  optionLoading: true
+  optionLoading: true,
+  data: null
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -29,7 +30,7 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        ...action.result
+        data: action.result
       };
     case OPTION_SUCCESS:
       return {

@@ -2,11 +2,11 @@ import d3 from 'd3-geo-projection';
 import React, {Component, PropTypes} from 'react';
 
 export default class TreeMap extends Component {
+
   static propTypes = {
-    data: PropTypes.array.isRequired,
-    width: PropTypes.number,
-    height: PropTypes.number
+    data: PropTypes.object.isRequired
   }
+
   componentDidMount() {
     this.draw();
   }
@@ -58,28 +58,30 @@ export default class TreeMap extends Component {
 
   positionNode() {
     this.style({
-      left: val => val.x + 'px',
-      top: val => val.y + 'px',
-      width: val => Math.max(0, val.valx - 0) + 'px',
-      height: val => Math.max(0, val.valy - 0) + 'px'
+      left: obj => obj.x + 'px',
+      top: obj => obj.y + 'px',
+      width: obj => Math.max(0, obj.x - 0) + 'px',
+      height: obj => Math.max(0, obj.y - 0) + 'px'
     });
   }
 
-  draw = () =>{
+  draw = () => {
     // const colorScale = d3.scale.category20c();
-    const root = d3.select(this.refs.treeMapHolder);
+    const treeMapHolder = d3.select(this.refs.treeMapHolder);
     // Make sure we have a clean slate
-    root.selectAll('.node').remove();
-    this.treeMapLayout = d3.select.datum(root).selectAll('.node')
+    treeMapHolder.selectAll('.node').remove();
+    this.treeMapLayout = treeMapHolder.datum(this.props.data).selectAll('.node')
       .data(this.treemap.nodes)
       .enter().append('div')
       .attr('class', this.getNodeClass)
       .call(this.positionNode)
       .html(this.getNodeContet);
   }
+
   render() {
+    const styles = require('./TreeMap.scss');
     return (
-      <section ref = "treeMapHolder" />
+      <section ref = "treeMapHolder" className={styles.treeMapHolder} />
     );
   }
 }

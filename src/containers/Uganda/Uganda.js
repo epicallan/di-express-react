@@ -6,7 +6,6 @@ import { asyncConnect } from 'redux-async-connect';
 // import {connect} from 'react-redux';
 
 @asyncConnect([{
-  deferred: true,
   promise: ({store: {dispatch, getState}}) => {
     const promises = [];
     if (!isLoaded(getState())) promises.push(dispatch(load()));

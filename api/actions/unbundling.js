@@ -27,6 +27,7 @@ class UnbundlingAction {
     // fuse options entity data with the oda data
     return odaData.data.map( obj => {
       const entity = activeData.find(data => data.id === obj._id);
+      obj.value = obj.total;
       return Object.assign({}, obj, entity);
     });
   }
@@ -50,5 +51,5 @@ export default async function unbundling(req, params) {
   const activeLevel = unbundlingAction.getActiveLevelKey(req.body.group);
   const activeData = activeLevel ? optionsData[activeLevel] : optionsData['id-to'];
   const data = unbundlingAction.processODAData(odaRaw, activeData);
-  return {oda: data};
+  return {name: 'oda', children: data};
 }

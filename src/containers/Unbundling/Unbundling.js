@@ -1,14 +1,13 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import Helmet from 'react-helmet';
 import {isLoaded, load, isOptionsLoaded, loadOptions} from 'redux/modules/unbundling';
 import { asyncConnect } from 'redux-async-connect';
-// import {connect} from 'react-redux';
+import {TreeMap} from '../../components';
+import {connect} from 'react-redux';
 
 @asyncConnect([{
-  deferred: true,
   promise: ({store: {dispatch, getState}}) => {
     const promises = [];
-
     if (!isLoaded(getState())) promises.push(dispatch(load())); // getting unbundling data
 
     if (!isOptionsLoaded(getState())) promises.push(dispatch(loadOptions())); // getting unbundling data options
@@ -16,13 +15,26 @@ import { asyncConnect } from 'redux-async-connect';
     return Promise.all(promises);
   }
 }])
-export default class Uganda extends Component {
+@connect(
+  state => ({
+    data: state.unbundling.data
+  })
+)
+export default class Unbundling extends Component {
+  static propTypes = {
+    data: PropTypes.object.isRequired
+  }
+
+  componentDidMount() {
+    console.log(this.props.data);
+  }
+
   render() {
     return (
       <div>
         <Helmet title="unbundling Aid"/>
         <h3> unbundling Aid</h3>
-        <p> Content goes here</p>
+        <TreeMap data = {this.props.data} />
       </div>
     );
   }
