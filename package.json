@@ -1,5 +1,5 @@
 {
-  "name": "react-redux-universal-hot-example",
+  "name": "di-datahub",
   "description": "Example of an isomorphic (universal) webapp using react redux and hot reloading",
   "author": "http://github.com/epicallan",
   "license": "MIT",

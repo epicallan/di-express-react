@@ -10,17 +10,15 @@ export default class TreeMap extends Component {
   }
   constructor(props) {
     super(props);
-    this.node = null; // d3 instance of a treemap
+    this.node = null; // d3 instance of a treemap node (the square box)
     this.treeMapHolder = null; // will contain d3 object of the treeMapHolder
   }
 
   componentDidMount() {
-    console.log('in TreeMap', this.props.data);
     this.draw();
   }
 
   getNodeClass(obj) {
-    // TODO may need some changes to cater for various use cases
     const type = 'region';
     const code = obj.region;
     return 'node ' + type + '-' + code;
@@ -43,10 +41,13 @@ export default class TreeMap extends Component {
     } else if (ratio > 0.001 ) {
       template = '<div class="name name-4">' + obj.name + '</div>';
     }
-    // console.log('template', template);
     return template;
   }
-
+  /**
+   * positionNode  positions treemap nodes
+   * this function is called on each node by the d3 treemap function
+   * @return {object}
+   */
   positionNode() {
     this.style({
       left: obj => obj.x + 'px',
@@ -55,8 +56,8 @@ export default class TreeMap extends Component {
       height: obj => Math.max(0, obj.dy - 0) + 'px',
     });
   }
+
   niceNum(input, precision) {
-    // var numPrefix, humanPrefixes, numValue, roundedValue;
     if (input === 'N/A') return input;
 
     if (input < 1000) return d3.round(input, precision);
@@ -74,11 +75,10 @@ export default class TreeMap extends Component {
     .value(obj => obj.value);
 
   resize = (forced) => {
-    // console.log('treeMapHolder: ', this.treeMapHolder);
     const parentWidth = this.treeMapHolder.node().parentNode.offsetWidth;
     // Treemap gets the size from it's parent, if it didn't change, then no need for resize
     if (forced !== true) return;
-    const margin = {top: 50, right: 10, bottom: 10, left: 10};
+    const margin = {top: 50, right: 20, bottom: 0, left: 20};
     const width = parentWidth;
     let height = window.innerHeight - 200 || 340 - margin.top - margin.bottom;
     if (height > 550) height = 550;
@@ -95,7 +95,7 @@ export default class TreeMap extends Component {
         .size([width, height])
         .ratio(height / width * 0.9 * (1 + Math.sqrt(5)));
 
-    this.node
+    this.node // May need to be refactored TODO
         .data(this.treemap.nodes)
         .call(this.positionNode)
         .attr('class', this.getNodeClass)
@@ -103,17 +103,14 @@ export default class TreeMap extends Component {
   }
 
   draw = () => {
-    // const colorScale = d3.scale.category20c();
     this.treeMapHolder = d3.select(this.refs.treeMapHolder);
     // Make sure we have a clean slate
     this.treeMapHolder.selectAll('.node').remove();
-    this.node = this.treeMapHolder.datum(this.props.data).selectAll('.node')
+
+    this.node = this.treeMapHolder.datum(this.props.data).selectAll('.node') // TODO needs some refactoring
       .data(this.treemap.nodes)
-      .enter().append('div')
-      .attr('class', this.getNodeClass)
-      .call(this.positionNode)
-      .html(this.getNodeContent);
-    this.resize(true);
+      .enter().append('div');
+    this.resize(true);  // completes setting up the treemap node and treemap layout settings
   }
 
   render() {

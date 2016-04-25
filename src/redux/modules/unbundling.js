@@ -1,6 +1,10 @@
 const LOAD = 'unbundling/LOAD';
 const LOAD_SUCCESS = 'unbundling/LOAD_SUCCESS';
 const LOAD_FAIL = 'unbundling/LOAD_FAIL';
+const LOAD_COMPARISON = 'unbundling/LOAD_COMPARISON';
+const COMPARISON_STOP = 'unbundling/COMPARISON_STOP';
+const LOAD_COMPARISON_SUCCESS = 'unbundling/LOAD_COMPARISON_SUCCESS';
+const LOAD_COMPARISON_FAIL = 'unbundling/LOAD_COMPARISON_FAIL';
 const OPTION = 'unbundling/OPTION';
 const OPTION_SUCCESS = 'unbundling/OPTION_SUCCESS';
 const OPTION_FAIL = 'unbundling/OPTION_FAIL';
@@ -10,7 +14,9 @@ const initialState = {
   loading: true,
   optionLoaded: false,
   optionLoading: true,
-  data: null
+  comparisonLoading: false,
+  comparisonLoaded: false,
+  chartCount: 1
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -19,6 +25,11 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         loading: true
+      };
+    case LOAD_COMPARISON:
+      return {
+        ...state,
+        comparisonLoading: true
       };
     case OPTION:
       return {
@@ -31,6 +42,14 @@ export default function reducer(state = initialState, action = {}) {
         loading: false,
         loaded: true,
         data: action.result
+      };
+    case LOAD_COMPARISON_SUCCESS:
+      return {
+        ...state,
+        chartCount: 2,
+        comparisonLoading: false,
+        comparisonLoaded: true,
+        comparisonData: action.result
       };
     case OPTION_SUCCESS:
       return {
@@ -47,12 +66,26 @@ export default function reducer(state = initialState, action = {}) {
         data: null,
         error: action.error || 'error loading data'
       };
+    case LOAD_COMPARISON_FAIL:
+      return {
+        ...state,
+        chartCount: 1,
+        comparisonLoaded: false,
+        comparisonLoading: false,
+        comparisonData: null,
+        error: action.error || 'error loading data'
+      };
     case OPTION_FAIL:
       return {
         ...state,
         optionLoading: false,
         optionloaded: false,
         error: action.error || 'error loading options data'
+      };
+    case COMPARISON_STOP:
+      return {
+        ...state,
+        chartCount: 1,
       };
     default:
       return state;

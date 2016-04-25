@@ -1,110 +1,91 @@
 .node {
-    border: 1px solid #f1f1f1;
-    line-height: 16px;
-    overflow: hidden;
-    position: absolute;
-    text-indent: 2px;
-    cursor: pointer;
-    padding: 0;
-    color: #fff;
-    font-size: 12px;
-    background: #1f1e1d;
+  border: 1px solid #f1f1f1;
+  line-height: 16px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 2px;
+  cursor: pointer;
+  padding: 0;
+  color: #fff;
+  font-size: 12px;
+  background: #1f1e1d;
 }
 .region-north-central-america {
-    background: #0095cb;
+  background: #0095cb;
 }
-//.node:hover { background-color: @gray-darker; }
-
+//.node:hover { background-color: $gray-darker; }
 .treeMapHolder {
   position: relative;
 }
-
-
-
-.Treemap-value-container{
+.Treemap-value-container {
   display: inline-block;
   padding: 0 10px;
   text-align: left;
   background: #eee;
-  i{
-    color:#999;
+  i {
+    color: #999;
   }
-  .Treemap-value{
+  .Treemap-value {
     font-size: 18px;
     font-weight: bold;
   }
 }
-
-.oda-story{
-  .btn--on-light{
+.oda-story {
+  .btn--on-light {
     background-color: black;
   }
 }
-
-
-  .back-button-container{
-    display: none;
-  }
-
-  .name{
-    font-size: 15px;
-    margin-top: 20px;
-  }
-  .name, .number{
-    margin-left:10px;
-  }
-
-  .number{
-    font-size: 15px;
-    margin-top: 5px;
-  }
-
-  .number-2{
-    font-size: 12px;
-    margin-top: 2px;
-  }
-
-  .name-1{
-    font-weight: bold;
-    font-size: 18px;
-  }
-
-  .name-2{
-    font-size: 15px;
-    font-weight: bold;
-    margin-top:6px;
-    margin-left:6px;
-  }
-
-  .number-2{
-    margin-left:6px;
-  }
-
-  .name-3{
-    font-size: 13px;
-    margin-top:2px;
-    margin-left:2px;
-  }
-
-  .name-4{
-    font-weight: normal;
-    font-weight: 300;
-    font-size:9px;
-    margin-top:2px;
-    margin-left:2px;
-    line-height: 11px;
-  }
-
-.treemap:hover{
-
-  .back-button-container{
+.back-button-container {
+  display: none;
+}
+.name {
+  font-size: 15px;
+  margin-top: 20px;
+}
+.name,
+.number {
+  margin-left: 10px;
+}
+.number {
+  font-size: 15px;
+  margin-top: 5px;
+}
+.number-2 {
+  font-size: 12px;
+  margin-top: 2px;
+}
+.name-1 {
+  font-weight: bold;
+  font-size: 18px;
+}
+.name-2 {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 6px;
+  margin-left: 6px;
+}
+.number-2 {
+  margin-left: 6px;
+}
+.name-3 {
+  font-size: 13px;
+  margin-top: 2px;
+  margin-left: 2px;
+}
+.name-4 {
+  font-weight: normal;
+  font-weight: 300;
+  font-size: 9px;
+  margin-top: 2px;
+  margin-left: 2px;
+  line-height: 11px;
+}
+.treemap:hover {
+  .back-button-container {
     display: block;
   }
-
 }
-
-
-.treemap--settings-holder{
+.treemap--settings-holder {
   text-align: center;
   padding-right: 80px;
   ul {
@@ -116,20 +97,18 @@
     display: inline-block;
     padding: 5px;
     position: relative;
-    color:#999;
+    color: #999;
     font-size: 22px;
-
-    &.selected, &.active{
-      color:#333;
+    &.active,
+    &.selected {
+      color: #333;
     }
   }
-
-  &.col-md-6{
+  &.col-md-6 {
     .settings--item {
       font-size: 15px;
     }
   }
-
   .settings--sort_item {
     border: 1px dotted transparent;
   }
@@ -150,22 +129,19 @@
     text-decoration: underline;
     font-weight: 900;
   }
-  .settings--item-level-name{
+  .settings--item-level-name {
     font-size: 11px;
   }
-
-  .select-holder{
+  .select-holder {
     position: absolute;
-    width:200px;
+    width: 200px;
     background: #fff;
     padding: 20px;
     z-index: 1000000;
-
     i {
       font-style: normal;
       font-weight: 700;
     }
-
     .close {
       position: absolute;
       top: 5px;
@@ -174,12 +150,10 @@
     }
   }
 }
-
-.treemap-sentence{
+.treemap-sentence {
   text-align: center;
   padding: 10px 50px;
 }
-
 .oda--intro {
   position: absolute;
   z-index: 2;
@@ -191,9 +165,58 @@
   opacity: 1;
   transition: all ease-in 0.25s;
   display: block;
-
 }
-
 .oda--intro.ng-hide {
   opacity: 0;
 }
+
+.region-europe  { background:lighten(purple, 20%); } // Europe
+.region-north-of-sahara { background:green;    } // Africa (North of Sahara)
+.region-south-of-sahara { background:red;      } // Africa (South of Sahara)
+.region-north-central-america { background:blue; } // America (North & Central America)
+.region-south-america { background:purple;               } // America (South America)
+.region-middle-east { background:navy;                 } // Asia (Middle East Asia)
+.region-south-central-asia { background:lighten(blue, 20%);   } // Asia (South & Central Asia)
+.region-east-asia { background:orange;               } // Asia (Far East Asia)
+.region-oceania { background:lighten(blue, 20%);   } // Oceania
+.region-999,
+.region-unspecified { background: darken(gray, 20%)              } // Unspecified
+
+.bundle-cash-loan-equity  { background:red;                   } // Cash (loan/equity)
+.bundle-cash-grant  { background:green;                 } // Cash grant
+.bundle-commodities-food  { background:blue;                  } // Commodities and food
+.bundle-gpgs-nngos  { background:orange;                } // GPGs and NNGOs
+.bundle-mixed-project-aid  { background:purple;                } // Mixed project aid
+.bundle-non-transfer  { background:navy;                  } // Non-transfer
+.bundle-technical-ooperation  { background:lighten(blue, 20%);    } // Technical cooperation
+.bundle-export-credit  { background:lighten(blue, 40%);    } // Technical cooperation
+
+.oof-bundle-oof-grant{ background:green; }
+.oof-bundle-oof-loan{ background:orange; }
+.oof-bundle-oof-export-credit{ background:lighten(blue, 40%); }
+
+.sector-education  { background:red;                   } // Education
+.sector-health  { background:green;                 } // Health
+.sector-water-and-sanitation  { background:blue;                  } // Water and Sanitation
+.sector-governance-and-security  { background:orange;                } // Governance and Security
+.sector-other-social-services  { background:purple;                } // Other Social Services
+.sector-infrastructure  { background:navy;                  } // Infrastructure
+.sector-banking-and-business  { background:lighten(red, 20%);     } // Banking and Business
+.sector-agriculture-and-food-security  { background:lighten(green, 20%);   } // Agriculture and Food Security
+.sector-industry-and-trade  { background:lighten(blue, 20%);    } // Industry and Trade
+.sector-environment  { background:lighten(orange, 20%);  } // Environment
+.sector-other  { background:lighten(purple, 20%);  } // Other
+.sector-general-budget-support  { background:lighten(navy, 20%);    } // General Budget Support
+.sector-debt-relief  { background:darken(red, 20%);      } // Debt Relief
+.sector-humanitarian  { background:darken(red, 20%);      } // Humanitarian
+
+.channel-public-sector-unknown { background:red;                   } // Public-sector (unknown country)
+.channel-public-sector-donor { background:green;                 } // Public-sector (Donor government)
+.channel-public-sector-recipient { background:blue;                  } // Public-sector (Recipient government)
+.channel-ngo-unknown { background:orange;                } // NGO (unknown country)
+.channel-ngo-donor { background:purple;                } // NGO (Donor-country-based)
+.channel-ngo-recipient { background:navy;                  } // NGO (Recipient-country-based)
+.channel-public-private-partnership { background:lighten(red, 20%);     } // Punlic-private partnership
+.channel-multilateral { background:lighten(green, 20%);   } // Multilateral
+.channel-other { background:lighten(blue, 20%);    } // Other (Private sector, think-tank, etc)
+.channel-unspecified { background:lighten(orange, 20%);  } // Unspecified

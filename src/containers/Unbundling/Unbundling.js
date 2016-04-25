@@ -22,14 +22,37 @@ import {connect} from 'react-redux';
 )
 export default class Unbundling extends Component {
   static propTypes = {
-    data: PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
+    comparisonData: PropTypes.object,
+    chartCount: PropTypes.number
   }
+
+  OnStopComparison = ()=>{
+    // hide comparisonContainer element from dom
+    this.refs.comparisonContainer.setAttribute('style', 'display: none');
+  }
+
   render() {
+    const chartClass = this.props.chartCount === 2 ? 'col-md-6' : 'col-md-12';
     return (
       <div>
         <Helmet title="unbundling Aid"/>
-        <h3> unbundling Aid</h3>
-        <TreeMap data = {this.props.data} />
+        <h3> unbundling Aid </h3>
+        <section className= "row">
+          <div className = {chartClass} >
+            <TreeMap data = {this.props.data} />
+          </div>
+          {(() => {
+            // on comparison we need another chart
+            if (this.props.chartCount === 2) {
+              return (
+                <div className= "col-md-6" ref="comparisonContainer">
+                  <TreeMap data = {this.props.comparisonData} />
+                </div>
+              );
+            }
+          })()}
+        </section>
       </div>
     );
   }
