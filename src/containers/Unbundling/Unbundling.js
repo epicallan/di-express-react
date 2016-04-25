@@ -29,7 +29,7 @@ export default class Unbundling extends Component {
       <div>
         <Helmet title="unbundling Aid"/>
         <h3> unbundling Aid</h3>
-        <TreeMap data = {this.props.data} width = {700} height= {500}/>
+        <TreeMap data = {this.props.data} />
       </div>
     );
   }

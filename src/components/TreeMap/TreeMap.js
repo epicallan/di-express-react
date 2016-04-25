@@ -6,9 +6,12 @@ import React, {Component, PropTypes} from 'react';
 export default class TreeMap extends Component {
 
   static propTypes = {
-    data: PropTypes.object.isRequired,
-    width: PropTypes.number,
-    height: PropTypes.number
+    data: PropTypes.object.isRequired
+  }
+  constructor(props) {
+    super(props);
+    this.node = null; // d3 instance of a treemap
+    this.treeMapHolder = null; // will contain d3 object of the treeMapHolder
   }
 
   componentDidMount() {
@@ -52,11 +55,6 @@ export default class TreeMap extends Component {
       height: obj => Math.max(0, obj.dy - 0) + 'px',
     });
   }
-
-  node = null;
-
-  treeMapHolder = null;
-
   niceNum(input, precision) {
     // var numPrefix, humanPrefixes, numValue, roundedValue;
     if (input === 'N/A') return input;
