@@ -1,0 +1,199 @@
+.node {
+    border: 1px solid #f1f1f1;
+    line-height: 16px;
+    overflow: hidden;
+    position: absolute;
+    text-indent: 2px;
+    cursor: pointer;
+    padding: 0;
+    color: #fff;
+    font-size: 12px;
+    background: #1f1e1d;
+}
+.region-north-central-america {
+    background: #0095cb;
+}
+//.node:hover { background-color: @gray-darker; }
+
+.treeMapHolder {
+  position: relative;
+}
+
+
+
+.Treemap-value-container{
+  display: inline-block;
+  padding: 0 10px;
+  text-align: left;
+  background: #eee;
+  i{
+    color:#999;
+  }
+  .Treemap-value{
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
+
+.oda-story{
+  .btn--on-light{
+    background-color: black;
+  }
+}
+
+
+  .back-button-container{
+    display: none;
+  }
+
+  .name{
+    font-size: 15px;
+    margin-top: 20px;
+  }
+  .name, .number{
+    margin-left:10px;
+  }
+
+  .number{
+    font-size: 15px;
+    margin-top: 5px;
+  }
+
+  .number-2{
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .name-1{
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .name-2{
+    font-size: 15px;
+    font-weight: bold;
+    margin-top:6px;
+    margin-left:6px;
+  }
+
+  .number-2{
+    margin-left:6px;
+  }
+
+  .name-3{
+    font-size: 13px;
+    margin-top:2px;
+    margin-left:2px;
+  }
+
+  .name-4{
+    font-weight: normal;
+    font-weight: 300;
+    font-size:9px;
+    margin-top:2px;
+    margin-left:2px;
+    line-height: 11px;
+  }
+
+.treemap:hover{
+
+  .back-button-container{
+    display: block;
+  }
+
+}
+
+
+.treemap--settings-holder{
+  text-align: center;
+  padding-right: 80px;
+  ul {
+    display: inline;
+    padding: 0;
+  }
+  .settings--item {
+    list-style: none;
+    display: inline-block;
+    padding: 5px;
+    position: relative;
+    color:#999;
+    font-size: 22px;
+
+    &.selected, &.active{
+      color:#333;
+    }
+  }
+
+  &.col-md-6{
+    .settings--item {
+      font-size: 15px;
+    }
+  }
+
+  .settings--sort_item {
+    border: 1px dotted transparent;
+  }
+  .settings--sort_item:hover {
+    cursor: move;
+    background: #fafafa;
+    border: 1px dotted #ccc;
+  }
+  .settings--sort_item.disabled {
+    cursor: default;
+  }
+  .drag-handle {
+    position: relative;
+    top: 3px;
+  }
+  strong {
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 900;
+  }
+  .settings--item-level-name{
+    font-size: 11px;
+  }
+
+  .select-holder{
+    position: absolute;
+    width:200px;
+    background: #fff;
+    padding: 20px;
+    z-index: 1000000;
+
+    i {
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    .close {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      cursor: pointer;
+    }
+  }
+}
+
+.treemap-sentence{
+  text-align: center;
+  padding: 10px 50px;
+}
+
+.oda--intro {
+  position: absolute;
+  z-index: 2;
+  height: 580px;
+  background-color: #BA0C2F;
+  width: 100%;
+  color: white;
+  padding-top: 100px;
+  opacity: 1;
+  transition: all ease-in 0.25s;
+  display: block;
+
+}
+
+.oda--intro.ng-hide {
+  opacity: 0;
+}

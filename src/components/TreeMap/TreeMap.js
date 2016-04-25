@@ -1,13 +1,18 @@
 import d3 from 'd3-geo-projection';
 import React, {Component, PropTypes} from 'react';
 
+/* eslint-disable id-length*/
+
 export default class TreeMap extends Component {
 
   static propTypes = {
-    data: PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
+    width: PropTypes.number,
+    height: PropTypes.number
   }
 
   componentDidMount() {
+    console.log('in TreeMap', this.props.data);
     this.draw();
   }
 
@@ -18,7 +23,7 @@ export default class TreeMap extends Component {
     return 'node ' + type + '-' + code;
   }
 
-  getNodeContet(obj) {
+  getNodeContent = (obj) => {
     let template = null;
     if (!obj.parent || obj.children) return null;
 
@@ -35,8 +40,22 @@ export default class TreeMap extends Component {
     } else if (ratio > 0.001 ) {
       template = '<div class="name name-4">' + obj.name + '</div>';
     }
+    // console.log('template', template);
     return template;
   }
+
+  positionNode() {
+    this.style({
+      left: obj => obj.x + 'px',
+      top: obj => obj.y + 'px',
+      width: obj => Math.max(0, obj.dx - 0) + 'px',
+      height: obj => Math.max(0, obj.dy - 0) + 'px',
+    });
+  }
+
+  node = null;
+
+  treeMapHolder = null;
 
   niceNum(input, precision) {
     // var numPrefix, humanPrefixes, numValue, roundedValue;
@@ -53,35 +72,58 @@ export default class TreeMap extends Component {
 
   treemap = d3.layout.treemap()
     .sticky(false)
-    .sort((prev, current) => prev.value - current.value)
-    .value(val => val.size);
+    .sort((a, b) => a.value - b.value)
+    .value(obj => obj.value);
 
-  positionNode() {
-    this.style({
-      left: obj => obj.x + 'px',
-      top: obj => obj.y + 'px',
-      width: obj => Math.max(0, obj.x - 0) + 'px',
-      height: obj => Math.max(0, obj.y - 0) + 'px'
-    });
+  resize = (forced) => {
+    // console.log('treeMapHolder: ', this.treeMapHolder);
+    const parentWidth = this.treeMapHolder.node().parentNode.offsetWidth;
+    // Treemap gets the size from it's parent, if it didn't change, then no need for resize
+    if (forced !== true) return;
+    const margin = {top: 50, right: 10, bottom: 10, left: 10};
+    const width = parentWidth;
+    let height = window.innerHeight - 200 || 340 - margin.top - margin.bottom;
+    if (height > 550) height = 550;
+
+    this.treeMapHolder
+        .style({
+          left: margin.left + 'px',
+          top: margin.top + 'px',
+          width: (width + margin.left + margin.right) + 'px',
+          height: (height + margin.top + margin.bottom) + 'px'
+        });
+
+    this.treemap
+        .size([width, height])
+        .ratio(height / width * 0.9 * (1 + Math.sqrt(5)));
+
+    this.node
+        .data(this.treemap.nodes)
+        .call(this.positionNode)
+        .attr('class', this.getNodeClass)
+        .html(this.getNodeContent);
   }
 
   draw = () => {
     // const colorScale = d3.scale.category20c();
-    const treeMapHolder = d3.select(this.refs.treeMapHolder);
+    this.treeMapHolder = d3.select(this.refs.treeMapHolder);
     // Make sure we have a clean slate
-    treeMapHolder.selectAll('.node').remove();
-    this.treeMapLayout = treeMapHolder.datum(this.props.data).selectAll('.node')
+    this.treeMapHolder.selectAll('.node').remove();
+    this.node = this.treeMapHolder.datum(this.props.data).selectAll('.node')
       .data(this.treemap.nodes)
       .enter().append('div')
       .attr('class', this.getNodeClass)
       .call(this.positionNode)
-      .html(this.getNodeContet);
+      .html(this.getNodeContent);
+    this.resize(true);
   }
 
   render() {
     const styles = require('./TreeMap.scss');
     return (
-      <section ref = "treeMapHolder" className={styles.treeMapHolder} />
+    <div className ={styles.treeContainer}>
+      <section ref = "treeMapHolder" className="treeMapHolder" />
+    </div>
     );
   }
 }

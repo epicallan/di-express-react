@@ -24,17 +24,12 @@ export default class Unbundling extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired
   }
-
-  componentDidMount() {
-    console.log(this.props.data);
-  }
-
   render() {
     return (
       <div>
         <Helmet title="unbundling Aid"/>
         <h3> unbundling Aid</h3>
-        <TreeMap data = {this.props.data} />
+        <TreeMap data = {this.props.data} width = {700} height= {500}/>
       </div>
     );
   }

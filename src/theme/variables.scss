@@ -27,6 +27,7 @@ $navbar-default-bg: #ba0c2f;
 
 $navbar-default-link-hover-bg:  darken($navbar-default-bg, 6.5%) !default;
 $navbar-default-link-hover-color:  $link-color;
+$navbar-default-link-active-color:  $link-color;
 
 $nav-pills-border-radius: 0px;
 $nav-pills-active-link-hover-bg: $primary-black;
