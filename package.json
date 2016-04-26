@@ -115,7 +115,6 @@
     "d3-geo-projection": "github:epicallan/d3-geo-projection",
     "datamaps": "github:markmarkoh/datamaps#window-to-global",
     "express": "^4.13.3",
-    "express-session": "^1.12.1",
     "file-loader": "^0.8.5",
     "hoist-non-react-statics": "^1.0.3",
     "http-proxy": "^1.12.0",

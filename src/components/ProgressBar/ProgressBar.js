@@ -18,9 +18,6 @@ export default class ProgressBar extends Component {
     intervalTime: (Math.random() * 500)
   };
 
-  componentWillUpdate() {
-  }
-
   loadProgress = () => {
     let percent = this.state.percent;
     if (this.props.loaded === true) percent = 100;

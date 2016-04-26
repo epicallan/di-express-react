@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import Helmet from 'react-helmet';
 import {isLoaded, load, isOptionsLoaded, loadOptions} from 'redux/modules/unbundling';
 import { asyncConnect } from 'redux-async-connect';
-import {TreeMap} from '../../components';
+import {TreeMap, UnbundlingMenu} from '../../components';
 import {connect} from 'react-redux';
 
 @asyncConnect([{
@@ -37,7 +37,9 @@ export default class Unbundling extends Component {
     return (
       <div>
         <Helmet title="unbundling Aid"/>
-        <h3> unbundling Aid </h3>
+        <header className= "row">
+          <UnbundlingMenu />
+        </header>
         <section className= "row">
           <div className = {chartClass} >
             <TreeMap data = {this.props.data} />

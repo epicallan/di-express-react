@@ -10,3 +10,4 @@ export Themes from './Themes/Themes';
 export District from './District/District';
 export ProgressBar from './ProgressBar/ProgressBar';
 export TreeMap from './TreeMap/TreeMap';
+export UnbundlingMenu from './UnbundlingMenu/UnbundlingMenu';
