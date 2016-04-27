@@ -81,7 +81,7 @@ export default class TreeMap extends Component {
     const margin = {top: 50, right: 20, bottom: 0, left: 20};
     const width = parentWidth;
     let height = window.innerHeight - 200 || 340 - margin.top - margin.bottom;
-    if (height > 550) height = 550;
+    if (height > 450) height = 450;
 
     this.treeMapHolder
         .style({

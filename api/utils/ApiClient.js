@@ -2,7 +2,9 @@ import fetch from 'node-fetch';
 import redis from 'redis';
 import { REDIS_PORT, REDIS_ADDR } from '../config';
 
-const client = redis.createClient(REDIS_PORT, REDIS_ADDR);
+
+const client = process.env.NODE_ENV === 'test' ? null : redis.createClient(REDIS_PORT, REDIS_ADDR);
+
 /**
 * we are returning a promises
 */
