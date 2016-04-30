@@ -19,18 +19,42 @@ export default class UnbundlingMenu extends Component {
     aidTo: PropTypes.array.isRequired,
     aidFrom: PropTypes.array.isRequired
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      match: {year: 2013},
+      group: {_id: '$id-to', total: {'$sum': '$value'}},
+      year: 2013,
+      sector: 'all',
+      bundle: 'all',
+      aidTo: 'all',
+      aidFrom: 'all'
+    };
+  }
   /**
    * levelOptionsVisibility:  set selectOptions visible or unvisible depending on their current display state
    * @param  {[type]} level [description]
    * @return {[type]}       [description]
    */
   levelOptionsVisibility(level) {
-    console.log(level);
-    const selectOptions = this.refs[level];
-    console.log(selectOptions);
-    /* eslint-disable no-unused-expressions*/
-    selectOptions.offsetHeight ? selectOptions.style.display = 'block'
-    : selectOptions.style.display = 'none';
+    // hide all initiallly
+    const selectElms = document.getElementsByClassName('select-holder');
+    Array.prototype.forEach.call(selectElms, elm => elm.style.display = 'none');
+    // show the element in question
+    const activeOptions = document.getElementById(level);
+    // if we selecting the active option, we probably want it hidden
+    if (activeOptions.className.includes('active')) {
+      activeOptions.className = 'select-holder';
+      return false;
+    }
+    // set option active and show it
+    activeOptions.className += ' active';
+    activeOptions.style.display = 'block';
+  }
+
+  optionsChangeHandler(level, event) {
+    this.setState({[level]: event.target.value});
+    console.log(this.state);
   }
 
   createLevelSettings = () => {
@@ -49,12 +73,12 @@ export default class UnbundlingMenu extends Component {
             <span className="settings--item-level-name">{key}</span>
             <strong>All</strong>
           </span>
-          <div className="select-holder" ref={key}>
+          <div className="select-holder" ref={key} id ={key}>
             <i className="ss-delete close"></i>
             <i>{key}</i>
             <div className="select">
-              <select className="form-control">
-                <option value="">all</option>
+              <select className="form-control" value = {this.state[key]} onChange = {this.optionsChangeHandler.bind(this, key)} >
+                <option value="all">all</option>
                 {levelOptions}
               </select>
             </div>
@@ -70,12 +94,13 @@ export default class UnbundlingMenu extends Component {
     return (
       <section className ={cx('treemap--settings-holder', 'col-md-12', styles.toolBar)}>
         <div className="settings--item selected">
-          <span className={styles.spanMain}>ODA in <strong> 2013</strong></span>
+          <span className={styles.spanMain}>ODA in <strong> {this.state.match.year}</strong></span>
           <div className="select-holder">
             <i className="ss-delete close"></i>
             <i>Select year</i>
             <div className="select">
-              <select className="form-control" >
+              <select className="form-control" value = {this.state.year} onChange = {this.optionsChangeHandler.bind(this, 'year')} >
+                  {/* TODO refactor */ }
                   <option value="2013">2013</option>
                   <option value="2012">2012</option>
                   <option value="2011">2011</option>

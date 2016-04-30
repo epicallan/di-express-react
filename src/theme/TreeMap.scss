@@ -167,57 +167,137 @@
   transition: all ease-in 0.25s;
   display: block;
 }
-.oda--intro.ng-hide {
-  opacity: 0;
+.region-europe {
+    background: #c962c4
 }
-
-.region-europe  { background:lighten(purple, 20%); } // Europe
-.region-north-of-sahara { background:green;    } // Africa (North of Sahara)
-.region-south-of-sahara { background:red;      } // Africa (South of Sahara)
-.region-north-central-america { background:blue; } // America (North & Central America)
-.region-south-america { background:purple;               } // America (South America)
-.region-middle-east { background:navy;                 } // Asia (Middle East Asia)
-.region-south-central-asia { background:lighten(blue, 20%);   } // Asia (South & Central Asia)
-.region-east-asia { background:orange;               } // Asia (Far East Asia)
-.region-oceania { background:lighten(blue, 20%);   } // Oceania
+.region-north-of-sahara {
+    background: #b7bf10
+}
+.region-south-of-sahara {
+    background: #ba0c2f
+}
+.region-north-central-america {
+    background: #0095cb
+}
+.region-south-america {
+    background: #93328e
+}
+.region-middle-east {
+    background: #1b365d
+}
+.region-south-central-asia {
+    background: #32c8ff
+}
+.region-east-asia {
+    background: #ea7600
+}
+.region-oceania {
+    background: #32c8ff
+}
 .region-999,
-.region-unspecified { background: darken(gray, 20%)              } // Unspecified
-
-.bundle-cash-loan-equity  { background:red;                   } // Cash (loan/equity)
-.bundle-cash-grant  { background:green;                 } // Cash grant
-.bundle-commodities-food  { background:blue;                  } // Commodities and food
-.bundle-gpgs-nngos  { background:orange;                } // GPGs and NNGOs
-.bundle-mixed-project-aid  { background:purple;                } // Mixed project aid
-.bundle-non-transfer  { background:navy;                  } // Non-transfer
-.bundle-technical-ooperation  { background:lighten(blue, 20%);    } // Technical cooperation
-.bundle-export-credit  { background:lighten(blue, 40%);    } // Technical cooperation
-
-.oof-bundle-oof-grant{ background:green; }
-.oof-bundle-oof-loan{ background:orange; }
-.oof-bundle-oof-export-credit{ background:lighten(blue, 40%); }
-
-.sector-education  { background:red;                   } // Education
-.sector-health  { background:green;                 } // Health
-.sector-water-and-sanitation  { background:blue;                  } // Water and Sanitation
-.sector-governance-and-security  { background:orange;                } // Governance and Security
-.sector-other-social-services  { background:purple;                } // Other Social Services
-.sector-infrastructure  { background:navy;                  } // Infrastructure
-.sector-banking-and-business  { background:lighten(red, 20%);     } // Banking and Business
-.sector-agriculture-and-food-security  { background:lighten(green, 20%);   } // Agriculture and Food Security
-.sector-industry-and-trade  { background:lighten(blue, 20%);    } // Industry and Trade
-.sector-environment  { background:lighten(orange, 20%);  } // Environment
-.sector-other  { background:lighten(purple, 20%);  } // Other
-.sector-general-budget-support  { background:lighten(navy, 20%);    } // General Budget Support
-.sector-debt-relief  { background:darken(red, 20%);      } // Debt Relief
-.sector-humanitarian  { background:darken(red, 20%);      } // Humanitarian
-
-.channel-public-sector-unknown { background:red;                   } // Public-sector (unknown country)
-.channel-public-sector-donor { background:green;                 } // Public-sector (Donor government)
-.channel-public-sector-recipient { background:blue;                  } // Public-sector (Recipient government)
-.channel-ngo-unknown { background:orange;                } // NGO (unknown country)
-.channel-ngo-donor { background:purple;                } // NGO (Donor-country-based)
-.channel-ngo-recipient { background:navy;                  } // NGO (Recipient-country-based)
-.channel-public-private-partnership { background:lighten(red, 20%);     } // Punlic-private partnership
-.channel-multilateral { background:lighten(green, 20%);   } // Multilateral
-.channel-other { background:lighten(blue, 20%);    } // Other (Private sector, think-tank, etc)
-.channel-unspecified { background:lighten(orange, 20%);  } // Unspecified
+.region-unspecified {
+    background: #1f1e1d
+}
+.bundle-cash-loan-equity {
+    background: #ba0c2f
+}
+.bundle-cash-grant {
+    background: #b7bf10
+}
+.bundle-commodities-food {
+    background: #0095cb
+}
+.bundle-gpgs-nngos {
+    background: #ea7600
+}
+.bundle-mixed-project-aid {
+    background: #93328e
+}
+.bundle-non-transfer {
+    background: #1b365d
+}
+.bundle-technical-ooperation {
+    background: #32c8ff
+}
+.bundle-export-credit {
+    background: #98e4ff
+}
+.oof-bundle-oof-grant {
+    background: #b7bf10
+}
+.oof-bundle-oof-loan {
+    background: #ea7600
+}
+.oof-bundle-oof-export-credit {
+    background: #98e4ff
+}
+.sector-education {
+    background: #ba0c2f
+}
+.sector-health {
+    background: #b7bf10
+}
+.sector-water-and-sanitation {
+    background: #0095cb
+}
+.sector-governance-and-security {
+    background: #ea7600
+}
+.sector-other-social-services {
+    background: #93328e
+}
+.sector-infrastructure {
+    background: #1b365d
+}
+.sector-banking-and-business {
+    background: #f23a5f
+}
+.sector-agriculture-and-food-security {
+    background: #e8ef46
+}
+.sector-industry-and-trade {
+    background: #32c8ff
+}
+.sector-environment {
+    background: #ffa951
+}
+.sector-other {
+    background: #c962c4
+}
+.sector-general-budget-support {
+    background: #3264ac
+}
+.sector-debt-relief,
+.sector-humanitarian {
+    background: #5a0617
+}
+.channel-public-sector-unknown {
+    background: #ba0c2f
+}
+.channel-public-sector-donor {
+    background: #b7bf10
+}
+.channel-public-sector-recipient {
+    background: #0095cb
+}
+.channel-ngo-unknown {
+    background: #ea7600
+}
+.channel-ngo-donor {
+    background: #93328e
+}
+.channel-ngo-recipient {
+    background: #1b365d
+}
+.channel-public-private-partnership {
+    background: #f23a5f
+}
+.channel-multilateral {
+    background: #e8ef46
+}
+.channel-other {
+    background: #32c8ff
+}
+.channel-unspecified {
+    background: #ffa951
+}
