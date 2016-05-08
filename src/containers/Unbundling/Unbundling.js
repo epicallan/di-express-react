@@ -18,7 +18,8 @@ import cx from 'classnames';
 }])
 @connect(
   state => ({
-    data: state.unbundling.data
+    data: state.unbundling.data,
+    chartCount: state.unbundling.chartCount
   })
 )
 export default class Unbundling extends Component {

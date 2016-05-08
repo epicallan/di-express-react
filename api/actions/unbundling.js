@@ -9,7 +9,8 @@ class UnbundlingAction {
   }
 
   async getODAData({match, group}) {
-    if (group._id === '$id-to' && match['id-to'] === undefined) return this.getODAfromRedis();
+    if (group._id === '$id-to' && match['id-to'] === undefined && match.year === 2013) return this.getODAfromRedis();
+    // console.log('making fresh request');
     const url = this.urlBuilder('oda', { match, group});
     return get(DI_API, url);
   }
@@ -51,5 +52,6 @@ export default async function unbundling(req, params) {
   const activeLevel = unbundlingAction.getActiveLevelKey(req.body.group);
   const activeData = activeLevel ? optionsData[activeLevel] : optionsData['id-to'];
   const data = unbundlingAction.processODAData(odaRaw, activeData);
+  console.log('called api');
   return {name: 'oda', children: data};
 }

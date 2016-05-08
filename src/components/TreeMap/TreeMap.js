@@ -8,13 +8,20 @@ export default class TreeMap extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired
   }
+
   constructor(props) {
     super(props);
     this.node = null; // d3 instance of a treemap node (the square box)
-    this.treeMapHolder = null; // will contain d3 object of the treeMapHolder
+    this.treeMapHolder = null; // will contain d3 object of the treeMapHolder dom node
   }
 
   componentDidMount() {
+    console.log('treemap component mount');
+    this.draw();
+  }
+
+  componentWillUpdate() {
+    console.log('treemap update: ', this.props.data);
     this.draw();
   }
 
@@ -100,13 +107,13 @@ export default class TreeMap extends Component {
         .call(this.positionNode)
         .attr('class', this.getNodeClass)
         .html(this.getNodeContent);
+    console.log('finished draw');
   }
 
   draw = () => {
     this.treeMapHolder = d3.select(this.refs.treeMapHolder);
     // Make sure we have a clean slate
     this.treeMapHolder.selectAll('.node').remove();
-
     this.node = this.treeMapHolder.datum(this.props.data).selectAll('.node') // TODO needs some refactoring
       .data(this.treemap.nodes)
       .enter().append('div');

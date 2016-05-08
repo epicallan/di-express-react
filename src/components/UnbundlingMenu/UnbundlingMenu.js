@@ -1,5 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {load} from 'redux/modules/unbundling';
 import cx from 'classnames';
 
 @connect(
@@ -9,7 +11,8 @@ import cx from 'classnames';
     channel: state.unbundling.channel,
     aidTo: state.unbundling['id-to'],
     aidFrom: state.unbundling['id-from']
-  })
+  }),
+  dispatch => ({ load: bindActionCreators(load, dispatch)})
 )
 export default class UnbundlingMenu extends Component {
   static propTypes = {
@@ -17,14 +20,13 @@ export default class UnbundlingMenu extends Component {
     bundle: PropTypes.array.isRequired,
     channel: PropTypes.array.isRequired,
     aidTo: PropTypes.array.isRequired,
-    aidFrom: PropTypes.array.isRequired
+    aidFrom: PropTypes.array.isRequired,
+    load: PropTypes.func.isRequired
   };
   constructor(props) {
     super(props);
     this.state = {
-      match: {year: 2013},
-      group: {_id: '$id-to', total: {'$sum': '$value'}},
-      year: 2013,
+      year: 2013, // mantaining select options state
       sector: 'all',
       bundle: 'all',
       aidTo: 'all',
@@ -43,18 +45,25 @@ export default class UnbundlingMenu extends Component {
     // show the element in question
     const activeOptions = document.getElementById(level);
     // if we selecting the active option, we probably want it hidden
+    // so reassign its className property removing the active class
     if (activeOptions.className.includes('active')) {
       activeOptions.className = 'select-holder';
       return false;
     }
-    // set option active and show it
+    // set option container class active and show it for the options container we want to show
     activeOptions.className += ' active';
     activeOptions.style.display = 'block';
   }
 
   optionsChangeHandler(level, event) {
     this.setState({[level]: event.target.value});
-    console.log(this.state);
+    // make API call
+    const args = {
+      match: {year: event.target.value}, // used in api call
+      group: {_id: '$id-to', total: {'$sum': '$value'}}
+    };
+    console.log('args ', args);
+    this.props.load(args);
   }
 
   createLevelSettings = () => {
@@ -94,10 +103,10 @@ export default class UnbundlingMenu extends Component {
     return (
       <section className ={cx('treemap--settings-holder', 'col-md-12', styles.toolBar)}>
         <div className="settings--item selected">
-          <span className={styles.spanMain}>ODA in <strong> {this.state.match.year}</strong></span>
-          <div className="select-holder">
+          <span className={styles.spanMain} onClick={this.levelOptionsVisibility.bind(this, 'year')} >ODA in <strong> {this.state.year}</strong></span>
+          <div className="select-holder" ref="year" id = "year">
             <i className="ss-delete close"></i>
-            <i>Select year</i>
+            <i>Years</i>
             <div className="select">
               <select className="form-control" value = {this.state.year} onChange = {this.optionsChangeHandler.bind(this, 'year')} >
                   {/* TODO refactor */ }

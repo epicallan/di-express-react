@@ -37,6 +37,7 @@ export default function reducer(state = initialState, action = {}) {
         optionLoading: true
       };
     case LOAD_SUCCESS:
+      // console.log('new data load load');
       return {
         ...state,
         loading: false,
@@ -104,9 +105,10 @@ export function isOptionsLoaded(globalState) {
  * @return {object}
  */
 export function load(data = {
-  match: {'year': 2013},
+  match: {'year': 2012},
   group: {'_id': '$id-to', 'total': {'$sum': '$value'}}
 }) {
+  console.log('unbundling request for : ', data.match);
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
     promise: (client) => client.post('unbundling', {data})
