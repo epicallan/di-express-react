@@ -105,7 +105,7 @@ export function isOptionsLoaded(globalState) {
  * @return {object}
  */
 export function load(data = {
-  match: {'year': 2012},
+  match: {'year': 2013},
   group: {'_id': '$id-to', 'total': {'$sum': '$value'}}
 }) {
   console.log('unbundling request for : ', data.match);

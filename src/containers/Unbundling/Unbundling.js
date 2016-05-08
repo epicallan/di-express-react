@@ -18,14 +18,11 @@ import cx from 'classnames';
 }])
 @connect(
   state => ({
-    data: state.unbundling.data,
     chartCount: state.unbundling.chartCount
   })
 )
 export default class Unbundling extends Component {
   static propTypes = {
-    data: PropTypes.object.isRequired,
-    comparisonData: PropTypes.object,
     chartCount: PropTypes.number
   }
 
@@ -46,14 +43,14 @@ export default class Unbundling extends Component {
           </header>
           <section className= {cx('row')}>
             <div className = {chartClass} >
-              <TreeMap data = {this.props.data} />
+              <TreeMap chart = {1} />
             </div>
             {(() => {
               // on comparison we need another chart
               if (this.props.chartCount === 2) {
                 return (
                   <div className= "col-md-6" ref="comparisonContainer">
-                    <TreeMap data = {this.props.comparisonData} />
+                    <TreeMap chart = {2} />
                   </div>
                 );
               }

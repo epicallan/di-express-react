@@ -1,12 +1,21 @@
 import d3 from 'd3-geo-projection';
 import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
 
 /* eslint-disable id-length*/
+@connect(
+  state => ({
+    data: state.unbundling.data,
+    comparison: state.unbundling.comparisonData
+  })
+)
 
 export default class TreeMap extends Component {
 
   static propTypes = {
-    data: PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
+    comparison: PropTypes.object,
+    chart: PropTypes.number,
   }
 
   constructor(props) {
@@ -16,13 +25,14 @@ export default class TreeMap extends Component {
   }
 
   componentDidMount() {
-    console.log('treemap component mount');
-    this.draw();
+    console.log('treemap component mount', this.props.data);
+    /* eslint-disable no-unused-expressions*/
+    this.props.chart === 1 ? this.draw(this.props.data) : this.draw(this.props.comparison);
   }
 
   componentWillUpdate() {
-    console.log('treemap update: ', this.props.data);
-    this.draw();
+    console.log('treemap update', this.props.data);
+    this.props.chart === 1 ? this.draw(this.props.data) : this.draw(this.props.comparison);
   }
 
   getNodeClass(obj) {
