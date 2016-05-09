@@ -13,6 +13,10 @@
 .region-north-central-america {
   background: #0095cb;
 }
+// closing X
+.ss-delete.right:after, .ss-delete:before {
+    content: 'X';
+}
 //.node:hover { background-color: $gray-darker; }
 .treeMapHolder {
   position: relative;

@@ -2,6 +2,7 @@ import d3 from 'd3-geo-projection';
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 
+
 /* eslint-disable id-length*/
 @connect(
   state => ({
@@ -25,14 +26,14 @@ export default class TreeMap extends Component {
   }
 
   componentDidMount() {
-    console.log('treemap component mount', this.props.data);
+    // console.log('treemap component mounted', this.props.data);
     /* eslint-disable no-unused-expressions*/
     this.props.chart === 1 ? this.draw(this.props.data) : this.draw(this.props.comparison);
   }
 
-  componentWillUpdate() {
-    console.log('treemap update', this.props.data);
-    this.props.chart === 1 ? this.draw(this.props.data) : this.draw(this.props.comparison);
+  componentWillUpdate(nextProps) {
+    // console.log('treemap update', nextProps);
+    nextProps.chart === 1 ? this.draw(nextProps.data) : this.draw(nextProps.comparison);
   }
 
   getNodeClass(obj) {
@@ -90,7 +91,7 @@ export default class TreeMap extends Component {
     .sticky(false)
     .sort((a, b) => a.value - b.value)
     .value(obj => obj.value);
-
+  // TODO refactor function or rename
   resize = (forced) => {
     const parentWidth = this.treeMapHolder.node().parentNode.offsetWidth;
     // Treemap gets the size from it's parent, if it didn't change, then no need for resize
@@ -120,11 +121,11 @@ export default class TreeMap extends Component {
     console.log('finished draw');
   }
 
-  draw = () => {
+  draw = (data) => {
     this.treeMapHolder = d3.select(this.refs.treeMapHolder);
     // Make sure we have a clean slate
     this.treeMapHolder.selectAll('.node').remove();
-    this.node = this.treeMapHolder.datum(this.props.data).selectAll('.node') // TODO needs some refactoring
+    this.node = this.treeMapHolder.datum(data).selectAll('.node') // TODO needs some refactoring
       .data(this.treemap.nodes)
       .enter().append('div');
     this.resize(true);  // completes setting up the treemap node and treemap layout settings

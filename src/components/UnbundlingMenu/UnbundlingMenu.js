@@ -9,8 +9,8 @@ import cx from 'classnames';
     sector: state.unbundling.sector,
     bundle: state.unbundling.bundle,
     channel: state.unbundling.channel,
-    aidTo: state.unbundling['id-to'],
-    aidFrom: state.unbundling['id-from']
+    'id-to': state.unbundling['id-to'], // aid to
+    'id-from': state.unbundling['id-from'] // aid from
   }),
   dispatch => ({ load: bindActionCreators(load, dispatch)})
 )
@@ -19,18 +19,20 @@ export default class UnbundlingMenu extends Component {
     sector: PropTypes.array.isRequired,
     bundle: PropTypes.array.isRequired,
     channel: PropTypes.array.isRequired,
-    aidTo: PropTypes.array.isRequired,
-    aidFrom: PropTypes.array.isRequired,
+    'id-to': PropTypes.array.isRequired,
+    'id-from': PropTypes.array.isRequired,
     load: PropTypes.func.isRequired
   };
   constructor(props) {
     super(props);
     this.state = {
+      match: {'year': 2013},
+      group: {_id: '$id-to', total: {'$sum': '$value'}},
       year: 2013, // mantaining select options state
-      sector: 'all',
-      bundle: 'all',
-      aidTo: 'all',
-      aidFrom: 'all'
+      sector: 'All',
+      bundle: 'All',
+      'id-to': 'All',
+      'id-from': 'All'
     };
   }
   /**
@@ -55,15 +57,41 @@ export default class UnbundlingMenu extends Component {
     activeOptions.style.display = 'block';
   }
 
+  closeOptionContainer(level) {
+    const activeOptions = document.getElementById(level);
+    // reassign class names
+    activeOptions.className = 'select-holder';
+    activeOptions.style.display = 'block';
+  }
+  niceNamesForSelectOptions = (name, levelName) => {
+    const level = this.props[levelName];
+    if (levelName === 'year' || name === 'All') return name;
+    const obj = level.find(item => item.id === name );
+    return obj.name;
+  }
   optionsChangeHandler(level, event) {
-    this.setState({[level]: event.target.value});
+    /* eslint-disable no-unused-expressions*/
+    event.target.value === 'all' ? delete this.state.match[level] : this.state.match[level] = event.target.value;
+    this.setState({[level]: this.niceNamesForSelectOptions(event.target.value, level)});
     // make API call
     const args = {
-      match: {year: event.target.value}, // used in api call
-      group: {_id: '$id-to', total: {'$sum': '$value'}}
+      match: this.state.match,
+      group: this.state.group
     };
+    console.log('state ', this.state);
     console.log('args ', args);
     this.props.load(args);
+  }
+  /**
+   * this function is just a helper function to return 'to' or 'from' from
+   * the id-to and id-from menu lable names
+   * @param  {string} label [description]
+   * @return {string}       [description]
+   */
+  niceNamesForMenu = (label) => {
+    const splitLabel = label.split('-');
+    const nice = splitLabel.length > 1 ? splitLabel[1] : label;
+    return nice;
   }
 
   createLevelSettings = () => {
@@ -75,19 +103,20 @@ export default class UnbundlingMenu extends Component {
           <option key = {item._id} value = {item.id}> {item.name} </option>
         )
       );
-
+      // console.log('state', this.state);
+      const niceLabel = this.niceNamesForMenu(key);
       return (
         <li key = {key + '-' + index} className="settings--item settings--sort_item">
           <span className="drag-handle" onClick={this.levelOptionsVisibility.bind(this, key)}>
-            <span className="settings--item-level-name">{key}</span>
-            <strong>All</strong>
+            <span className="settings--item-level-name">{niceLabel}</span>
+            <strong>{this.state[key]}</strong>
           </span>
           <div className="select-holder" ref={key} id ={key}>
-            <i className="ss-delete close"></i>
-            <i>{key}</i>
+            <i className="ss-delete close" onClick={this.closeOptionContainer.bind(this, key)}></i>
+            <i>{niceLabel}</i>
             <div className="select">
               <select className="form-control" value = {this.state[key]} onChange = {this.optionsChangeHandler.bind(this, key)} >
-                <option value="all">all</option>
+                <option value="All">all</option>
                 {levelOptions}
               </select>
             </div>
@@ -105,7 +134,7 @@ export default class UnbundlingMenu extends Component {
         <div className="settings--item selected">
           <span className={styles.spanMain} onClick={this.levelOptionsVisibility.bind(this, 'year')} >ODA in <strong> {this.state.year}</strong></span>
           <div className="select-holder" ref="year" id = "year">
-            <i className="ss-delete close"></i>
+            <i className="ss-delete close" onClick={this.closeOptionContainer.bind(this, 'year')}></i>
             <i>Years</i>
             <div className="select">
               <select className="form-control" value = {this.state.year} onChange = {this.optionsChangeHandler.bind(this, 'year')} >

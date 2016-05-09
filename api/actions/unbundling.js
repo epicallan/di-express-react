@@ -9,8 +9,9 @@ class UnbundlingAction {
   }
 
   async getODAData({match, group}) {
-    if (group._id === '$id-to' && match['id-to'] === undefined && match.year === 2013) return this.getODAfromRedis();
-    // console.log('making fresh request');
+    if (!Number.isNaN(match.year)) match.year = parseInt(match.year, 10); // making sure year is an integer
+    // needs refactoring getODAfromRedis should take in an argument
+    if (match.year === 2013 && Object.keys(match).length < 2) return this.getODAfromRedis();
     const url = this.urlBuilder('oda', { match, group});
     return get(DI_API, url);
   }
@@ -19,7 +20,12 @@ class UnbundlingAction {
     const odaRaw = await getFromRedis('unbundling-initial');
     return new Promise((resolve) => resolve(odaRaw));
   }
-
+  /**
+   * getActiveLevelKey returns active metric eg aid to or aid from
+   * This allows us to find out which data to enrich the raw odaData with.
+   * @param  {[object]} got from request
+   * @return {string}   id-to or id-from
+   */
   getActiveLevelKey(group) {
     return group._id.split('$')[1];
   }
@@ -49,9 +55,11 @@ export default async function unbundling(req, params) {
   if (params[0] === 'options') return await unbundlingAction.getOptionsData();
   const optionsData = await unbundlingAction.getOptionsData();
   const odaRaw = await unbundlingAction.getODAData(req.body);
+  // let us find out whether we are look at data for countries that recieve aid or give AID
   const activeLevel = unbundlingAction.getActiveLevelKey(req.body.group);
-  const activeData = activeLevel ? optionsData[activeLevel] : optionsData['id-to'];
-  const data = unbundlingAction.processODAData(odaRaw, activeData);
-  console.log('called api');
+  // let us enrich the various data rows/fields with their corresponding rich data
+  const richLevelData = activeLevel ? optionsData[activeLevel] : optionsData['id-to'];
+  // let us compose the data
+  const data = unbundlingAction.processODAData(odaRaw, richLevelData);
   return {name: 'oda', children: data};
 }
