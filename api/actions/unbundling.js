@@ -9,6 +9,7 @@ class UnbundlingAction {
   }
 
   async getODAFromAPI({match, group}) {
+    console.log('getting from API');
     // if not in cache make an api request
     if (!Number.isNaN(match.year)) match.year = parseInt(match.year, 10);
     const url = this.urlBuilder('oda', { match, group});
@@ -58,7 +59,7 @@ export const unbundlingAction = new UnbundlingAction();
 export default async function unbundling(req, params) {
   if (params[0] === 'options') return await unbundlingAction.getOptionsData();
   const optionsData = await unbundlingAction.getOptionsData();
-  // check whether we have the payload for this request cached
+  // if we have the payload for this request cached we return it
   let odaRaw = await getFromRedis(JSON.stringify(req.body));
   // get from API if not in cache
   if (!odaRaw) odaRaw = await unbundlingAction.getODAFromAPI(req.body);
