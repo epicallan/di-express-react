@@ -1,4 +1,4 @@
-import {get, getFromRedis} from '../utils/ApiClient';
+import {get, getFromRedis, saveInRedis} from '../utils/ApiClient';
 import { DI_API } from '../config';
 
 class UnbundlingAction {
@@ -8,18 +8,22 @@ class UnbundlingAction {
     return new Promise((resolve) => resolve(data));
   }
 
-  async getODAData({match, group}) {
-    if (!Number.isNaN(match.year)) match.year = parseInt(match.year, 10); // making sure year is an integer
-    // needs refactoring getODAfromRedis should take in an argument
-    if (match.year === 2013 && Object.keys(match).length < 2) return this.getODAfromRedis();
+  async getODAFromAPI({match, group}) {
+    // if not in cache make an api request
+    if (!Number.isNaN(match.year)) match.year = parseInt(match.year, 10);
     const url = this.urlBuilder('oda', { match, group});
     return get(DI_API, url);
   }
 
-  async getODAfromRedis() {
-    const odaRaw = await getFromRedis('unbundling-initial');
-    return new Promise((resolve) => resolve(odaRaw));
-  }
+  /**
+   * carried function that takes in the request for new data (post request)
+   * and waits for the payload to cache it into redis.
+   * @param  {object} request
+   *  @param  {object} request payload
+   * @return {[type]}         [description]
+   */
+
+  cacheRequestPayload = (request) => (payload) => saveInRedis(JSON.stringify(request), payload);
   /**
    * getActiveLevelKey returns active metric eg aid to or aid from
    * This allows us to find out which data to enrich the raw odaData with.
@@ -54,7 +58,12 @@ export const unbundlingAction = new UnbundlingAction();
 export default async function unbundling(req, params) {
   if (params[0] === 'options') return await unbundlingAction.getOptionsData();
   const optionsData = await unbundlingAction.getOptionsData();
-  const odaRaw = await unbundlingAction.getODAData(req.body);
+  // check whether we have the payload for this request cached
+  let odaRaw = await getFromRedis(JSON.stringify(req.body));
+  // get from API if not in cache
+  if (!odaRaw) odaRaw = await unbundlingAction.getODAFromAPI(req.body);
+  // caching request and payload
+  if (odaRaw) unbundlingAction.cacheRequestPayload(req.body)(odaRaw);
   // let us find out whether we are look at data for countries that recieve aid or give AID
   const activeLevel = unbundlingAction.getActiveLevelKey(req.body.group);
   // let us enrich the various data rows/fields with their corresponding rich data

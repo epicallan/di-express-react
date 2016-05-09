@@ -1,9 +1,13 @@
-import {get, saveInRedis} from '../utils/ApiClient';
-import { DI_API } from '../config';
+import {get,
+  saveInRedis
+} from '../utils/ApiClient';
+import {
+  DI_API
+} from '../config';
 
 async function getOptionsData() {
   const promises = ['entity', 'sector', 'bundle', 'channel'].
-                  map(id => get(DI_API, 'reference/' + id ));
+  map(id => get(DI_API, 'reference/' + id));
   return Promise.all(promises);
 }
 
@@ -13,14 +17,11 @@ function process0ptionsData(data) {
     bundle: data[2],
     channel: data[3]
   };
-  options['id-to'] = data[0].filter( obj => {
-    return obj['donor-recipient-type'] === 'recipient'
-    || obj['donor-recipient-type'] === 'crossover'
-    || obj['donor-recipient-type'] === 'region';
+  options['id-to'] = data[0].filter(obj => {
+    return obj['donor-recipient-type'] === 'recipient' || obj['donor-recipient-type'] === 'crossover' || obj['donor-recipient-type'] === 'region';
   });
   options['id-from'] = data[0].filter(obj => {
-    return obj['donor-recipient-type'] === 'donor'
-    || obj['donor-recipient-type'] === 'multilateral';
+    return obj['donor-recipient-type'] === 'donor' || obj['donor-recipient-type'] === 'multilateral';
   });
   return options;
 }
@@ -40,29 +41,38 @@ async function saveOptionsData() {
  * This is the data that is used in drawing up the initial unbundling aid treemap
  * @return {obj}
  */
-function getInitalAidData() {
-  const match = {
-    'concept': 'oda',
-    'year': 2013
-  };
-  const group = {
-    '_id': '$id-to',
-    'total': {'$sum': '$value'}
-  };
+function getInitalAidData({
+  match,
+  group
+}) {
   let url = `aggregate/oda?`;
   url += '&match=' + JSON.stringify(match);
   url += '&group=' + JSON.stringify(group);
   return get(DI_API, url);
 }
 
-async function saveInitialAidData() {
-  const data = await getInitalAidData();
-  return saveInRedis('unbundling-initial', data);
+async function saveInitialAidData(req) {
+  const data = await getInitalAidData(req);
+  // modifying redis-key
+  delete req.match.concept;
+  return saveInRedis(JSON.stringify(req), data);
 }
 /**
  * sychronised the redis jobs so that i can close the client when they are done
  */
 export default () => {
-  saveInitialAidData();
+  const initialRequest = {
+    match: {
+      'concept': 'oda',
+      'year': 2013
+    },
+    group: {
+      '_id': '$id-to',
+      'total': {
+        '$sum': '$value'
+      }
+    }
+  };
+  saveInitialAidData(initialRequest);
   saveOptionsData();
 };

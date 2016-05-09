@@ -61,7 +61,7 @@ export default class UnbundlingMenu extends Component {
     const activeOptions = document.getElementById(level);
     // reassign class names
     activeOptions.className = 'select-holder';
-    activeOptions.style.display = 'block';
+    activeOptions.style.display = 'none';
   }
   niceNamesForSelectOptions = (name, levelName) => {
     const level = this.props[levelName];
