@@ -16,6 +16,7 @@ export default class TreeMap extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
     comparison: PropTypes.object,
+    treeMapRefName: PropTypes.string.isRequired,
     chart: PropTypes.number,
   }
 
@@ -28,11 +29,10 @@ export default class TreeMap extends Component {
   componentDidMount() {
     // console.log('treemap component mounted', this.props.data);
     /* eslint-disable no-unused-expressions*/
-    this.props.chart === 1 ? this.draw(this.props.data) : this.draw(this.props.comparison);
+    this.draw(this.props.data);
   }
 
   componentWillUpdate(nextProps) {
-    // console.log('treemap update', nextProps);
     nextProps.chart === 1 ? this.draw(nextProps.data) : this.draw(nextProps.comparison);
   }
 
@@ -118,11 +118,11 @@ export default class TreeMap extends Component {
         .call(this.positionNode)
         .attr('class', this.getNodeClass)
         .html(this.getNodeContent);
-    console.log('finished draw');
+    console.log('finished draw for chart:', this.props.treeMapRefName);
   }
 
   draw = (data) => {
-    this.treeMapHolder = d3.select(this.refs.treeMapHolder);
+    this.treeMapHolder = d3.select(this.refs[this.props.treeMapRefName]);
     // Make sure we have a clean slate
     this.treeMapHolder.selectAll('.node').remove();
     this.node = this.treeMapHolder.datum(data).selectAll('.node') // TODO needs some refactoring
@@ -135,7 +135,7 @@ export default class TreeMap extends Component {
     const styles = require('./TreeMap.scss');
     return (
     <div className ={styles.treeContainer}>
-      <section ref = "treeMapHolder" className="treeMapHolder" />
+      <section ref = {this.props.treeMapRefName} className="treeMapHolder" />
     </div>
     );
   }

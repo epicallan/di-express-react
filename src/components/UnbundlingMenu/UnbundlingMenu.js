@@ -34,7 +34,8 @@ export default class UnbundlingMenu extends Component {
       bundle: { niceName: 'All', value: 'All'},
       'id-to': { niceName: 'All', value: 'All'},
       'id-from': { niceName: 'All', value: 'All'},
-      channel: { niceName: 'All', value: 'All'}
+      channel: { niceName: 'All', value: 'All'},
+      compareBtnLable: 'compare'
     };
   }
   /**
@@ -65,12 +66,14 @@ export default class UnbundlingMenu extends Component {
     activeOptions.className = 'select-holder';
     activeOptions.style.display = 'none';
   }
+
   niceNamesForSelectOptions = (name, levelName) => {
     const level = this.props[levelName];
     if (levelName === 'year' || name === 'All') return name;
     const obj = level.find(item => item.id === name );
     return obj.name;
   }
+
   optionsChangeHandler(level, event) {
     /* eslint-disable no-unused-expressions*/
     // if the selection is all for an option then remove that option from the api request
@@ -154,11 +157,11 @@ export default class UnbundlingMenu extends Component {
               </select>
           </div>
         </div>
-        <ul>
-          {this.createLevelSettings()}
-        </ul>
-      </div>
-    </section>
+          <ul>
+            {this.createLevelSettings()}
+          </ul>
+        </div>
+      </section>
     );
   }
 }

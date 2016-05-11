@@ -8,6 +8,7 @@ const LOAD_COMPARISON_FAIL = 'unbundling/LOAD_COMPARISON_FAIL';
 const OPTION = 'unbundling/OPTION';
 const OPTION_SUCCESS = 'unbundling/OPTION_SUCCESS';
 const OPTION_FAIL = 'unbundling/OPTION_FAIL';
+const CHANGE_CHART_COUNT = 'unbundling/CHANGE_CHART_COUNT';
 
 const initialState = {
   loaded: false,
@@ -21,6 +22,13 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case CHANGE_CHART_COUNT: {
+      return {
+        ...state,
+        comparisonData: state.data,
+        chartCount: action.chartCount
+      };
+    }
     case LOAD:
       return {
         ...state,
@@ -107,9 +115,9 @@ export function isOptionsLoaded(globalState) {
 export function load(data = {
   match: {'year': 2013},
   group: {'_id': '$id-to', 'total': {'$sum': '$value'}}
-}) {
+}, types = [LOAD, LOAD_SUCCESS, LOAD_FAIL] ) {
   return {
-    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
+    types,
     promise: (client) => client.post('unbundling', {data})
   };
 }
@@ -118,5 +126,16 @@ export function loadOptions() {
   return {
     types: [OPTION, OPTION_SUCCESS, OPTION_FAIL],
     promise: (client) => client.post('unbundling/options')
+  };
+}
+
+export function loadComparisonData(args) {
+  return load(args, [LOAD_COMPARISON, LOAD_COMPARISON_SUCCESS, LOAD_COMPARISON_FAIL]);
+}
+
+export function changeChartCount(count) {
+  return {
+    type: CHANGE_CHART_COUNT,
+    chartCount: count
   };
 }
