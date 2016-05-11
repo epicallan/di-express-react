@@ -17,6 +17,7 @@ export async function get(API, urlPart) {
 export function getFromRedis(key) {
   return new Promise((resolve, reject) => {
     client.get(key, (err, reply) => {
+      // if (reply === null) reject(new Error('No data'))
       resolve(JSON.parse(reply) || reply);
       reject(err);
     });

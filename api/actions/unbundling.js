@@ -26,14 +26,12 @@ class UnbundlingAction {
 
   cacheRequestPayload = (request) => (payload) => saveInRedis(JSON.stringify(request), payload);
   /**
-   * getActiveLevelKey returns active metric eg aid to or aid from
+   * getActiveLevelKey returns active metric eg aid to(id-to) or aid from(id-from)
    * This allows us to find out which data to enrich the raw odaData with.
    * @param  {[object]} got from request
    * @return {string}   id-to or id-from
    */
-  getActiveLevelKey(group) {
-    return group._id.split('$')[1];
-  }
+  getActiveLevelKey = (group) => group._id.split('$')[1];
 
   processODAData(odaData, activeData) {
     // fuse options entity data with the oda data
