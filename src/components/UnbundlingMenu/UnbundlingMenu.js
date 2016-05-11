@@ -25,14 +25,16 @@ export default class UnbundlingMenu extends Component {
   };
   constructor(props) {
     super(props);
+    // mantaining select options state
     this.state = {
-      match: {'year': 2013},
-      group: {_id: '$id-to', total: {'$sum': '$value'}},
-      year: 2013, // mantaining select options state
-      sector: 'All',
-      bundle: 'All',
-      'id-to': 'All',
-      'id-from': 'All'
+      match: {'year': 2013}, // for creating api request
+      group: {_id: '$id-to', total: {'$sum': '$value'}}, // for creating api request
+      year: {value: 2013},
+      sector: { niceName: 'All', value: 'All'},
+      bundle: { niceName: 'All', value: 'All'},
+      'id-to': { niceName: 'All', value: 'All'},
+      'id-from': { niceName: 'All', value: 'All'},
+      channel: { niceName: 'All', value: 'All'}
     };
   }
   /**
@@ -71,16 +73,19 @@ export default class UnbundlingMenu extends Component {
   }
   optionsChangeHandler(level, event) {
     /* eslint-disable no-unused-expressions*/
-    event.target.value === 'all' ? delete this.state.match[level] : this.state.match[level] = event.target.value;
-    this.setState({[level]: this.niceNamesForSelectOptions(event.target.value, level)});
-    // make API call
+    // if the selection is all for an option then remove that option from the api request
+    event.target.value === 'All' ? delete this.state.match[level] : this.state.match[level] = event.target.value;
+    const stateObj = this.state[level];
+    if (level !== 'year') stateObj.niceName = this.niceNamesForSelectOptions(event.target.value, level);
+    stateObj.value = event.target.value;
+    this.setState(stateObj);
+    // make API request Object
     const args = {
       match: this.state.match,
       group: this.state.group
     };
-    console.log('state ', this.state);
-    console.log('args ', args);
-    this.props.load(args);
+    console.log('state in change options', this.state);
+    this.props.load(args); // make request
   }
   /**
    * this function is just a helper function to return 'to' or 'from' from
@@ -103,20 +108,19 @@ export default class UnbundlingMenu extends Component {
           <option key = {item._id} value = {item.id}> {item.name} </option>
         )
       );
-      // console.log('state', this.state);
-      const niceLabel = this.niceNamesForMenu(key);
+      const levelName = this.niceNamesForMenu(key);
       return (
         <li key = {key + '-' + index} className="settings--item settings--sort_item">
           <span className="drag-handle" onClick={this.levelOptionsVisibility.bind(this, key)}>
-            <span className="settings--item-level-name">{niceLabel}</span>
-            <strong>{this.state[key]}</strong>
+            <span className="settings--item-level-name">{levelName}</span>
+            <strong>{this.state[key].niceName}</strong>
           </span>
           <div className="select-holder" ref={key} id ={key}>
             <i className="ss-delete close" onClick={this.closeOptionContainer.bind(this, key)}></i>
-            <i>{niceLabel}</i>
+            <i>{levelName}</i>
             <div className="select">
-              <select className="form-control" value = {this.state[key]} onChange = {this.optionsChangeHandler.bind(this, key)} >
-                <option value="All">all</option>
+              <select className="form-control" value = {this.state[key].value} onChange = {this.optionsChangeHandler.bind(this, key)} >
+                <option value="All">All</option>
                 {levelOptions}
               </select>
             </div>
@@ -132,12 +136,12 @@ export default class UnbundlingMenu extends Component {
     return (
       <section className ={cx('treemap--settings-holder', 'col-md-12', styles.toolBar)}>
         <div className="settings--item selected">
-          <span className={styles.spanMain} onClick={this.levelOptionsVisibility.bind(this, 'year')} >ODA in <strong> {this.state.year}</strong></span>
+          <span className={styles.spanMain} onClick={this.levelOptionsVisibility.bind(this, 'year')} >ODA in <strong> {this.state.year.value}</strong></span>
           <div className="select-holder" ref="year" id = "year">
             <i className="ss-delete close" onClick={this.closeOptionContainer.bind(this, 'year')}></i>
             <i>Years</i>
             <div className="select">
-              <select className="form-control" value = {this.state.year} onChange = {this.optionsChangeHandler.bind(this, 'year')} >
+              <select className="form-control" value = {this.state.year.value} onChange = {this.optionsChangeHandler.bind(this, 'year')} >
                   {/* TODO refactor */ }
                   <option value="2013">2013</option>
                   <option value="2012">2012</option>
