@@ -45,24 +45,23 @@ export default class Unbundling extends Component {
     }
   }
   render() {
-    // console.log(this.props.chartCount);
-    const chartClass = this.props.chartCount === 2 ? 'col-md-6' : 'col-md-12';
     const styles = require('./Unbundling.scss');
+    const chartClass = this.props.chartCount === 2 ? 'col-md-6' : 'col-md-12';
     return (
       <div>
         <Helmet title="unbundling Aid"/>
         <section className="container-fluid oda-story">
           <header className= {cx('row', styles.header)}>
             <h1 className="text-center"> Unbundling aid </h1>
-            <div className = {chartClass}>
-              <UnbundlingMenu />
+            <div className = {cx(chartClass, styles.menuContainer)}>
+              <UnbundlingMenu chart = {1} />
             </div>
             {(() => {
               // on comparison we need another chart
               if (this.props.chartCount === 2) {
                 return (
-                  <div className= "col-md-6" ref="comparisonMenu">
-                    <UnbundlingMenu />
+                  <div className= {cx(chartClass, styles.menuContainer)} ref="comparisonMenu">
+                    <UnbundlingMenu chart = {2} />
                   </div>
                 );
               }

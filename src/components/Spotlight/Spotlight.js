@@ -31,7 +31,7 @@ export default class Spotlight extends Component {
     mapData: PropTypes.object.isRequired,
     data: PropTypes.array.isRequired,
     entities: PropTypes.array.isRequired,
-    actions: PropTypes.object,
+    actions: PropTypes.object.isRequired,
     indicator: PropTypes.string,
     defaultFill: PropTypes.string,
     domain: PropTypes.array,

@@ -25,7 +25,8 @@ export default function reducer(state = initialState, action = {}) {
     case CHANGE_CHART_COUNT: {
       return {
         ...state,
-        chartCount: action.chartCount
+        chartCount: action.chartCount,
+        comparisonData: state.data
       };
     }
     case LOAD:
@@ -49,8 +50,7 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        data: action.result,
-        comparisonData: action.result,
+        data: action.result
       };
     case LOAD_COMPARISON_SUCCESS:
       return {
@@ -112,13 +112,13 @@ export function isOptionsLoaded(globalState) {
  * @param  {obj} unbundling api post request args
  * @return {object}
  */
-export function load(data = {
+export function load(apiRequestObj = {
   match: {'year': 2013},
   group: {'_id': '$id-to', 'total': {'$sum': '$value'}}
 }, types = [LOAD, LOAD_SUCCESS, LOAD_FAIL] ) {
   return {
     types,
-    promise: (client) => client.post('unbundling', {data})
+    promise: (client) => client.post('unbundling', {data: apiRequestObj})
   };
 }
 
@@ -129,8 +129,8 @@ export function loadOptions() {
   };
 }
 
-export function loadComparisonData(args) {
-  return load(args, [LOAD_COMPARISON, LOAD_COMPARISON_SUCCESS, LOAD_COMPARISON_FAIL]);
+export function loadComparisonData(apiRequestObj) {
+  return load(apiRequestObj, [LOAD_COMPARISON, LOAD_COMPARISON_SUCCESS, LOAD_COMPARISON_FAIL]);
 }
 
 export function changeChartCount(count) {

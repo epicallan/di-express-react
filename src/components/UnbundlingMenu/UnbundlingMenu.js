@@ -1,7 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {load} from 'redux/modules/unbundling';
+import {load, loadComparisonData} from 'redux/modules/unbundling';
 import cx from 'classnames';
 
 @connect(
@@ -12,7 +12,7 @@ import cx from 'classnames';
     'id-to': state.unbundling['id-to'], // aid to
     'id-from': state.unbundling['id-from'] // aid from
   }),
-  dispatch => ({ load: bindActionCreators(load, dispatch)})
+  dispatch => ({ actions: bindActionCreators({load, loadComparisonData}, dispatch)})
 )
 export default class UnbundlingMenu extends Component {
   static propTypes = {
@@ -21,7 +21,8 @@ export default class UnbundlingMenu extends Component {
     channel: PropTypes.array.isRequired,
     'id-to': PropTypes.array.isRequired,
     'id-from': PropTypes.array.isRequired,
-    load: PropTypes.func.isRequired
+    actions: PropTypes.object.isRequired,
+    chart: PropTypes.number
   };
   constructor(props) {
     super(props);
@@ -83,12 +84,12 @@ export default class UnbundlingMenu extends Component {
     stateObj.value = event.target.value;
     this.setState(stateObj);
     // make API request Object
-    const args = {
+    const apiRequestObj = {
       match: this.state.match,
       group: this.state.group
     };
     console.log('state in change options', this.state);
-    this.props.load(args); // make request
+    this.props.chart === 1 ? this.props.actions.load(apiRequestObj) : this.props.actions.loadComparisonData(apiRequestObj);
   }
   /**
    * this function is just a helper function to return 'to' or 'from' from
