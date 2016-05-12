@@ -30,12 +30,14 @@ export default class UnbundlingMenu extends Component {
     this.state = {
       match: {'year': 2013}, // for creating api request
       group: {_id: '$id-to', total: {'$sum': '$value'}}, // for creating api request
-      year: {value: 2013},
-      sector: { niceName: 'All', value: 'All'},
-      bundle: { niceName: 'All', value: 'All'},
-      'id-to': { niceName: 'All', value: 'All'},
-      'id-from': { niceName: 'All', value: 'All'},
-      channel: { niceName: 'All', value: 'All'},
+      selectOptions: {
+        year: {value: 2013, visible: true},
+        sector: { niceName: 'All', value: 'All', visible: false},
+        bundle: { niceName: 'All', value: 'All', visible: false},
+        'id-to': { niceName: 'All', value: 'All', visible: false},
+        'id-from': { niceName: 'All', value: 'All', visible: false},
+        channel: { niceName: 'All', value: 'All', visible: false},
+      },
       compareBtnLable: 'compare'
     };
   }
@@ -44,45 +46,52 @@ export default class UnbundlingMenu extends Component {
    * @param  {[type]} level [description]
    * @return {[type]}       [description]
    */
-  levelOptionsVisibility(level) {
-    // hide all initiallly
-    const selectElms = document.getElementsByClassName('select-holder');
-    Array.prototype.forEach.call(selectElms, elm => elm.style.display = 'none');
-    // show the element in question
-    const activeOptions = document.getElementById(level);
-    // if we selecting the active option, we probably want it hidden
-    // so reassign its className property removing the active class
-    if (activeOptions.className.includes('active')) {
-      activeOptions.className = 'select-holder';
-      return false;
-    }
-    // set option container class active and show it for the options container we want to show
-    activeOptions.className += ' active';
-    activeOptions.style.display = 'block';
+  levelOptionsVisibility(levelName) {
+    // hide all select options
+    // and show only current selection
+    const selectOptions = this.state.selectOptions;
+    Object.keys(selectOptions).forEach(key => {
+      const options = selectOptions[key];
+      const refName = `${key}-${this.props.chart}`;
+      if (key === levelName) {
+        options.visible = true;
+        this.refs[refName].style.display = 'block';
+      } else {
+        options.visible = false;
+        this.refs[refName].style.display = 'none';
+      }
+    });
+    this.setState({selectOptions});
+    // console.log(this.state);
   }
 
-  closeOptionContainer(level) {
-    const activeOptions = document.getElementById(level);
-    // reassign class names
-    activeOptions.className = 'select-holder';
-    activeOptions.style.display = 'none';
+  closeOptionContainer(levelName) {
+    // hide object
+    const refName = `${levelName}-${this.props.chart}`;
+    this.refs[refName].style.display = 'none';
+    // change its state
+    const activeOptions = this.state.selectOptions[levelName];
+    activeOptions.visible = false;
+    const selectOptions = Object.assign({}, this.state.selectOptions, {[levelName]: activeOptions});
+    this.setState({'selectOptions': selectOptions});
   }
 
-  niceNamesForSelectOptions = (name, levelName) => {
+  niceNamesForSelectOptions = (id, levelName) => {
     const level = this.props[levelName];
-    if (levelName === 'year' || name === 'All') return name;
-    const obj = level.find(item => item.id === name );
+    if (levelName === 'year' || id === 'All') return id;
+    const obj = level.find(item => item.id === id );
     return obj.name;
   }
 
-  optionsChangeHandler(level, event) {
+  optionsChangeHandler(levelName, event) {
     /* eslint-disable no-unused-expressions*/
     // if the selection is all for an option then remove that option from the api request
-    event.target.value === 'All' ? delete this.state.match[level] : this.state.match[level] = event.target.value;
-    const stateObj = this.state[level];
-    if (level !== 'year') stateObj.niceName = this.niceNamesForSelectOptions(event.target.value, level);
+    event.target.value === 'All' ? delete this.state.match[levelName] : this.state.match[levelName] = event.target.value;
+    const stateObj = this.state.selectOptions[levelName];
+    if (levelName !== 'year') stateObj.niceName = this.niceNamesForSelectOptions(event.target.value, levelName);
     stateObj.value = event.target.value;
-    this.setState(stateObj);
+    const selectOptions = Object.assign({}, this.state.selectOptions, stateObj);
+    this.setState({selectOptions});
     // make API request Object
     const apiRequestObj = {
       match: this.state.match,
@@ -113,17 +122,19 @@ export default class UnbundlingMenu extends Component {
         )
       );
       const levelName = this.niceNamesForMenu(key);
+      const refName = `${key}-${this.props.chart}`; // we want to have unique refnames coz we duplicate this component
       return (
         <li key = {key + '-' + index} className="settings--item settings--sort_item">
           <span className="drag-handle" onClick={this.levelOptionsVisibility.bind(this, key)}>
             <span className="settings--item-level-name">{levelName}</span>
-            <strong>{this.state[key].niceName}</strong>
+            <strong>{this.state.selectOptions[key].niceName}</strong>
           </span>
-          <div className="select-holder" ref={key} id ={key}>
+          <div className="select-holder" ref={refName}>
             <i className="ss-delete close" onClick={this.closeOptionContainer.bind(this, key)}></i>
             <i>{levelName}</i>
             <div className="select">
-              <select className="form-control" value = {this.state[key].value} onChange = {this.optionsChangeHandler.bind(this, key)} >
+              <select className="form-control" value = {this.state.selectOptions[key].value}
+                onChange = {this.optionsChangeHandler.bind(this, key)} >
                 <option value="All">All</option>
                 {levelOptions}
               </select>
@@ -137,15 +148,16 @@ export default class UnbundlingMenu extends Component {
 
   render() {
     const styles = require('./UnbundlingMenu.scss');
+    const refName = `year-${this.props.chart}`;
     return (
       <section className ={cx('treemap--settings-holder', 'col-md-12', styles.toolBar)}>
         <div className="settings--item selected">
-          <span className={styles.spanMain} onClick={this.levelOptionsVisibility.bind(this, 'year')} >ODA in <strong> {this.state.year.value}</strong></span>
-          <div className="select-holder" ref="year" id = "year">
+          <span className={styles.spanMain} onClick={this.levelOptionsVisibility.bind(this, 'year')} >ODA in <strong> {this.state.selectOptions.year.value}</strong></span>
+          <div className="select-holder" ref={refName}>
             <i className="ss-delete close" onClick={this.closeOptionContainer.bind(this, 'year')}></i>
             <i>Years</i>
             <div className="select">
-              <select className="form-control" value = {this.state.year.value} onChange = {this.optionsChangeHandler.bind(this, 'year')} >
+              <select className="form-control" value = {this.state.selectOptions.year.value} onChange = {this.optionsChangeHandler.bind(this, 'year')} >
                   {/* TODO refactor */ }
                   <option value="2013">2013</option>
                   <option value="2012">2012</option>
