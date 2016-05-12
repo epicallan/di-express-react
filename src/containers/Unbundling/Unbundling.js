@@ -75,14 +75,14 @@ export default class Unbundling extends Component {
           </header>
           <section className= {cx('row')}>
             <div className = {chartClass} >
-              <TreeMap chart = {1} treeMapRefName= "treemap1" />
+              <TreeMap treeMapRefName= "treemap1" />
             </div>
             {(() => {
               // on comparison we need another chart
               if (this.props.chartCount === 2) {
                 return (
                   <div className= "col-md-6" ref="comparisonTreemap">
-                    <TreeMap chart = {2} treeMapRefName= "treemap2" />
+                    <TreeMap treeMapRefName= "treemap2" />
                   </div>
                 );
               }

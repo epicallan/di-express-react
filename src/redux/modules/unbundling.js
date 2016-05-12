@@ -25,7 +25,6 @@ export default function reducer(state = initialState, action = {}) {
     case CHANGE_CHART_COUNT: {
       return {
         ...state,
-        comparisonData: state.data,
         chartCount: action.chartCount
       };
     }
@@ -50,7 +49,8 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        data: action.result
+        data: action.result,
+        comparisonData: action.result,
       };
     case LOAD_COMPARISON_SUCCESS:
       return {

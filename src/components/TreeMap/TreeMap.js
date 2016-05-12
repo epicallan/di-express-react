@@ -1,13 +1,15 @@
 import d3 from 'd3-geo-projection';
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import styles from './TreeMap.scss';
 
 
 /* eslint-disable id-length*/
 @connect(
   state => ({
     data: state.unbundling.data,
-    comparison: state.unbundling.comparisonData
+    comparison: state.unbundling.comparisonData,
+    chartCount: state.unbundling.chartCount // hack its change forces a full re-draw of the treemap
   })
 )
 
@@ -16,8 +18,8 @@ export default class TreeMap extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
     comparison: PropTypes.object,
-    treeMapRefName: PropTypes.string.isRequired,
-    chart: PropTypes.number,
+    chartCount: PropTypes.number.isRequired,
+    treeMapRefName: PropTypes.string.isRequired
   }
 
   constructor(props) {
@@ -29,11 +31,15 @@ export default class TreeMap extends Component {
   componentDidMount() {
     // console.log('treemap component mounted', this.props.data);
     /* eslint-disable no-unused-expressions*/
-    this.draw(this.props.data);
+    this.props.treeMapRefName === 'treemap1' ? this.draw(this.props.data) : this.draw(this.props.comparison);
+    console.log('finished draw for chart in component did mount:', this.props.treeMapRefName);
+    console.log('------------------------------------------------');
   }
 
   componentWillUpdate(nextProps) {
-    nextProps.chart === 1 ? this.draw(nextProps.data) : this.draw(nextProps.comparison);
+    nextProps.treeMapRefName === 'treemap1' ? this.draw(nextProps.data) : this.draw(nextProps.comparison);
+    console.log('finished draw for chart in component will update:', this.props.treeMapRefName);
+    console.log('------------------------------------------------');
   }
 
   getNodeClass(obj) {
@@ -118,7 +124,6 @@ export default class TreeMap extends Component {
         .call(this.positionNode)
         .attr('class', this.getNodeClass)
         .html(this.getNodeContent);
-    console.log('finished draw for chart:', this.props.treeMapRefName);
   }
 
   draw = (data) => {
@@ -132,7 +137,6 @@ export default class TreeMap extends Component {
   }
 
   render() {
-    const styles = require('./TreeMap.scss');
     return (
     <div className ={styles.treeContainer}>
       <section ref = {this.props.treeMapRefName} className="treeMapHolder" />
