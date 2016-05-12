@@ -2,15 +2,19 @@ import d3 from 'd3-geo-projection';
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import styles from './TreeMap.scss';
+import {bindActionCreators} from 'redux';
+import {load, loadComparisonData, updateSelectOptions} from 'redux/modules/unbundling';
 
 
 /* eslint-disable id-length*/
 @connect(
   state => ({
     data: state.unbundling.data,
+    selectOptions: state.unbundling.selectOptions,
     comparison: state.unbundling.comparisonData,
     chartCount: state.unbundling.chartCount // hack its change forces a full re-draw of the treemap
-  })
+  }),
+  dispatch => ({ actions: bindActionCreators({load, loadComparisonData, updateSelectOptions}, dispatch)})
 )
 
 export default class TreeMap extends Component {
@@ -19,13 +23,17 @@ export default class TreeMap extends Component {
     data: PropTypes.object.isRequired,
     comparison: PropTypes.object,
     chartCount: PropTypes.number.isRequired,
-    treeMapRefName: PropTypes.string.isRequired
+    treeMapRefName: PropTypes.string.isRequired,
+    actions: PropTypes.object.isRequired,
+    selectOptions: PropTypes.object.isRequired
   }
 
   constructor(props) {
     super(props);
     this.node = null; // d3 instance of a treemap node (the square box)
     this.treeMapHolder = null; // will contain d3 object of the treeMapHolder dom node
+    this.match = {'year': 2013}; // for creating api request
+    this.group = {_id: '$id-to', total: {'$sum': '$value'}};// for creating api request
   }
 
   componentDidMount() {
@@ -81,6 +89,19 @@ export default class TreeMap extends Component {
     });
   }
 
+  nodeClickHandler = (node) => {
+    // create new api request object based on current selection
+    // console.log('node', node);
+    const aidTypeField = node['donor-recipient-type'] === 'recipient' ? '$id-from' : '$id-to';
+    this.match['id-to'] = node.id;
+    this.group._id = aidTypeField;
+    // make request
+    const {treeMapRefName, actions} = this.props;
+    // chosing an appropriate load function so that we update the appropriate data
+    const loadData = treeMapRefName === 'treemap1' ? actions.load : actions.loadComparisonData;
+    loadData({match: this.match, group: this.group});
+  }
+
   niceNum(input, precision) {
     if (input === 'N/A') return input;
 
@@ -93,10 +114,12 @@ export default class TreeMap extends Component {
     return roundedValue + humanPrefixes[numPrefix.symbol];
   }
 
+  // creating d3 treemap object
   treemap = d3.layout.treemap()
     .sticky(false)
     .sort((a, b) => a.value - b.value)
     .value(obj => obj.value);
+
   // TODO refactor function or rename
   resize = (forced) => {
     const parentWidth = this.treeMapHolder.node().parentNode.offsetWidth;
@@ -122,6 +145,7 @@ export default class TreeMap extends Component {
     this.node // May need to be refactored TODO
         .data(this.treemap.nodes)
         .call(this.positionNode)
+        .on('click', this.nodeClickHandler)
         .attr('class', this.getNodeClass)
         .html(this.getNodeContent);
   }

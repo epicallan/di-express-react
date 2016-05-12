@@ -9,6 +9,8 @@ const OPTION = 'unbundling/OPTION';
 const OPTION_SUCCESS = 'unbundling/OPTION_SUCCESS';
 const OPTION_FAIL = 'unbundling/OPTION_FAIL';
 const CHANGE_CHART_COUNT = 'unbundling/CHANGE_CHART_COUNT';
+const SELECT_OPTIONS = 'unbundling/SELECT_OPTIONS';
+
 
 const initialState = {
   loaded: false,
@@ -17,11 +19,25 @@ const initialState = {
   optionLoading: true,
   comparisonLoading: false,
   comparisonLoaded: false,
-  chartCount: 1
+  chartCount: 1,
+  selectOptions: {
+    year: {value: 2013, visible: true},
+    sector: { niceName: 'All', value: 'All', visible: false},
+    bundle: { niceName: 'All', value: 'All', visible: false},
+    'id-to': { niceName: 'All', value: 'All', visible: false},
+    'id-from': { niceName: 'All', value: 'All', visible: false},
+    channel: { niceName: 'All', value: 'All', visible: false},
+  },
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case SELECT_OPTIONS: {
+      return {
+        ...state,
+        selectOptions: action.selectOptions
+      };
+    }
     case CHANGE_CHART_COUNT: {
       return {
         ...state,
@@ -116,6 +132,7 @@ export function load(apiRequestObj = {
   match: {'year': 2013},
   group: {'_id': '$id-to', 'total': {'$sum': '$value'}}
 }, types = [LOAD, LOAD_SUCCESS, LOAD_FAIL] ) {
+  console.log('apiRequestObj', apiRequestObj);
   return {
     types,
     promise: (client) => client.post('unbundling', {data: apiRequestObj})
@@ -137,5 +154,12 @@ export function changeChartCount(count) {
   return {
     type: CHANGE_CHART_COUNT,
     chartCount: count
+  };
+}
+
+export function updateSelectOptions(selectOptions) {
+  return {
+    type: SELECT_OPTIONS,
+    selectOptions
   };
 }

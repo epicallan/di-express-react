@@ -1,7 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {load, loadComparisonData} from 'redux/modules/unbundling';
+import {load, loadComparisonData, updateSelectOptions} from 'redux/modules/unbundling';
 import cx from 'classnames';
 
 @connect(
@@ -9,16 +9,18 @@ import cx from 'classnames';
     sector: state.unbundling.sector,
     bundle: state.unbundling.bundle,
     channel: state.unbundling.channel,
+    selectOptions: state.unbundling.selectOptions,
     'id-to': state.unbundling['id-to'], // aid to
     'id-from': state.unbundling['id-from'] // aid from
   }),
-  dispatch => ({ actions: bindActionCreators({load, loadComparisonData}, dispatch)})
+  dispatch => ({ actions: bindActionCreators({load, loadComparisonData, updateSelectOptions}, dispatch)})
 )
 export default class UnbundlingMenu extends Component {
   static propTypes = {
     sector: PropTypes.array.isRequired,
     bundle: PropTypes.array.isRequired,
     channel: PropTypes.array.isRequired,
+    selectOptions: PropTypes.object,
     'id-to': PropTypes.array.isRequired,
     'id-from': PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired,
@@ -27,17 +29,9 @@ export default class UnbundlingMenu extends Component {
   constructor(props) {
     super(props);
     // mantaining select options state
+    this.match = {'year': 2013}; // for creating api request
+    this.group = {_id: '$id-to', total: {'$sum': '$value'}}; // for creating api request
     this.state = {
-      match: {'year': 2013}, // for creating api request
-      group: {_id: '$id-to', total: {'$sum': '$value'}}, // for creating api request
-      selectOptions: {
-        year: {value: 2013, visible: true},
-        sector: { niceName: 'All', value: 'All', visible: false},
-        bundle: { niceName: 'All', value: 'All', visible: false},
-        'id-to': { niceName: 'All', value: 'All', visible: false},
-        'id-from': { niceName: 'All', value: 'All', visible: false},
-        channel: { niceName: 'All', value: 'All', visible: false},
-      },
       compareBtnLable: 'compare'
     };
   }
@@ -49,7 +43,7 @@ export default class UnbundlingMenu extends Component {
   levelOptionsVisibility(levelName) {
     // hide all select options
     // and show only current selection
-    const selectOptions = this.state.selectOptions;
+    const selectOptions = this.props.selectOptions;
     Object.keys(selectOptions).forEach(key => {
       const options = selectOptions[key];
       const refName = `${key}-${this.props.chart}`;
@@ -61,7 +55,7 @@ export default class UnbundlingMenu extends Component {
         this.refs[refName].style.display = 'none';
       }
     });
-    this.setState({selectOptions});
+    this.props.actions.updateSelectOptions(selectOptions);
     // console.log(this.state);
   }
 
@@ -70,9 +64,9 @@ export default class UnbundlingMenu extends Component {
     const refName = `${levelName}-${this.props.chart}`;
     this.refs[refName].style.display = 'none';
     // change its state
-    const activeOptions = this.state.selectOptions[levelName];
+    const activeOptions = this.props.selectOptions[levelName];
     activeOptions.visible = false;
-    const selectOptions = Object.assign({}, this.state.selectOptions, {[levelName]: activeOptions});
+    const selectOptions = Object.assign({}, this.props.selectOptions, {[levelName]: activeOptions});
     this.setState({'selectOptions': selectOptions});
   }
 
@@ -86,16 +80,16 @@ export default class UnbundlingMenu extends Component {
   optionsChangeHandler(levelName, event) {
     /* eslint-disable no-unused-expressions*/
     // if the selection is all for an option then remove that option from the api request
-    event.target.value === 'All' ? delete this.state.match[levelName] : this.state.match[levelName] = event.target.value;
-    const stateObj = this.state.selectOptions[levelName];
+    event.target.value === 'All' ? delete this.match[levelName] : this.match[levelName] = event.target.value;
+    const stateObj = this.props.selectOptions[levelName];
     if (levelName !== 'year') stateObj.niceName = this.niceNamesForSelectOptions(event.target.value, levelName);
     stateObj.value = event.target.value;
-    const selectOptions = Object.assign({}, this.state.selectOptions, {[levelName]: stateObj});
-    this.setState({selectOptions});
+    const selectOptions = Object.assign({}, this.props.selectOptions, {[levelName]: stateObj});
+    this.props.actions.updateSelectOptions(selectOptions);
     // make API request Object
     const apiRequestObj = {
-      match: this.state.match,
-      group: this.state.group
+      match: this.match,
+      group: this.group
     };
     // console.log('state in change options', this.state);
     this.props.chart === 1 ? this.props.actions.load(apiRequestObj) : this.props.actions.loadComparisonData(apiRequestObj);
@@ -127,13 +121,13 @@ export default class UnbundlingMenu extends Component {
         <li key = {key + '-' + index} className="settings--item settings--sort_item">
           <span className="drag-handle" onClick={this.levelOptionsVisibility.bind(this, key)}>
             <span className="settings--item-level-name">{levelName}</span>
-            <strong>{this.state.selectOptions[key].niceName}</strong>
+            <strong>{this.props.selectOptions[key].niceName}</strong>
           </span>
           <div className="select-holder" ref={refName}>
             <i className="ss-delete close" onClick={this.closeOptionContainer.bind(this, key)}></i>
             <i>{levelName}</i>
             <div className="select">
-              <select className="form-control" value = {this.state.selectOptions[key].value}
+              <select className="form-control" value = {this.props.selectOptions[key].value}
                 onChange = {this.optionsChangeHandler.bind(this, key)} >
                 <option value="All">All</option>
                 {levelOptions}
@@ -152,12 +146,12 @@ export default class UnbundlingMenu extends Component {
     return (
       <section className ={cx('treemap--settings-holder', 'col-md-12', styles.toolBar)}>
         <div className="settings--item selected">
-          <span className={styles.spanMain} onClick={this.levelOptionsVisibility.bind(this, 'year')} >ODA in <strong> {this.state.selectOptions.year.value}</strong></span>
+          <span className={styles.spanMain} onClick={this.levelOptionsVisibility.bind(this, 'year')} >ODA in <strong> {this.props.selectOptions.year.value}</strong></span>
           <div className="select-holder" ref={refName}>
             <i className="ss-delete close" onClick={this.closeOptionContainer.bind(this, 'year')}></i>
             <i>Years</i>
             <div className="select">
-              <select className="form-control" value = {this.state.selectOptions.year.value} onChange = {this.optionsChangeHandler.bind(this, 'year')} >
+              <select className="form-control" value = {this.props.selectOptions.year.value} onChange = {this.optionsChangeHandler.bind(this, 'year')} >
                   {/* TODO refactor */ }
                   <option value="2013">2013</option>
                   <option value="2012">2012</option>
