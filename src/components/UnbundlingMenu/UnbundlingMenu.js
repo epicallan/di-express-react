@@ -90,14 +90,14 @@ export default class UnbundlingMenu extends Component {
     const stateObj = this.state.selectOptions[levelName];
     if (levelName !== 'year') stateObj.niceName = this.niceNamesForSelectOptions(event.target.value, levelName);
     stateObj.value = event.target.value;
-    const selectOptions = Object.assign({}, this.state.selectOptions, stateObj);
+    const selectOptions = Object.assign({}, this.state.selectOptions, {[levelName]: stateObj});
     this.setState({selectOptions});
     // make API request Object
     const apiRequestObj = {
       match: this.state.match,
       group: this.state.group
     };
-    console.log('state in change options', this.state);
+    // console.log('state in change options', this.state);
     this.props.chart === 1 ? this.props.actions.load(apiRequestObj) : this.props.actions.loadComparisonData(apiRequestObj);
   }
   /**

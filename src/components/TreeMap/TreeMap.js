@@ -32,14 +32,14 @@ export default class TreeMap extends Component {
     // console.log('treemap component mounted', this.props.data);
     /* eslint-disable no-unused-expressions*/
     this.props.treeMapRefName === 'treemap1' ? this.draw(this.props.data) : this.draw(this.props.comparison);
-    console.log('finished draw for chart in component did mount:', this.props.treeMapRefName);
-    console.log('------------------------------------------------');
+    // console.log('finished draw for chart in component did mount:', this.props.treeMapRefName);
+    // console.log('------------------------------------------------');
   }
 
   componentWillUpdate(nextProps) {
     nextProps.treeMapRefName === 'treemap1' ? this.draw(nextProps.data) : this.draw(nextProps.comparison);
-    console.log('finished draw for chart in component will update:', this.props.treeMapRefName);
-    console.log('------------------------------------------------');
+    // console.log('finished draw for chart in component will update:', this.props.treeMapRefName);
+    // console.log('------------------------------------------------');
   }
 
   getNodeClass(obj) {
