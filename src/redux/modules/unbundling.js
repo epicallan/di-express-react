@@ -35,7 +35,7 @@ export default function reducer(state = initialState, action = {}) {
     case SELECT_OPTIONS: {
       return {
         ...state,
-        selectOptions: action.selectOptions
+        selectOptions: Object.assign({}, state.selectOptions, action.selectOptions)
       };
     }
     case CHANGE_CHART_COUNT: {
@@ -156,7 +156,12 @@ export function changeChartCount(count) {
     chartCount: count
   };
 }
-
+/**
+ * pdateSelectOptions takes a portion of the selectOptions object or all of it and
+ * replaces the current states selectOptions object with the new one.
+ * @param  {object} selectOptions
+ * @return {object}
+ */
 export function updateSelectOptions(selectOptions) {
   return {
     type: SELECT_OPTIONS,

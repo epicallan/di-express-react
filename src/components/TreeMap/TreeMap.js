@@ -37,17 +37,12 @@ export default class TreeMap extends Component {
   }
 
   componentDidMount() {
-    // console.log('treemap component mounted', this.props.data);
     /* eslint-disable no-unused-expressions*/
     this.props.treeMapRefName === 'treemap1' ? this.draw(this.props.data) : this.draw(this.props.comparison);
-    // console.log('finished draw for chart in component did mount:', this.props.treeMapRefName);
-    // console.log('------------------------------------------------');
   }
 
   componentWillUpdate(nextProps) {
     nextProps.treeMapRefName === 'treemap1' ? this.draw(nextProps.data) : this.draw(nextProps.comparison);
-    // console.log('finished draw for chart in component will update:', this.props.treeMapRefName);
-    // console.log('------------------------------------------------');
   }
 
   getNodeClass(obj) {
@@ -91,7 +86,6 @@ export default class TreeMap extends Component {
 
   nodeClickHandler = (node) => {
     // create new api request object based on current selection
-    // console.log('node', node);
     const aidTypeField = node['donor-recipient-type'] === 'recipient' ? '$id-from' : '$id-to';
     this.match['id-to'] = node.id;
     this.group._id = aidTypeField;
@@ -100,6 +94,16 @@ export default class TreeMap extends Component {
     // chosing an appropriate load function so that we update the appropriate data
     const loadData = treeMapRefName === 'treemap1' ? actions.load : actions.loadComparisonData;
     loadData({match: this.match, group: this.group});
+    this.updateSelectMenu(node);
+  }
+
+  updateSelectMenu = (node) => {
+    // assuming selected country
+    const selectOptionType = node['donor-recipient-type'] === 'recipient' ? 'id-to' : 'id-from';
+    // updating the menu select options
+    this.props.actions.updateSelectOptions({
+      [selectOptionType]: { niceName: node.name, value: node.id, visible: false},
+    });
   }
 
   niceNum(input, precision) {
