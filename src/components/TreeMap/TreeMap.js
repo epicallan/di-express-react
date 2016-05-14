@@ -34,6 +34,8 @@ export default class TreeMap extends Component {
     this.treeMapHolder = null; // will contain d3 object of the treeMapHolder dom node
     this.match = {'year': 2013}; // for creating api request
     this.group = {_id: '$id-to', total: {'$sum': '$value'}};// for creating api request
+    this.nodeClassCode = '';
+    this.treemapDepth = 0;
   }
 
   componentDidMount() {
@@ -46,8 +48,8 @@ export default class TreeMap extends Component {
   }
 
   getNodeClass(obj) {
-    const type = 'region';
-    const code = obj.region;
+    const type = obj.type === 'country' ? 'region' : this.nodeClassCode;
+    const code = obj.region || obj.id;
     return 'node ' + type + '-' + code;
   }
 
@@ -86,9 +88,29 @@ export default class TreeMap extends Component {
 
   nodeClickHandler = (node) => {
     // create new api request object based on current selection
-    const aidTypeField = node['donor-recipient-type'] === 'recipient' ? '$id-from' : '$id-to';
-    this.match['id-to'] = node.id;
-    this.group._id = aidTypeField;
+    // const aidTypeField = node['donor-recipient-type'] === 'recipient' ? '$id-from' : '$id-to';
+    // console.log(node);
+    if (node.type !== undefined && node.type === 'country') {
+      if ( node['donor-recipient-type'] === 'recipient') {
+        this.match['id-to'] = node.id;
+        this.group._id = '$id-from';
+      } else {
+        this.match['id-from'] = node.id;
+        this.nodeClassCode = 'sector';
+        this.group._id = '$' + this.nodeClassCode;
+      }
+      this.treemapDepth ++;
+    } else {
+      if (this.treemapDepth === 2) {
+        this.match.sector = node.id;
+        this.nodeClassCode = 'bundle';
+        this.treemapDepth ++;
+      } else {
+        this.match.bundle = node.id;
+        this.nodeClassCode = 'channel';
+      }
+      this.group._id = '$' + this.nodeClassCode;
+    }
     // make request
     const {treeMapRefName, actions} = this.props;
     // chosing an appropriate load function so that we update the appropriate data

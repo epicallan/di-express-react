@@ -78,6 +78,7 @@ export default class UnbundlingMenu extends Component {
   }
 
   optionsChangeHandler(levelName, event) {
+    // TODO the new apiRequestObj should be influenced by the props.selectOptions obj
     /* eslint-disable no-unused-expressions*/
     // if the selection is all for an option then remove that option from the api request
     event.target.value === 'All' ? delete this.match[levelName] : this.match[levelName] = event.target.value;

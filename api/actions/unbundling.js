@@ -29,7 +29,7 @@ class UnbundlingAction {
    * getActiveLevelKey returns the active metric/dimension eg aid to(id-to) or aid from(id-from)
    * we are currently interested in
    * This allows us to find out which raw data to enrich with the 'options' data
-   * @param  {[object]} got from request
+   * @param  {object} got from request
    * @return {string}   id-to or id-from
    */
   getActiveLevelKey = (group) => group._id.split('$')[1];
