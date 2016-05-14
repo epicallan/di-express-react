@@ -34,7 +34,7 @@ export default class TreeMap extends Component {
     this.treeMapHolder = null; // will contain d3 object of the treeMapHolder dom node
     this.match = {'year': 2013}; // for creating api request
     this.group = {_id: '$id-to', total: {'$sum': '$value'}};// for creating api request
-    this.nodeClassCode = '';
+    this.nodeClassCodes = ['region', 'sector', 'bundle', 'channel'];
     this.treemapDepth = 0;
   }
 
@@ -47,8 +47,9 @@ export default class TreeMap extends Component {
     nextProps.treeMapRefName === 'treemap1' ? this.draw(nextProps.data) : this.draw(nextProps.comparison);
   }
 
-  getNodeClass(obj) {
-    const type = obj.type === 'country' ? 'region' : this.nodeClassCode;
+  getNodeClass = (obj) => {
+    const type = this.nodeClassCodes[this.treemapDepth];
+    // if (this.treemapDepth) console.log('type not zero', type);
     const code = obj.region || obj.id;
     return 'node ' + type + '-' + code;
   }
@@ -87,30 +88,14 @@ export default class TreeMap extends Component {
   }
 
   nodeClickHandler = (node) => {
-    // create new api request object based on current selection
-    // const aidTypeField = node['donor-recipient-type'] === 'recipient' ? '$id-from' : '$id-to';
-    // console.log(node);
-    if (node.type !== undefined && node.type === 'country') {
-      if ( node['donor-recipient-type'] === 'recipient') {
-        this.match['id-to'] = node.id;
-        this.group._id = '$id-from';
-      } else {
-        this.match['id-from'] = node.id;
-        this.nodeClassCode = 'sector';
-        this.group._id = '$' + this.nodeClassCode;
-      }
-      this.treemapDepth ++;
+    if (node.type === 'country') {
+      node['donor-recipient-type'] === 'recipient' ? this.match['id-to'] = node.id : this.match['id-from'] = node.id;
     } else {
-      if (this.treemapDepth === 2) {
-        this.match.sector = node.id;
-        this.nodeClassCode = 'bundle';
-        this.treemapDepth ++;
-      } else {
-        this.match.bundle = node.id;
-        this.nodeClassCode = 'channel';
-      }
-      this.group._id = '$' + this.nodeClassCode;
+      const category = this.nodeClassCodes[this.treemapDepth];
+      this.match[category] = node.id;
     }
+    if (node['donor-recipient-type'] !== 'recipient') this.treemapDepth ++;
+    this.group._id = this.treemapDepth ? '$' + this.nodeClassCodes[this.treemapDepth] : '$id-from';
     // make request
     const {treeMapRefName, actions} = this.props;
     // chosing an appropriate load function so that we update the appropriate data
