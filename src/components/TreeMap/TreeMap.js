@@ -86,27 +86,44 @@ export default class TreeMap extends Component {
       height: obj => Math.max(0, obj.dy - 0) + 'px',
     });
   }
-
+  /**
+   * nodeClickHandler: handles click events to treemap nodes
+   * @param  {[object]} node
+   */
   nodeClickHandler = (node) => {
+    const {treeMapRefName, actions} = this.props;
+    // chosing an appropriate load function so that we update the appropriate data
+    const loadData = treeMapRefName === 'treemap1' ? actions.load : actions.loadComparisonData;
+    this.updateSelectMenu(node);
+    // building match and group objects for api request object
+    const apiRequestObj = this.matchAndGroupAPIObjBuilder(node);
+    loadData(apiRequestObj);   // make request to API for new data
+  }
+  /**
+   * creates api request object based on the clicked treemap node
+   * @param  {[type]} node [description]
+   * @return {[type]}      [description]
+   */
+  matchAndGroupAPIObjBuilder = (node) => {
     if (node.type === 'country') {
       node['donor-recipient-type'] === 'recipient' ? this.match['id-to'] = node.id : this.match['id-from'] = node.id;
     } else {
       const category = this.nodeClassCodes[this.treemapDepth];
       this.match[category] = node.id;
     }
-    if (node['donor-recipient-type'] !== 'recipient') this.treemapDepth ++;
+    if (node['donor-recipient-type'] !== 'recipient' && this.treemapDepth < this.nodeClassCodes.length - 1) this.treemapDepth ++;
     this.group._id = this.treemapDepth ? '$' + this.nodeClassCodes[this.treemapDepth] : '$id-from';
-    // make request
-    const {treeMapRefName, actions} = this.props;
-    // chosing an appropriate load function so that we update the appropriate data
-    const loadData = treeMapRefName === 'treemap1' ? actions.load : actions.loadComparisonData;
-    loadData({match: this.match, group: this.group});
-    this.updateSelectMenu(node);
+    return {match: this.match, group: this.group};
   }
 
   updateSelectMenu = (node) => {
     // assuming selected country
-    const selectOptionType = node['donor-recipient-type'] === 'recipient' ? 'id-to' : 'id-from';
+    let selectOptionType = null;
+    if (!this.treemapDepth) {
+      selectOptionType = node['donor-recipient-type'] === 'recipient' ? 'id-to' : 'id-from';
+    } else {
+      selectOptionType = this.nodeClassCodes[this.treemapDepth];
+    }
     // updating the menu select options
     this.props.actions.updateSelectOptions({
       [selectOptionType]: { niceName: node.name, value: node.id, visible: false},
@@ -115,7 +132,6 @@ export default class TreeMap extends Component {
 
   niceNum(input, precision) {
     if (input === 'N/A') return input;
-
     if (input < 1000) return d3.round(input, precision);
     // this is for input marked as 1k, 2m
     const numPrefix = d3.formatPrefix(input);
@@ -131,7 +147,7 @@ export default class TreeMap extends Component {
     .sort((a, b) => a.value - b.value)
     .value(obj => obj.value);
 
-  // TODO refactor function or rename
+  // TODO refactor function
   resize = (forced) => {
     const parentWidth = this.treeMapHolder.node().parentNode.offsetWidth;
     // Treemap gets the size from it's parent, if it didn't change, then no need for resize
