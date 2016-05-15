@@ -1,5 +1,4 @@
 import express from 'express';
-import session from 'express-session';
 import bodyParser from 'body-parser';
 import config from '../src/config';
 import * as actions from './actions/index';
@@ -9,15 +8,6 @@ import PrettyError from 'pretty-error';
 
 const pretty = new PrettyError();
 const app = express();
-
-// if we are ever to use server side session cookies we will use redis for
-// a data store
-app.use(session({
-  secret: 'react and redux rule!!!!',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { maxAge: 60000 }
-}));
 
 app.use(bodyParser.json());
 
