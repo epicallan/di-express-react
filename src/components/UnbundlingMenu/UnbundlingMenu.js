@@ -9,8 +9,8 @@ import cx from 'classnames';
     sector: state.unbundling.sector,
     bundle: state.unbundling.bundle,
     channel: state.unbundling.channel,
-    match: state.unbundling.match, // for creating apiRequestObj
-    group: state.unbundling.group, //  for creating apiRequestObj
+    apiRequestMain: state.unbundling.apiRequestMain, // for creating apiRequestObj
+    apiRequestComparison: state.unbundling.apiRequestComparison, //  for creating apiRequestObj for a comparison treemap
     // mantaining state across selectOptions import when the treemap nodes are
     // clicked and we need to update the menu to reflect that
     selectOptions: state.unbundling.selectOptions,
@@ -24,8 +24,8 @@ export default class UnbundlingMenu extends Component {
     sector: PropTypes.array.isRequired,
     bundle: PropTypes.array.isRequired,
     channel: PropTypes.array.isRequired,
-    match: PropTypes.object.isRequired,
-    group: PropTypes.object.isRequired,
+    apiRequestMain: PropTypes.object.isRequired,
+    apiRequestComparison: PropTypes.object,
     selectOptions: PropTypes.object,
     'id-to': PropTypes.array.isRequired,
     'id-from': PropTypes.array.isRequired,
@@ -79,7 +79,9 @@ export default class UnbundlingMenu extends Component {
   }
 
   optionsChangeHandler(levelName, event) {
-    const {match, group, actions, chart} = this.props;
+    const {actions, chart, apiRequestMain, apiRequestComparison} = this.props;
+    // chosing what global request object to work
+    const {match, group} = chart === 1 ? apiRequestMain : apiRequestComparison;
     /* eslint-disable no-unused-expressions*/
     // if the selection is all for an option then remove that option from the api request
     const stateObj = this.props.selectOptions[levelName]; // selectOptions object being affected
@@ -89,9 +91,10 @@ export default class UnbundlingMenu extends Component {
     this.props.actions.updateSelectOptions(selectOptions);
     // updating API request object
     event.target.value === 'All' ? delete match[levelName] : match[levelName] = event.target.value;
-    // make API request Object
+    // make API request Object and make request for new data
     const apiRequestObj = {match, group};
-    chart === 1 ? actions.load(apiRequestObj) : actions.loadComparisonData(apiRequestObj);
+    const loadData = chart === 1 ? actions.load : actions.loadComparisonData;
+    loadData(apiRequestObj);
   }
   /**
    * this function is just a helper function to return 'to' or 'from' from

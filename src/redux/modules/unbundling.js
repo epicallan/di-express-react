@@ -10,6 +10,7 @@ const OPTION_SUCCESS = 'unbundling/OPTION_SUCCESS';
 const OPTION_FAIL = 'unbundling/OPTION_FAIL';
 const CHANGE_CHART_COUNT = 'unbundling/CHANGE_CHART_COUNT';
 const SELECT_OPTIONS = 'unbundling/SELECT_OPTIONS';
+// const CHANGE_TREE_MAP_DEPTH = 'unbundling/CHANGE_TREE_MAP_DEPTH';
 
 
 const initialState = {
@@ -19,7 +20,10 @@ const initialState = {
   optionLoading: true,
   comparisonLoading: false,
   comparisonLoaded: false,
+  apiRequestComparison: {},
   chartCount: 1,
+  // treeMapDepth: 0,
+  selectOptionsComparison: {},
   selectOptions: {
     year: {value: 2013, visible: true},
     sector: { niceName: 'All', value: 'All', visible: false},
@@ -38,10 +42,18 @@ export default function reducer(state = initialState, action = {}) {
         selectOptions: Object.assign({}, state.selectOptions, action.selectOptions)
       };
     }
+    // case CHANGE_TREE_MAP_DEPTH: {
+    //   return {
+    //     ...state,
+    //     treeMapDepth: action.treeMapDepth
+    //   };
+    // }
     case CHANGE_CHART_COUNT: {
       return {
         ...state,
         chartCount: action.chartCount,
+        selectOptionsComparison: state.selectOptions,
+        apiRequestComparison: state.apiRequestMain,
         comparisonData: state.data
       };
     }
@@ -66,7 +78,7 @@ export default function reducer(state = initialState, action = {}) {
         loading: false,
         loaded: true,
         data: action.result,
-        ...action.apiRequestObj
+        apiRequestMain: action.apiRequestObj
       };
     case LOAD_COMPARISON_SUCCESS:
       return {
@@ -75,7 +87,7 @@ export default function reducer(state = initialState, action = {}) {
         comparisonLoading: false,
         comparisonLoaded: true,
         comparisonData: action.result,
-        ...action.apiRequestObj
+        apiRequestComparison: action.apiRequestObj
       };
     case OPTION_SUCCESS:
       return {
@@ -170,3 +182,10 @@ export function updateSelectOptions(selectOptions) {
     selectOptions
   };
 }
+
+// export function changeTreeMapDepth(treeMapDepth) {
+//   return {
+//     type: CHANGE_TREE_MAP_DEPTH,
+//     treeMapDepth,
+//   };
+// }
