@@ -4,7 +4,7 @@ export default class BackButton extends Component {
   static propTypes = {
     selectOptionsHistory: PropTypes.object.isRequired,
     apiRequestObjHistory: PropTypes.array.isRequired,
-    actions: PropTypes.object.isRequired
+    loadDataFn: PropTypes.func.isRequired
   }
 
   render() {

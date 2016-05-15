@@ -57,6 +57,9 @@ export default class TreeMap extends Component {
   }
 
   getNodeClass = (obj) => {
+    // treemapDepth only changes when you click on a node
+    // when we interact with only the select menu options we stay with in the region
+    // type / treemapDepth, which is what we want.
     const type = this.nodeClassCodes[this.treeMapDepth];
     // if (this.treemapDepth) console.log('type not zero', type);
     const code = obj.region || obj.id;
