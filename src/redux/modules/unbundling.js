@@ -10,8 +10,9 @@ const OPTION_SUCCESS = 'unbundling/OPTION_SUCCESS';
 const OPTION_FAIL = 'unbundling/OPTION_FAIL';
 const CHANGE_CHART_COUNT = 'unbundling/CHANGE_CHART_COUNT';
 const SELECT_OPTIONS = 'unbundling/SELECT_OPTIONS';
-// const CHANGE_TREE_MAP_DEPTH = 'unbundling/CHANGE_TREE_MAP_DEPTH';
-
+const CHANGE_TREE_MAP_DEPTH = 'unbundling/CHANGE_TREE_MAP_DEPTH';
+const HYDRATE = 'unbundling/HYDRATE';
+const PERSIST = 'unbundling/PERSIST';
 
 const initialState = {
   loaded: false,
@@ -22,7 +23,7 @@ const initialState = {
   comparisonLoaded: false,
   apiRequestComparison: {},
   chartCount: 1,
-  // treeMapDepth: 0,
+  treeMapDepth: 0,
   selectOptionsComparison: {},
   selectOptions: {
     year: {value: 2013, visible: true},
@@ -40,6 +41,12 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         selectOptions: Object.assign({}, state.selectOptions, action.selectOptions)
+      };
+    }
+    case CHANGE_TREE_MAP_DEPTH: {
+      return {
+        ...state,
+        treeMapDepth: action.treeMapDepth
       };
     }
     case CHANGE_CHART_COUNT: {
@@ -119,6 +126,18 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         chartCount: 1,
       };
+    case HYDRATE: {
+      // get new state from cache
+      return {
+        ...action.state
+      };
+    }
+    case PERSIST: {
+      // store current cacheKey
+      return {
+        cache: action.cacheKey
+      };
+    }
     default:
       return state;
   }
@@ -177,9 +196,9 @@ export function updateSelectOptions(selectOptions) {
   };
 }
 
-// export function changeTreeMapDepth(treeMapDepth) {
-//   return {
-//     type: CHANGE_TREE_MAP_DEPTH,
-//     treeMapDepth,
-//   };
-// }
+export function changeTreeMapDepth(treeMapDepth) {
+  return {
+    type: CHANGE_TREE_MAP_DEPTH,
+    treeMapDepth,
+  };
+}

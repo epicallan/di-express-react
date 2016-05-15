@@ -3,7 +3,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import styles from './TreeMap.scss';
 import {bindActionCreators} from 'redux';
-import {load, loadComparisonData, updateSelectOptions} from 'redux/modules/unbundling';
+import {load, loadComparisonData, updateSelectOptions, changeTreeMapDepth} from 'redux/modules/unbundling';
 
 
 /* eslint-disable id-length*/
@@ -14,9 +14,10 @@ import {load, loadComparisonData, updateSelectOptions} from 'redux/modules/unbun
     apiRequestComparison: state.unbundling.apiRequestComparison, //  for creating apiRequestObj for a comparison treemap
     selectOptions: state.unbundling.selectOptions,
     comparison: state.unbundling.comparisonData,
+    treeMapDepth: state.unbundling.treeMapDepth,
     chartCount: state.unbundling.chartCount // hack its change forces a full re-draw of the treemap
   }),
-  dispatch => ({ actions: bindActionCreators({load, loadComparisonData, updateSelectOptions}, dispatch)})
+  dispatch => ({ actions: bindActionCreators({load, loadComparisonData, updateSelectOptions, changeTreeMapDepth}, dispatch)})
 )
 
 export default class TreeMap extends Component {
@@ -29,7 +30,8 @@ export default class TreeMap extends Component {
     chartCount: PropTypes.number.isRequired,
     treeMapRefName: PropTypes.string.isRequired,
     actions: PropTypes.object.isRequired,
-    selectOptions: PropTypes.object.isRequired
+    selectOptions: PropTypes.object.isRequired,
+    treeMapDepth: PropTypes.number.isRequired
   }
 
   constructor(props) {
@@ -38,7 +40,7 @@ export default class TreeMap extends Component {
     this.treeMapHolder = null; // will contain d3 object of the treeMapHolder dom node
     // Hack i want to be able to mutate this.props.treeMapDepth with in the component by incrementing it but
     // i cant coz its readonly
-    this.treeMapDepth = 0;
+    this.treeMapDepth = this.props.treeMapDepth;
     // these class codes are
     // used in creating the classnames for different node squares
     this.nodeClassCodes = ['region', 'sector', 'bundle', 'channel'];
@@ -46,22 +48,20 @@ export default class TreeMap extends Component {
 
   componentDidMount() {
     /* eslint-disable no-unused-expressions*/
-    if (this.props.chartCount === 2) this.changeTreeMapDepthCount();
-    // console.log(`in mount changed treemapDepth for: ${this.props.treeMapRefName}`, this.treeMapDepth );
+    // if (this.props.chartCount === 2) this.changeTreeMapDepthCount();
     this.props.treeMapRefName === 'treemap1' ? this.draw(this.props.data) : this.draw(this.props.comparison);
   }
 
   componentWillUpdate(nextProps) {
-    // console.log(`In will mount changed treemapDepth for: ${nextProps.treeMapRefName}`, this.treeMapDepth );
     nextProps.treeMapRefName === 'treemap1' ? this.draw(nextProps.data) : this.draw(nextProps.comparison);
   }
 
   getNodeClass = (obj) => {
-    // treemapDepth only changes when you click on a node
+    // treeMapDepth only changes when you click on a node
     // when we interact with only the select menu options we stay with in the region
-    // type / treemapDepth, which is what we want.
-    const type = this.nodeClassCodes[this.treeMapDepth];
-    // if (this.treemapDepth) console.log('type not zero', type);
+    // type / treeMapDepth, which is what we want.
+    const type = this.nodeClassCodes[this.props.treeMapDepth];
+    // if (this.treeMapDepth) console.log('type not zero', type);
     const code = obj.region || obj.id;
     return 'node ' + type + '-' + code;
   }
@@ -98,17 +98,17 @@ export default class TreeMap extends Component {
       height: obj => Math.max(0, obj.dy - 0) + 'px',
     });
   }
-
+/*
   changeTreeMapDepthCount = () => {
     // when we are comparing two maps
-    const {treeMapRefName, apiRequestComparison} = this.props;
+    const {treeMapRefName, apiRequestComparison } = this.props;
     if (apiRequestComparison.group._id !== '$id-to' && treeMapRefName === 'treemap2') {
       const matchKeysLength = Object.keys(apiRequestComparison.match).length;
       // console.log('matchKeysLength: ', matchKeysLength);
       this.treeMapDepth = matchKeysLength > 2 ? matchKeysLength - 2 : 0;
-      // console.log(`in changeTreeMapDepthCount changed treemapDepth`, this.treeMapDepth );
+      // console.log(`in changeTreeMapDepthCount changed treeMapDepth`, this.treeMapDepth );
     }
-  }
+  }*/
   /**
    * nodeClickHandler: handles click events to treemap nodes
    * @param  {[object]} node
@@ -122,6 +122,7 @@ export default class TreeMap extends Component {
     const apiRequestObj = this.matchAndGroupAPIObjBuilder(node);
     // actions.updateAPIRequestObject(apiRequestObj);
     // globaly update apiRequestObj
+    if (this.treeMapDepth) actions.changeTreeMapDepth(this.treeMapDepth); // update incase we have changed
     loadData(apiRequestObj);   // make request to API for new data
   }
   /**
@@ -130,16 +131,16 @@ export default class TreeMap extends Component {
    * @return {[type]}      [description]
    */
   matchAndGroupAPIObjBuilder = (node) => {
-    const {apiRequestMain, apiRequestComparison, treeMapRefName} = this.props;
+    const {apiRequestMain, apiRequestComparison, treeMapRefName, treeMapDepth} = this.props;
     // const depth = treeMapDepth;
     const {match, group} = treeMapRefName === 'treemap1' ? apiRequestMain : apiRequestComparison;
     if (node.type === 'country') {
       node['donor-recipient-type'] === 'recipient' ? match['id-to'] = node.id : match['id-from'] = node.id;
     } else {
-      const category = this.nodeClassCodes[this.treeMapDepth];
+      const category = this.nodeClassCodes[treeMapDepth];
       match[category] = node.id;
     }
-    // const depth = treeMapDepth;
+    this.treeMapDepth = treeMapDepth; // internal treeMapDepth should be in sync with the global
     if (node['donor-recipient-type'] !== 'recipient' && this.treeMapDepth < this.nodeClassCodes.length - 1) this.treeMapDepth ++;
     group._id = this.treeMapDepth ? '$' + this.nodeClassCodes[this.treeMapDepth] : '$id-from';
     return {match, group};
