@@ -9,9 +9,13 @@ import cx from 'classnames';
     sector: state.unbundling.sector,
     bundle: state.unbundling.bundle,
     channel: state.unbundling.channel,
+    match: state.unbundling.match, // for creating apiRequestObj
+    group: state.unbundling.group, //  for creating apiRequestObj
+    // mantaining state across selectOptions import when the treemap nodes are
+    // clicked and we need to update the menu to reflect that
     selectOptions: state.unbundling.selectOptions,
-    'id-to': state.unbundling['id-to'], // aid to
-    'id-from': state.unbundling['id-from'] // aid from
+    'id-to': state.unbundling['id-to'], // aid to countries
+    'id-from': state.unbundling['id-from'] // aid from countries
   }),
   dispatch => ({ actions: bindActionCreators({load, loadComparisonData, updateSelectOptions}, dispatch)})
 )
@@ -20,21 +24,18 @@ export default class UnbundlingMenu extends Component {
     sector: PropTypes.array.isRequired,
     bundle: PropTypes.array.isRequired,
     channel: PropTypes.array.isRequired,
+    match: PropTypes.object.isRequired,
+    group: PropTypes.object.isRequired,
     selectOptions: PropTypes.object,
     'id-to': PropTypes.array.isRequired,
     'id-from': PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired,
     chart: PropTypes.number
   };
-  constructor(props) {
-    super(props);
-    // mantaining select options state
-    this.match = {'year': 2013}; // for creating api request
-    this.group = {_id: '$id-to', total: {'$sum': '$value'}}; // for creating api request
-    this.state = {
-      compareBtnLable: 'compare'
-    };
-  }
+  // component state
+  state = {
+    compareBtnLable: 'compare'
+  };
   /**
    * levelOptionsVisibility:  set selectOptions visible or unvisible depending on their current display state
    * @param  {[type]} level [description]
@@ -78,22 +79,19 @@ export default class UnbundlingMenu extends Component {
   }
 
   optionsChangeHandler(levelName, event) {
-    // TODO the new apiRequestObj should be influenced by the props.selectOptions obj
+    const {match, group, actions, chart} = this.props;
     /* eslint-disable no-unused-expressions*/
     // if the selection is all for an option then remove that option from the api request
-    event.target.value === 'All' ? delete this.match[levelName] : this.match[levelName] = event.target.value;
-    const stateObj = this.props.selectOptions[levelName];
+    const stateObj = this.props.selectOptions[levelName]; // selectOptions object being affected
     if (levelName !== 'year') stateObj.niceName = this.niceNamesForSelectOptions(event.target.value, levelName);
     stateObj.value = event.target.value;
     const selectOptions = Object.assign({}, this.props.selectOptions, {[levelName]: stateObj});
     this.props.actions.updateSelectOptions(selectOptions);
+    // updating API request object
+    event.target.value === 'All' ? delete match[levelName] : match[levelName] = event.target.value;
     // make API request Object
-    const apiRequestObj = {
-      match: this.match,
-      group: this.group
-    };
-    // console.log('state in change options', this.state);
-    this.props.chart === 1 ? this.props.actions.load(apiRequestObj) : this.props.actions.loadComparisonData(apiRequestObj);
+    const apiRequestObj = {match, group};
+    chart === 1 ? actions.load(apiRequestObj) : actions.loadComparisonData(apiRequestObj);
   }
   /**
    * this function is just a helper function to return 'to' or 'from' from

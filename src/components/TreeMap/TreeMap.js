@@ -10,6 +10,8 @@ import {load, loadComparisonData, updateSelectOptions} from 'redux/modules/unbun
 @connect(
   state => ({
     data: state.unbundling.data,
+    match: state.unbundling.match,
+    group: state.unbundling.group,
     selectOptions: state.unbundling.selectOptions,
     comparison: state.unbundling.comparisonData,
     chartCount: state.unbundling.chartCount // hack its change forces a full re-draw of the treemap
@@ -21,6 +23,8 @@ export default class TreeMap extends Component {
 
   static propTypes = {
     data: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
+    group: PropTypes.object.isRequired,
     comparison: PropTypes.object,
     chartCount: PropTypes.number.isRequired,
     treeMapRefName: PropTypes.string.isRequired,
@@ -32,8 +36,8 @@ export default class TreeMap extends Component {
     super(props);
     this.node = null; // d3 instance of a treemap node (the square box)
     this.treeMapHolder = null; // will contain d3 object of the treeMapHolder dom node
-    this.match = {'year': 2013}; // for creating api request
-    this.group = {_id: '$id-to', total: {'$sum': '$value'}};// for creating api request
+    // these class codes are
+    // used in creating the classnames for different node squares
     this.nodeClassCodes = ['region', 'sector', 'bundle', 'channel'];
     this.treemapDepth = 0;
   }
@@ -97,6 +101,8 @@ export default class TreeMap extends Component {
     this.updateSelectMenu(node);
     // building match and group objects for api request object
     const apiRequestObj = this.matchAndGroupAPIObjBuilder(node);
+    // actions.updateAPIRequestObject(apiRequestObj);
+    // globaly update apiRequestObj
     loadData(apiRequestObj);   // make request to API for new data
   }
   /**
@@ -105,15 +111,16 @@ export default class TreeMap extends Component {
    * @return {[type]}      [description]
    */
   matchAndGroupAPIObjBuilder = (node) => {
+    const {match, group} = this.props;
     if (node.type === 'country') {
-      node['donor-recipient-type'] === 'recipient' ? this.match['id-to'] = node.id : this.match['id-from'] = node.id;
+      node['donor-recipient-type'] === 'recipient' ? match['id-to'] = node.id : match['id-from'] = node.id;
     } else {
       const category = this.nodeClassCodes[this.treemapDepth];
-      this.match[category] = node.id;
+      match[category] = node.id;
     }
     if (node['donor-recipient-type'] !== 'recipient' && this.treemapDepth < this.nodeClassCodes.length - 1) this.treemapDepth ++;
-    this.group._id = this.treemapDepth ? '$' + this.nodeClassCodes[this.treemapDepth] : '$id-from';
-    return {match: this.match, group: this.group};
+    group._id = this.treemapDepth ? '$' + this.nodeClassCodes[this.treemapDepth] : '$id-from';
+    return {match, group};
   }
 
   updateSelectMenu = (node) => {
@@ -190,7 +197,7 @@ export default class TreeMap extends Component {
   render() {
     return (
     <div className ={styles.treeContainer}>
-      <section ref = {this.props.treeMapRefName} className="treeMapHolder" />
+      <section ref = {this.props.treeMapRefName} className={styles.treeMapHolder} />
     </div>
     );
   }

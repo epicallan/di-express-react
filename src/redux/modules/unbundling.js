@@ -61,12 +61,12 @@ export default function reducer(state = initialState, action = {}) {
         optionLoading: true
       };
     case LOAD_SUCCESS:
-      // console.log('unbundling load: ', action.result);
       return {
         ...state,
         loading: false,
         loaded: true,
-        data: action.result
+        data: action.result,
+        ...action.apiRequestObj
       };
     case LOAD_COMPARISON_SUCCESS:
       return {
@@ -74,7 +74,8 @@ export default function reducer(state = initialState, action = {}) {
         chartCount: 2,
         comparisonLoading: false,
         comparisonLoaded: true,
-        comparisonData: action.result
+        comparisonData: action.result,
+        ...action.apiRequestObj
       };
     case OPTION_SUCCESS:
       return {
@@ -130,12 +131,13 @@ export function isOptionsLoaded(globalState) {
  */
 export function load(apiRequestObj = {
   match: {'year': 2013},
-  group: {'_id': '$id-to', 'total': {'$sum': '$value'}}
+  group: {_id: '$id-to', total: {'$sum': '$value'}}
 }, types = [LOAD, LOAD_SUCCESS, LOAD_FAIL] ) {
   console.log('apiRequestObj', apiRequestObj);
   return {
     types,
-    promise: (client) => client.post('unbundling', {data: apiRequestObj})
+    promise: (client) => client.post('unbundling', {data: apiRequestObj}),
+    apiRequestObj
   };
 }
 
