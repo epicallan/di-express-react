@@ -44,7 +44,7 @@
   },
   "betterScripts": {
     "start-prod": {
-      "command": "pm2 start ./bin/server.js --watch",
+      "command": "node ./bin/server.js",
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "production",
@@ -53,7 +53,7 @@
       }
     },
     "start-prod-api": {
-      "command": "pm2 start ./bin/api.js --watch",
+      "command": "node ./bin/api.js",
       "env": {
         "NODE_PATH": "./api",
         "NODE_ENV": "production",
