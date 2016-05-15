@@ -42,12 +42,6 @@ export default function reducer(state = initialState, action = {}) {
         selectOptions: Object.assign({}, state.selectOptions, action.selectOptions)
       };
     }
-    // case CHANGE_TREE_MAP_DEPTH: {
-    //   return {
-    //     ...state,
-    //     treeMapDepth: action.treeMapDepth
-    //   };
-    // }
     case CHANGE_CHART_COUNT: {
       return {
         ...state,

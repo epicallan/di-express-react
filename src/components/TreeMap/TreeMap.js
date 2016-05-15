@@ -14,7 +14,6 @@ import {load, loadComparisonData, updateSelectOptions} from 'redux/modules/unbun
     apiRequestComparison: state.unbundling.apiRequestComparison, //  for creating apiRequestObj for a comparison treemap
     selectOptions: state.unbundling.selectOptions,
     comparison: state.unbundling.comparisonData,
-    // treeMapDepth: state.unbundling.treeMapDepth,
     chartCount: state.unbundling.chartCount // hack its change forces a full re-draw of the treemap
   }),
   dispatch => ({ actions: bindActionCreators({load, loadComparisonData, updateSelectOptions}, dispatch)})
@@ -30,8 +29,7 @@ export default class TreeMap extends Component {
     chartCount: PropTypes.number.isRequired,
     treeMapRefName: PropTypes.string.isRequired,
     actions: PropTypes.object.isRequired,
-    selectOptions: PropTypes.object.isRequired,
-    // treeMapDepth: PropTypes.number.isRequired
+    selectOptions: PropTypes.object.isRequired
   }
 
   constructor(props) {
@@ -48,11 +46,13 @@ export default class TreeMap extends Component {
 
   componentDidMount() {
     /* eslint-disable no-unused-expressions*/
-    this.changeTreeMapDepthCount();
+    if (this.props.chartCount === 2) this.changeTreeMapDepthCount();
+    // console.log(`in mount changed treemapDepth for: ${this.props.treeMapRefName}`, this.treeMapDepth );
     this.props.treeMapRefName === 'treemap1' ? this.draw(this.props.data) : this.draw(this.props.comparison);
   }
 
   componentWillUpdate(nextProps) {
+    // console.log(`In will mount changed treemapDepth for: ${nextProps.treeMapRefName}`, this.treeMapDepth );
     nextProps.treeMapRefName === 'treemap1' ? this.draw(nextProps.data) : this.draw(nextProps.comparison);
   }
 
@@ -95,12 +95,15 @@ export default class TreeMap extends Component {
       height: obj => Math.max(0, obj.dy - 0) + 'px',
     });
   }
+
   changeTreeMapDepthCount = () => {
     // when we are comparing two maps
-    const {chartCount, treeMapRefName, apiRequestComparison} = this.props;
-    if (chartCount === 2 && treeMapRefName === 'treemap2') {
-      this.treemapDepth = apiRequestComparison.match.length > 2 ? apiRequestComparison.match.length - 1 : 0;
-      console.log('changed treemapDepth', this.treemapDepth );
+    const {treeMapRefName, apiRequestComparison} = this.props;
+    if (apiRequestComparison.group._id !== '$id-to' && treeMapRefName === 'treemap2') {
+      const matchKeysLength = Object.keys(apiRequestComparison.match).length;
+      // console.log('matchKeysLength: ', matchKeysLength);
+      this.treeMapDepth = matchKeysLength > 2 ? matchKeysLength - 2 : 0;
+      // console.log(`in changeTreeMapDepthCount changed treemapDepth`, this.treeMapDepth );
     }
   }
   /**
