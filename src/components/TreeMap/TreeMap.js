@@ -2,69 +2,35 @@ import d3 from 'd3-geo-projection';
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import styles from './TreeMap.scss';
-import {bindActionCreators} from 'redux';
-import {
-  load,
-  loadComparisonData,
-  updateSelectOptions,
-  changeTreeMapDepth,
-  updateComparisonSelectOptions
-} from 'redux/modules/unbundling';
-
 
 /* eslint-disable id-length*/
 @connect(
   state => ({
-    data: state.unbundling.data,
-    apiRequestMain: state.unbundling.apiRequestMain, // for creating apiRequestObj
-    apiRequestComparison: state.unbundling.apiRequestComparison, //  for creating apiRequestObj for a comparison treemap
-    selectOptions: state.unbundling.selectOptions,
-    selectOptionsComparison: state.unbundling.selectOptionsComparison,
-    comparison: state.unbundling.comparisonData,
-    treeMapDepth: state.unbundling.treeMapDepth,
     chartCount: state.unbundling.chartCount // hack its change forces a full re-draw of the treemap
-  }),
-  dispatch => ({ actions: bindActionCreators({
-    load, loadComparisonData, updateSelectOptions, changeTreeMapDepth, updateComparisonSelectOptions
-  }, dispatch)})
+  })
 )
 
 export default class TreeMap extends Component {
 
   static propTypes = {
     data: PropTypes.object.isRequired,
-    apiRequestMain: PropTypes.object.isRequired,
-    apiRequestComparison: PropTypes.object,
-    comparison: PropTypes.object,
+    apiRequest: PropTypes.object.isRequired,
     chartCount: PropTypes.number.isRequired,
-    treeMapRefName: PropTypes.string.isRequired,
-    actions: PropTypes.object.isRequired,
-    selectOptions: PropTypes.object,
-    selectOptionsComparison: PropTypes.object,
-    treeMapDepth: PropTypes.number.isRequired
+    treeMapType: PropTypes.number.isRequired,
+    treeMapDepth: PropTypes.number.isRequired,
+    changeTreeMapDepth: PropTypes.func.isRequired,
+    updateSelectOptions: PropTypes.func.isRequired,
+    loadData: PropTypes.func.isRequired
   }
 
   constructor(props) {
     super(props);
-    const {
-      selectOptionsComparison,
-      selectOptions,
-      actions,
-      apiRequestMain,
-      treeMapDepth,
-      apiRequestComparison,
-      treeMapRefName
-    } = this.props;
     this.node = null; // d3 instance of a treemap node (the square box)
     this.treeMapHolder = null; // will contain d3 object of the treeMapHolder dom node
     // Hack i want to be able to mutate this.props.treeMapDepth with in the component by incrementing it but
     // i cant coz its readonly
-    this.treeMapDepth = treeMapDepth;
-    // setting instance variables
-    this.selectOptions = treeMapRefName === 'treemap1' ? selectOptions : selectOptionsComparison;
-    this.updateSelectOptions = treeMapRefName === 'treemap1' ? actions.updateSelectOptions : actions.updateComparisonSelectOptions;
-    this.loadData = treeMapRefName === 'treemap1' ? actions.load : actions.loadComparisonData;
-    this.apiRequestObj = treeMapRefName === 'treemap1' ? apiRequestMain : apiRequestComparison;
+    this.treeMapDepth = this.props.treeMapDepth;
+    this.treeMapRefName = 'treeMap-' + this.props.treeMapType;
     // these class codes are
     // used in creating the classnames for different node squares
     this.nodeClassCodes = ['region', 'sector', 'bundle', 'channel'];
@@ -72,12 +38,11 @@ export default class TreeMap extends Component {
 
   componentDidMount() {
     /* eslint-disable no-unused-expressions*/
-    // if (this.props.chartCount === 2) this.changeTreeMapDepthCount();
-    this.props.treeMapRefName === 'treemap1' ? this.draw(this.props.data) : this.draw(this.props.comparison);
+    this.draw(this.props.data);
   }
 
   componentWillUpdate(nextProps) {
-    nextProps.treeMapRefName === 'treemap1' ? this.draw(nextProps.data) : this.draw(nextProps.comparison);
+    this.draw(nextProps.data);
   }
 
   getNodeClass = (obj) => {
@@ -128,13 +93,12 @@ export default class TreeMap extends Component {
    */
   nodeClickHandler = (node) => {
     // chosing an appropriate load function so that we update the appropriate data
-    // const loadData = treeMapRefName === 'treemap1' ? actions.load : actions.loadComparisonData;
     this.updateSelectMenu(node);
     // building match and group objects for api request object
     const apiRequestObj = this.matchAndGroupAPIObjBuilder(node);
     // actions.updateAPIRequestObject(apiRequestObj);
     // globaly update apiRequestObj
-    if (this.treeMapDepth) this.props.actions.changeTreeMapDepth(this.treeMapDepth); // update incase we have changed
+    if (this.treeMapDepth) this.props.changeTreeMapDepth(this.treeMapDepth); // update incase we have changed
     this.loadData(apiRequestObj);   // make request to API for new data
   }
   /**
@@ -143,9 +107,9 @@ export default class TreeMap extends Component {
    * @return {[type]}      [description]
    */
   matchAndGroupAPIObjBuilder = (node) => {
-    const {treeMapDepth} = this.props;
+    const {treeMapDepth, apiRequest} = this.props;
     // const depth = treeMapDepth;
-    const {match, group} = this.apiRequestObj;
+    const {match, group} = apiRequest;
     if (node.type === 'country') {
       node['donor-recipient-type'] === 'recipient' ? match['id-to'] = node.id : match['id-from'] = node.id;
     } else {
@@ -166,8 +130,6 @@ export default class TreeMap extends Component {
     } else {
       selectOptionType = this.nodeClassCodes[this.treeMapDepth];
     }
-    // const {treeMapRefName, actions} = this.props;
-    // const updateSelectOptionsFn = treeMapRefName === 'treemap1' ? actions.updateSelectOptions : actions.updateComparisonSelectOptions;
     // updating the menu select options
     this.updateSelectOptions({
       [selectOptionType]: { niceName: node.name, value: node.id},
@@ -222,7 +184,7 @@ export default class TreeMap extends Component {
   }
 
   draw = (data) => {
-    this.treeMapHolder = d3.select(this.refs[this.props.treeMapRefName]);
+    this.treeMapHolder = d3.select(this.refs[this.treeMapRefName]);
     // Make sure we have a clean slate
     this.treeMapHolder.selectAll('.node').remove();
     this.node = this.treeMapHolder.datum(data).selectAll('.node') // TODO needs some refactoring
@@ -234,7 +196,7 @@ export default class TreeMap extends Component {
   render() {
     return (
     <div className ={styles.treeContainer}>
-      <section ref = {this.props.treeMapRefName} className={styles.treeMapHolder} />
+      <section ref = {this.treeMapRefName} className={styles.treeMapHolder} />
     </div>
     );
   }

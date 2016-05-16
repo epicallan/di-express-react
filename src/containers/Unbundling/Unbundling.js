@@ -1,11 +1,22 @@
 import React, {Component, PropTypes} from 'react';
 import Helmet from 'react-helmet';
-import {isLoaded, load, isOptionsLoaded, loadOptions, changeChartCount} from 'redux/modules/unbundling';
 import { asyncConnect } from 'redux-async-connect';
-import {TreeMap, UnbundlingMenu} from '../../components';
+import {TreeMap, UnbundlingMenu, CompareButton} from '../../components';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import cx from 'classnames';
+import {
+  isLoaded,
+  isOptionsLoaded,
+  load,
+  loadComparisonData,
+  loadOptions,
+  updateSelectOptions,
+  updateComparisonSelectOptions,
+  changeChartCount,
+  changeTreeMapDepth,
+  changeTreeMapDepthComparison
+} from 'redux/modules/unbundling';
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -20,33 +31,55 @@ import cx from 'classnames';
 @connect(
   state => ({
     chartCount: state.unbundling.chartCount,
+    data: state.unbundling.data,
+    treeMapDepthMain: state.unbundling.treeMapDepthMain,
+    treeMapDepthComparison: state.unbundling.treeMapDepthComparison,
+    comparisonData: state.unbundling.comparisonData,
+    apiRequestMain: state.unbundling.apiRequestMain,
+    apiRequestComparison: state.unbundling.apiRequestComparison,
+    selectOptions: state.unbundling.selectOptions,
+    selectOptionsComparison: state.unbundling.selectOptionsComparison,
   }),
-  dispatch => ({ changeChartCount: bindActionCreators(changeChartCount, dispatch)})
+  dispatch => ({ actions: bindActionCreators({
+    load,
+    loadComparisonData,
+    loadOptions,
+    updateSelectOptions,
+    updateComparisonSelectOptions,
+    changeChartCount,
+    changeTreeMapDepth,
+    changeTreeMapDepthComparison
+  }, dispatch)})
 )
 export default class Unbundling extends Component {
   static propTypes = {
     chartCount: PropTypes.number.isRequired,
-    changeChartCount: PropTypes.func.isRequired
+    actions: PropTypes.object.isRequired,
+    apiRequestMain: PropTypes.object.isRequired,
+    apiRequestComparison: PropTypes.object,
+    selectOptions: PropTypes.object.isRequired,
+    data: PropTypes.object.isRequired,
+    comparisonData: PropTypes.object,
+    selectOptionsComparison: PropTypes.object,
+    treeMapDepthMain: PropTypes.number.isRequired,
+    treeMapDepthComparison: PropTypes.number
   }
-  state = {
-    compareBtnLable: 'Compare'
-  }
-  /**
-   * changes chartCount value to 2
-   * @return {[type]} [description]
-   */
-  compareClickHandler = () => {
-    if (this.state.compareBtnLable === 'Compare') {
-      this.state.compareBtnLable = 'X';
-      this.props.changeChartCount(2);
-    } else {
-      this.state.compareBtnLable = 'Compare';
-      this.props.changeChartCount(1);
-    }
-  }
+
   render() {
     const styles = require('./Unbundling.scss');
-    const chartClass = this.props.chartCount === 2 ? 'col-md-6' : 'col-md-12';
+    const {
+      actions,
+      chartCount,
+      apiRequestMain,
+      apiRequestComparison,
+      selectOptions,
+      selectOptionsComparison,
+      data,
+      treeMapDepthMain,
+      treeMapDepthComparison,
+      comparisonData
+    } = this.props;
+    const chartClass = chartCount === 2 ? 'col-md-6' : 'col-md-12';
     return (
       <div>
         <Helmet title="unbundling Aid"/>
@@ -54,34 +87,58 @@ export default class Unbundling extends Component {
           <header className= {cx('row', styles.header)}>
             <h1 className="text-center"> Unbundling aid </h1>
             <div className = {cx(chartClass, styles.menuContainer)}>
-              <UnbundlingMenu chart = {1} />
+              <UnbundlingMenu
+                menuType = {1}
+                selectOptions = {selectOptions}
+                apiRequest = {apiRequestMain}
+                loadData = {actions.load}
+                updateSelectOptions = {actions.updateSelectOptions}
+                />
             </div>
             {(() => {
               // on comparison we need another chart
               if (this.props.chartCount === 2) {
                 return (
                   <div className= {cx(chartClass, styles.menuContainer)} ref="comparisonMenu">
-                    <UnbundlingMenu chart = {2} />
+                    <UnbundlingMenu
+                      menuType = {2}
+                      selectOptions = {selectOptionsComparison}
+                      apiRequest = {apiRequestComparison}
+                      updateSelectOptions = {actions.updateComparisonSelectOptions}
+                      loadData = {actions.loadComparisonData}
+                      />
                   </div>
                 );
               }
             })()}
-            <div className = {styles.comparisonBtn}>
-              <button className="btn btn--on-light btn--square" onClick= {this.compareClickHandler.bind(this)}>
-                  <span>{this.state.compareBtnLable}</span>
-              </button>
-            </div>
+            <CompareButton changeChartCount = {actions.changeChartCount} />
           </header>
           <section className= {cx('row')}>
             <div className = {chartClass} >
-              <TreeMap treeMapRefName= "treemap1" />
+              <TreeMap
+                treeMapType = {1}
+                changeTreeMapDepth = {actions.changeTreeMapDepth}
+                treeMapDepth = {treeMapDepthMain}
+                data = {data}
+                updateSelectOptions = {actions.updateSelectOptions}
+                apiRequest = {apiRequestMain}
+                loadData = {actions.load}
+              />
             </div>
             {(() => {
               // on comparison we need another chart
               if (this.props.chartCount === 2) {
                 return (
                   <div className= "col-md-6" ref="comparisonTreemap">
-                    <TreeMap treeMapRefName= "treemap2" />
+                    <TreeMap
+                      treeMapType = {2}
+                      treeMapDepth = {treeMapDepthComparison}
+                      data = {comparisonData}
+                      changeTreeMapDepth = {actions.changeTreeMapDepth}
+                      updateSelectOptions = {actions.updateComparisonSelectOptions}
+                      apiRequest = {apiRequestComparison}
+                      loadData = {actions.loadComparisonData}
+                      />
                   </div>
                 );
               }

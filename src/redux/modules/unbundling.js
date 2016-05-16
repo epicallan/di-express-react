@@ -12,6 +12,7 @@ const CHANGE_CHART_COUNT = 'unbundling/CHANGE_CHART_COUNT';
 const SELECT_OPTIONS = 'unbundling/SELECT_OPTIONS';
 const SELECT_OPTIONS_COMPARISON = 'unbundling/SELECT_OPTIONS_COMPARISON';
 const CHANGE_TREE_MAP_DEPTH = 'unbundling/CHANGE_TREE_MAP_DEPTH';
+const CHANGE_TREE_MAP_DEPTH_COMPARISON = 'unbundling/CHANGE_TREE_MAP_DEPTH_COMPARISON';
 const HYDRATE = 'unbundling/HYDRATE';
 const PERSIST = 'unbundling/PERSIST';
 
@@ -24,9 +25,16 @@ const initialState = {
   comparisonLoaded: false,
   apiRequestComparison: {},
   chartCount: 1,
-  treeMapDepth: 0,
+  treeMapDepthMain: 0,
   selectOptionsComparison: {},
-  selectOptions: {},
+  selectOptions: {
+    year: {value: 2013},
+    sector: { niceName: 'All', value: 'All'},
+    bundle: { niceName: 'All', value: 'All'},
+    'id-to': { niceName: 'All', value: 'All'},
+    'id-from': { niceName: 'All', value: 'All'},
+    channel: { niceName: 'All', value: 'All'}
+  }
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -34,7 +42,7 @@ export default function reducer(state = initialState, action = {}) {
     case SELECT_OPTIONS: {
       return {
         ...state,
-        selectOptions: action.selectOptions
+        selectOptions: Object.assign({}, state.selectOptions, action.selectOptions)
       };
     }
     case SELECT_OPTIONS_COMPARISON: {
@@ -46,12 +54,19 @@ export default function reducer(state = initialState, action = {}) {
     case CHANGE_TREE_MAP_DEPTH: {
       return {
         ...state,
-        treeMapDepth: action.treeMapDepth
+        treeMapDepthMain: action.treeMapDepthMain
+      };
+    }
+    case CHANGE_TREE_MAP_DEPTH_COMPARISON: {
+      return {
+        ...state,
+        treeMapDepthComparison: action.treeMapDepthComparison
       };
     }
     case CHANGE_CHART_COUNT: {
       return {
         ...state,
+        treeMapDepthComparison: state.treeMapDepth,
         chartCount: action.chartCount,
         selectOptionsComparison: state.selectOptions,
         apiRequestComparison: state.apiRequestMain,
@@ -203,9 +218,16 @@ export function updateComparisonSelectOptions(selectOptions) {
   };
 }
 
-export function changeTreeMapDepth(treeMapDepth) {
+export function changeTreeMapDepth(treeMapDepthMain) {
   return {
     type: CHANGE_TREE_MAP_DEPTH,
-    treeMapDepth,
+    treeMapDepthMain,
+  };
+}
+
+export function changeTreeMapDepthComparison(treeMapDepthComparison) {
+  return {
+    type: CHANGE_TREE_MAP_DEPTH_COMPARISON,
+    treeMapDepthComparison,
   };
 }
