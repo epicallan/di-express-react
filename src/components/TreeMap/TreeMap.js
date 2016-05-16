@@ -39,7 +39,7 @@ export default class TreeMap extends Component {
     chartCount: PropTypes.number.isRequired,
     treeMapRefName: PropTypes.string.isRequired,
     actions: PropTypes.object.isRequired,
-    selectOptions: PropTypes.object.isRequired,
+    selectOptions: PropTypes.object,
     selectOptionsComparison: PropTypes.object,
     treeMapDepth: PropTypes.number.isRequired
   }

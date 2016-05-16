@@ -26,21 +26,15 @@ const initialState = {
   chartCount: 1,
   treeMapDepth: 0,
   selectOptionsComparison: {},
-  selectOptions: {
-    year: {value: 2013},
-    sector: { niceName: 'All', value: 'All'},
-    bundle: { niceName: 'All', value: 'All'},
-    'id-to': { niceName: 'All', value: 'All'},
-    'id-from': { niceName: 'All', value: 'All'},
-    channel: { niceName: 'All', value: 'All'}
-  },
+  selectOptions: {},
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case SELECT_OPTIONS: {
       return {
-        ...state
+        ...state,
+        selectOptions: action.selectOptions
       };
     }
     case SELECT_OPTIONS_COMPARISON: {
@@ -195,16 +189,14 @@ export function changeChartCount(count) {
  * @param  {object} selectOptions
  * @return {object}
  */
-export function updateSelectOptions(selectOptions, type = SELECT_OPTIONS ) {
-  console.log('select options type: ', type);
+export function updateSelectOptions(selectOptions ) {
   return {
-    type,
-    selectOptions
+    type: SELECT_OPTIONS,
+    selectOptions: selectOptions
   };
 }
 
 export function updateComparisonSelectOptions(selectOptions) {
-  console.log('select options type: ', SELECT_OPTIONS_COMPARISON);
   return {
     type: SELECT_OPTIONS_COMPARISON,
     selectOptionsComparison: selectOptions

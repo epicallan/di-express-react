@@ -19,7 +19,7 @@ import cx from 'classnames';
 }])
 @connect(
   state => ({
-    chartCount: state.unbundling.chartCount
+    chartCount: state.unbundling.chartCount,
   }),
   dispatch => ({ changeChartCount: bindActionCreators(changeChartCount, dispatch)})
 )

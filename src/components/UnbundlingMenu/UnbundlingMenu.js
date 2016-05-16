@@ -27,7 +27,7 @@ export default class UnbundlingMenu extends Component {
     channel: PropTypes.array.isRequired,
     apiRequestMain: PropTypes.object.isRequired,
     apiRequestComparison: PropTypes.object,
-    selectOptions: PropTypes.object.isRequired,
+    selectOptions: PropTypes.object,
     selectOptionsComparison: PropTypes.object,
     'id-to': PropTypes.array.isRequired,
     'id-from': PropTypes.array.isRequired,
@@ -46,27 +46,31 @@ export default class UnbundlingMenu extends Component {
       chart
     } = this.props;
     this.menuType = chart;
+    // this.selectOptions = this.getSelectOptions;
     // console.log('menu type: ', chart);
     this.updateSelectOptions = chart === 1 ? actions.updateSelectOptions : actions.updateComparisonSelectOptions;
     this.loadData = chart === 1 ? actions.load : actions.loadComparisonData;
     this.apiRequestObj = chart === 1 ? apiRequestMain : apiRequestComparison;
   }
 
-  getSelectOptions = () => {
-    const {selectOptionsComparison, selectOptions} = this.props;
-    const selectOptionsObj = this.menuType === 1 ? selectOptions : selectOptionsComparison;
-    return selectOptionsObj;
-  }
+  selectOptions = {
+    year: {value: 2013},
+    sector: { niceName: 'All', value: 'All'},
+    bundle: { niceName: 'All', value: 'All'},
+    'id-to': { niceName: 'All', value: 'All'},
+    'id-from': { niceName: 'All', value: 'All'},
+    channel: { niceName: 'All', value: 'All'}
+  };
   /**
    * levelOptionsVisibility:  set selectOptions visible or unvisible depending on their current display state
    * @param  {[type]} level [description]
    * @return {[type]}       [description]
    */
   levelOptionsVisibility = (levelName) => {
-    const selectOptions = [...this.levels, 'year'];
+    const levels = [...this.levels, 'year'];
     // hide all select options
     // and show only current selection
-    selectOptions.forEach(key => {
+    levels.forEach(key => {
       // const options = selectOptionsObj[key];
       const refName = `${key}-${this.menuType}`; // TODO can be refactored : element whose visibility we are affectig
       key === levelName ? this.refs[refName].style.display = 'block' : this.refs[refName].style.display = 'none';
@@ -87,13 +91,13 @@ export default class UnbundlingMenu extends Component {
 
   optionsChangeHandler(levelName, event) {
     const {match, group} = this.apiRequestObj;
-    const selectOptionsObj = this.getSelectOptions();
+    // const selectOptionsObj = this.getSelectOptions();
     // if the selection is all for an option then remove that option from the api request
-    const stateObj = selectOptionsObj[levelName]; // selectOptions object being affected
+    const stateObj = this.selectOptions[levelName]; // selectOptions object being affected
     if (levelName !== 'year') stateObj.niceName = this.niceNamesForSelectOptions(event.target.value, levelName);
     stateObj.value = event.target.value;
-    // const selectOptions = Object.assign({}, selectOptionsObj, );
-    this.updateSelectOptions({[levelName]: stateObj});
+    // console.log({...selectOptionsObj, [levelName]: stateObj})
+    this.updateSelectOptions({...this.selectOptions, [levelName]: stateObj});
     // updating API request object
     event.target.value === 'All' ? delete match[levelName] : match[levelName] = event.target.value;
     // make API request Object and make request for new data
@@ -113,7 +117,7 @@ export default class UnbundlingMenu extends Component {
   }
 
   createLevelSettings = () => {
-    const selectOptionsObj = this.getSelectOptions();
+    const selectOptionsObj = this.selectOptions;
     // console.log('selectOptions: ', selectOptionsObj );
     const settings = this.levels.map((key, index) => {
       const level = this.props[key];
@@ -151,7 +155,7 @@ export default class UnbundlingMenu extends Component {
   render() {
     const styles = require('./UnbundlingMenu.scss');
     const refName = `year-${this.menuType}`;
-    const selectOptionsObj = this.getSelectOptions();
+    const selectOptionsObj = this.selectOptions;
     return (
       <section className ={cx('treemap--settings-holder', 'col-md-12', styles.toolBar)}>
         <div className="settings--item selected">
