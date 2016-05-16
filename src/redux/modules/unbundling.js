@@ -10,6 +10,7 @@ const OPTION_SUCCESS = 'unbundling/OPTION_SUCCESS';
 const OPTION_FAIL = 'unbundling/OPTION_FAIL';
 const CHANGE_CHART_COUNT = 'unbundling/CHANGE_CHART_COUNT';
 const SELECT_OPTIONS = 'unbundling/SELECT_OPTIONS';
+const SELECT_OPTIONS_COMPARISON = 'unbundling/SELECT_OPTIONS_COMPARISON';
 const CHANGE_TREE_MAP_DEPTH = 'unbundling/CHANGE_TREE_MAP_DEPTH';
 const HYDRATE = 'unbundling/HYDRATE';
 const PERSIST = 'unbundling/PERSIST';
@@ -26,12 +27,12 @@ const initialState = {
   treeMapDepth: 0,
   selectOptionsComparison: {},
   selectOptions: {
-    year: {value: 2013, visible: true},
-    sector: { niceName: 'All', value: 'All', visible: false},
-    bundle: { niceName: 'All', value: 'All', visible: false},
-    'id-to': { niceName: 'All', value: 'All', visible: false},
-    'id-from': { niceName: 'All', value: 'All', visible: false},
-    channel: { niceName: 'All', value: 'All', visible: false},
+    year: {value: 2013},
+    sector: { niceName: 'All', value: 'All'},
+    bundle: { niceName: 'All', value: 'All'},
+    'id-to': { niceName: 'All', value: 'All'},
+    'id-from': { niceName: 'All', value: 'All'},
+    channel: { niceName: 'All', value: 'All'},
   },
 };
 
@@ -41,6 +42,12 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         selectOptions: Object.assign({}, state.selectOptions, action.selectOptions)
+      };
+    }
+    case SELECT_OPTIONS_COMPARISON: {
+      return {
+        ...state,
+        selectOptionsComparison: Object.assign({}, state.selectOptionsComparison, action.selectOptionsComparison)
       };
     }
     case CHANGE_TREE_MAP_DEPTH: {
@@ -158,7 +165,7 @@ export function load(apiRequestObj = {
   match: {'year': 2013},
   group: {_id: '$id-to', total: {'$sum': '$value'}}
 }, types = [LOAD, LOAD_SUCCESS, LOAD_FAIL] ) {
-  console.log('apiRequestObj', apiRequestObj);
+  // console.log('apiRequestObj', apiRequestObj);
   return {
     types,
     promise: (client) => client.post('unbundling', {data: apiRequestObj}),
@@ -189,10 +196,19 @@ export function changeChartCount(count) {
  * @param  {object} selectOptions
  * @return {object}
  */
-export function updateSelectOptions(selectOptions) {
+export function updateSelectOptions(selectOptions, type = SELECT_OPTIONS ) {
+  console.log('select options type: ', type);
   return {
-    type: SELECT_OPTIONS,
+    type,
     selectOptions
+  };
+}
+
+export function updateComparisonSelectOptions(selectOptions) {
+  console.log('select options type: ', SELECT_OPTIONS_COMPARISON);
+  return {
+    type: SELECT_OPTIONS_COMPARISON,
+    selectOptionsComparison: selectOptions
   };
 }
 

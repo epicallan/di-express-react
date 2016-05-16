@@ -1,9 +1,9 @@
 import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {load, loadComparisonData, updateSelectOptions} from 'redux/modules/unbundling';
+import {load, loadComparisonData, updateSelectOptions, updateComparisonSelectOptions} from 'redux/modules/unbundling';
 import cx from 'classnames';
-
+/* eslint-disable no-unused-expressions*/
 @connect(
   state => ({
     sector: state.unbundling.sector,
@@ -14,10 +14,11 @@ import cx from 'classnames';
     // mantaining state across selectOptions import when the treemap nodes are
     // clicked and we need to update the menu to reflect that
     selectOptions: state.unbundling.selectOptions,
+    selectOptionsComparison: state.unbundling.selectOptionsComparison,
     'id-to': state.unbundling['id-to'], // aid to countries
     'id-from': state.unbundling['id-from'] // aid from countries
   }),
-  dispatch => ({ actions: bindActionCreators({load, loadComparisonData, updateSelectOptions}, dispatch)})
+  dispatch => ({ actions: bindActionCreators({load, loadComparisonData, updateSelectOptions, updateComparisonSelectOptions}, dispatch)})
 )
 export default class UnbundlingMenu extends Component {
   static propTypes = {
@@ -26,49 +27,55 @@ export default class UnbundlingMenu extends Component {
     channel: PropTypes.array.isRequired,
     apiRequestMain: PropTypes.object.isRequired,
     apiRequestComparison: PropTypes.object,
-    selectOptions: PropTypes.object,
+    selectOptions: PropTypes.object.isRequired,
+    selectOptionsComparison: PropTypes.object,
     'id-to': PropTypes.array.isRequired,
     'id-from': PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired,
     chart: PropTypes.number
   };
-  // component state
-  state = {
-    compareBtnLable: 'compare'
-  };
+
+  constructor(props) {
+    super(props);
+    this.state = { compareBtnLable: 'compare'};
+    this.levels = ['id-to', 'id-from', 'bundle', 'channel', 'sector'];
+    const {
+      actions,
+      apiRequestMain,
+      apiRequestComparison,
+      chart
+    } = this.props;
+    this.menuType = chart;
+    // console.log('menu type: ', chart);
+    this.updateSelectOptions = chart === 1 ? actions.updateSelectOptions : actions.updateComparisonSelectOptions;
+    this.loadData = chart === 1 ? actions.load : actions.loadComparisonData;
+    this.apiRequestObj = chart === 1 ? apiRequestMain : apiRequestComparison;
+  }
+
+  getSelectOptions = () => {
+    const {selectOptionsComparison, selectOptions} = this.props;
+    const selectOptionsObj = this.menuType === 1 ? selectOptions : selectOptionsComparison;
+    return selectOptionsObj;
+  }
   /**
    * levelOptionsVisibility:  set selectOptions visible or unvisible depending on their current display state
    * @param  {[type]} level [description]
    * @return {[type]}       [description]
    */
-  levelOptionsVisibility(levelName) {
+  levelOptionsVisibility = (levelName) => {
+    const selectOptions = [...this.levels, 'year'];
     // hide all select options
     // and show only current selection
-    const selectOptions = this.props.selectOptions;
-    Object.keys(selectOptions).forEach(key => {
-      const options = selectOptions[key];
-      const refName = `${key}-${this.props.chart}`;
-      if (key === levelName) {
-        options.visible = true;
-        this.refs[refName].style.display = 'block';
-      } else {
-        options.visible = false;
-        this.refs[refName].style.display = 'none';
-      }
+    selectOptions.forEach(key => {
+      // const options = selectOptionsObj[key];
+      const refName = `${key}-${this.menuType}`; // TODO can be refactored : element whose visibility we are affectig
+      key === levelName ? this.refs[refName].style.display = 'block' : this.refs[refName].style.display = 'none';
     });
-    this.props.actions.updateSelectOptions(selectOptions);
-    // console.log(this.state);
   }
 
-  closeOptionContainer(levelName) {
-    // hide object
-    const refName = `${levelName}-${this.props.chart}`;
+  closeOptionContainer = (levelName) => {
+    const refName = `${levelName}-${this.menuType}`;
     this.refs[refName].style.display = 'none';
-    // change its state
-    const activeOptions = this.props.selectOptions[levelName];
-    activeOptions.visible = false;
-    const selectOptions = Object.assign({}, this.props.selectOptions, {[levelName]: activeOptions});
-    this.setState({'selectOptions': selectOptions});
   }
 
   niceNamesForSelectOptions = (id, levelName) => {
@@ -79,22 +86,19 @@ export default class UnbundlingMenu extends Component {
   }
 
   optionsChangeHandler(levelName, event) {
-    const {actions, chart, apiRequestMain, apiRequestComparison} = this.props;
-    // chosing what global request object to work
-    const {match, group} = chart === 1 ? apiRequestMain : apiRequestComparison;
-    /* eslint-disable no-unused-expressions*/
+    const {match, group} = this.apiRequestObj;
+    const selectOptionsObj = this.getSelectOptions();
     // if the selection is all for an option then remove that option from the api request
-    const stateObj = this.props.selectOptions[levelName]; // selectOptions object being affected
+    const stateObj = selectOptionsObj[levelName]; // selectOptions object being affected
     if (levelName !== 'year') stateObj.niceName = this.niceNamesForSelectOptions(event.target.value, levelName);
     stateObj.value = event.target.value;
-    const selectOptions = Object.assign({}, this.props.selectOptions, {[levelName]: stateObj});
-    this.props.actions.updateSelectOptions(selectOptions);
+    // const selectOptions = Object.assign({}, selectOptionsObj, );
+    this.updateSelectOptions({[levelName]: stateObj});
     // updating API request object
     event.target.value === 'All' ? delete match[levelName] : match[levelName] = event.target.value;
     // make API request Object and make request for new data
     const apiRequestObj = {match, group};
-    const loadData = chart === 1 ? actions.load : actions.loadComparisonData;
-    loadData(apiRequestObj);
+    this.loadData(apiRequestObj);
   }
   /**
    * this function is just a helper function to return 'to' or 'from' from
@@ -109,7 +113,9 @@ export default class UnbundlingMenu extends Component {
   }
 
   createLevelSettings = () => {
-    const settings = Object.keys(this.props).map((key, index) => {
+    const selectOptionsObj = this.getSelectOptions();
+    console.log('selectOptions: ', selectOptionsObj );
+    const settings = this.levels.map((key, index) => {
       const level = this.props[key];
       if (!Array.isArray(level)) return false;
 
@@ -118,18 +124,18 @@ export default class UnbundlingMenu extends Component {
         )
       );
       const levelName = this.niceNamesForMenu(key);
-      const refName = `${key}-${this.props.chart}`; // we want to have unique refnames coz we duplicate this component
+      const refName = `${key}-${this.menuType}`; // we want to have unique refnames coz we duplicate this component
       return (
         <li key = {key + '-' + index} className="settings--item settings--sort_item">
           <span className="drag-handle" onClick={this.levelOptionsVisibility.bind(this, key)}>
             <span className="settings--item-level-name">{levelName}</span>
-            <strong>{this.props.selectOptions[key].niceName}</strong>
+            <strong>{selectOptionsObj[key].niceName}</strong>
           </span>
           <div className="select-holder" ref={refName}>
             <i className="ss-delete close" onClick={this.closeOptionContainer.bind(this, key)}></i>
             <i>{levelName}</i>
             <div className="select">
-              <select className="form-control" value = {this.props.selectOptions[key].value}
+              <select className="form-control" value = {selectOptionsObj[key].value}
                 onChange = {this.optionsChangeHandler.bind(this, key)} >
                 <option value="All">All</option>
                 {levelOptions}
@@ -144,16 +150,17 @@ export default class UnbundlingMenu extends Component {
 
   render() {
     const styles = require('./UnbundlingMenu.scss');
-    const refName = `year-${this.props.chart}`;
+    const refName = `year-${this.menuType}`;
+    const selectOptionsObj = this.getSelectOptions();
     return (
       <section className ={cx('treemap--settings-holder', 'col-md-12', styles.toolBar)}>
         <div className="settings--item selected">
-          <span className={styles.spanMain} onClick={this.levelOptionsVisibility.bind(this, 'year')} >ODA in <strong> {this.props.selectOptions.year.value}</strong></span>
+          <span className={styles.spanMain} onClick={this.levelOptionsVisibility.bind(this, 'year')} >ODA in <strong> {selectOptionsObj.year.value}</strong></span>
           <div className="select-holder" ref={refName}>
             <i className="ss-delete close" onClick={this.closeOptionContainer.bind(this, 'year')}></i>
             <i>Years</i>
             <div className="select">
-              <select className="form-control" value = {this.props.selectOptions.year.value} onChange = {this.optionsChangeHandler.bind(this, 'year')} >
+              <select className="form-control" value = {selectOptionsObj.year.value} onChange = {this.optionsChangeHandler.bind(this, 'year')} >
                   {/* TODO refactor */ }
                   <option value="2013">2013</option>
                   <option value="2012">2012</option>
