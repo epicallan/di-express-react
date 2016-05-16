@@ -32,7 +32,7 @@ const initialState = {
     bundle: { niceName: 'All', value: 'All'},
     'id-to': { niceName: 'All', value: 'All'},
     'id-from': { niceName: 'All', value: 'All'},
-    channel: { niceName: 'All', value: 'All'},
+    channel: { niceName: 'All', value: 'All'}
   },
 };
 
@@ -40,8 +40,7 @@ export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case SELECT_OPTIONS: {
       return {
-        ...state,
-        selectOptions: Object.assign({}, state.selectOptions, action.selectOptions)
+        ...state
       };
     }
     case SELECT_OPTIONS_COMPARISON: {

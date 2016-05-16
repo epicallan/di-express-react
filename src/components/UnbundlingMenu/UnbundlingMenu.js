@@ -114,7 +114,7 @@ export default class UnbundlingMenu extends Component {
 
   createLevelSettings = () => {
     const selectOptionsObj = this.getSelectOptions();
-    console.log('selectOptions: ', selectOptionsObj );
+    // console.log('selectOptions: ', selectOptionsObj );
     const settings = this.levels.map((key, index) => {
       const level = this.props[key];
       if (!Array.isArray(level)) return false;
