@@ -99,7 +99,7 @@ export default class TreeMap extends Component {
     // actions.updateAPIRequestObject(apiRequestObj);
     // globaly update apiRequestObj
     if (this.treeMapDepth) this.props.changeTreeMapDepth(this.treeMapDepth); // update incase we have changed
-    this.loadData(apiRequestObj);   // make request to API for new data
+    this.props.loadData(apiRequestObj);   // make request to API for new data
   }
   /**
    * creates api request object based on the clicked treemap node
@@ -131,7 +131,7 @@ export default class TreeMap extends Component {
       selectOptionType = this.nodeClassCodes[this.treeMapDepth];
     }
     // updating the menu select options
-    this.updateSelectOptions({
+    this.props.updateSelectOptions({
       [selectOptionType]: { niceName: node.name, value: node.id},
     });
   }

@@ -66,7 +66,7 @@ export default function reducer(state = initialState, action = {}) {
     case CHANGE_CHART_COUNT: {
       return {
         ...state,
-        treeMapDepthComparison: state.treeMapDepth,
+        treeMapDepthComparison: state.treeMapDepthMain,
         chartCount: action.chartCount,
         selectOptionsComparison: state.selectOptions,
         apiRequestComparison: state.apiRequestMain,
