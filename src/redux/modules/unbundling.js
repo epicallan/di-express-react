@@ -13,8 +13,10 @@ const SELECT_OPTIONS = 'unbundling/SELECT_OPTIONS';
 const SELECT_OPTIONS_COMPARISON = 'unbundling/SELECT_OPTIONS_COMPARISON';
 const CHANGE_TREE_MAP_DEPTH = 'unbundling/CHANGE_TREE_MAP_DEPTH';
 const CHANGE_TREE_MAP_DEPTH_COMPARISON = 'unbundling/CHANGE_TREE_MAP_DEPTH_COMPARISON';
+const CHANGE_COMPARE_BUTTON_LABLE = 'unbundling/CHANGE_COMPARE_BUTTON_LABLE';
 const HYDRATE = 'unbundling/HYDRATE';
-const PERSIST = 'unbundling/PERSIST';
+// const PERSIST = 'unbundling/PERSIST';
+import {getFromSessionStorage} from '../cache';
 
 const initialState = {
   loaded: false,
@@ -22,10 +24,12 @@ const initialState = {
   optionLoaded: false,
   optionLoading: true,
   comparisonLoading: false,
+  cacheKeys: [],
   comparisonLoaded: false,
   apiRequestComparison: {},
   chartCount: 1,
   treeMapDepthMain: 0,
+  compareBtnLable: 'Compare',
   selectOptionsComparison: {},
   selectOptions: {
     year: {value: 2013},
@@ -39,6 +43,12 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case CHANGE_COMPARE_BUTTON_LABLE: {
+      return {
+        ...state,
+        compareBtnLable: action.compareBtnLable
+      };
+    }
     case SELECT_OPTIONS: {
       return {
         ...state,
@@ -89,21 +99,25 @@ export default function reducer(state = initialState, action = {}) {
         optionLoading: true
       };
     case LOAD_SUCCESS:
+      // storeInSessionStorage(action.cacheKey, state); // cache previous state
       return {
         ...state,
         loading: false,
         loaded: true,
+        cacheKeys: [...state.cacheKeys, action.cacheKey],
         data: action.result,
-        apiRequestMain: action.apiRequestObj
+        apiRequestMain: action.apiRequest
       };
     case LOAD_COMPARISON_SUCCESS:
+      // storeInSessionStorage(action, state); // cache current state
       return {
         ...state,
         chartCount: 2,
         comparisonLoading: false,
         comparisonLoaded: true,
         comparisonData: action.result,
-        apiRequestComparison: action.apiRequestObj
+        cacheKeys: [...state.cacheKeys, action.cacheKey],
+        apiRequestComparison: action.apiRequest
       };
     case OPTION_SUCCESS:
       return {
@@ -142,15 +156,9 @@ export default function reducer(state = initialState, action = {}) {
         chartCount: 1,
       };
     case HYDRATE: {
-      // get new state from cache
+      const store = getFromSessionStorage(action.hydrateKey);
       return {
-        ...action.state
-      };
-    }
-    case PERSIST: {
-      // store current cacheKey
-      return {
-        cache: action.cacheKey
+        ...store
       };
     }
     default:
@@ -169,15 +177,18 @@ export function isOptionsLoaded(globalState) {
  * @param  {obj} unbundling api post request args
  * @return {object}
  */
-export function load(apiRequestObj = {
-  match: {'year': 2013},
-  group: {_id: '$id-to', total: {'$sum': '$value'}}
-}, types = [LOAD, LOAD_SUCCESS, LOAD_FAIL] ) {
-  // console.log('apiRequestObj', apiRequestObj);
+export function load(
+  apiRequest = {
+    match: {'year': 2013},
+    group: {_id: '$id-to', total: {'$sum': '$value'}}
+  },
+  types = [LOAD, LOAD_SUCCESS, LOAD_FAIL] ) {
+  const date = new Date();
   return {
     types,
-    promise: (client) => client.post('unbundling', {data: apiRequestObj}),
-    apiRequestObj
+    promise: (client) => client.post('unbundling', {data: apiRequest}),
+    apiRequest,
+    cacheKey: date.toISOString()
   };
 }
 
@@ -188,8 +199,8 @@ export function loadOptions() {
   };
 }
 
-export function loadComparisonData(apiRequestObj) {
-  return load(apiRequestObj, [LOAD_COMPARISON, LOAD_COMPARISON_SUCCESS, LOAD_COMPARISON_FAIL]);
+export function loadComparisonData(apiRequest) {
+  return load(apiRequest, [LOAD_COMPARISON, LOAD_COMPARISON_SUCCESS, LOAD_COMPARISON_FAIL]);
 }
 
 export function changeChartCount(count) {
@@ -229,5 +240,26 @@ export function changeTreeMapDepthComparison(treeMapDepthComparison) {
   return {
     type: CHANGE_TREE_MAP_DEPTH_COMPARISON,
     treeMapDepthComparison,
+  };
+}
+
+export function changeCompareBtnLable(compareBtnLable) {
+  return {
+    type: CHANGE_COMPARE_BUTTON_LABLE,
+    compareBtnLable
+  };
+}
+
+// export function cacheStore(cacheKey) {
+//   return {
+//     type: PERSIST,
+//     cacheKey
+//   };
+// }
+
+export function hydrateStore(cacheKey) {
+  return {
+    type: HYDRATE,
+    hydrateKey: cacheKey
   };
 }

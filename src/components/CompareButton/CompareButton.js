@@ -1,18 +1,19 @@
 import React, {PropTypes, Component} from 'react';
 
 export default class CompareButton extends Component {
+
   static propTypes = {
     changeChartCount: PropTypes.func.isRequired,
+    compareBtnLable: PropTypes.string.isRequired,
+    changeCompareBtnLable: PropTypes.func.isRequired
   }
 
-  state = {compareBtnLable: 'Compare'}
-
   compareClickHandler = () => {
-    if (this.state.compareBtnLable === 'Compare') {
-      this.setState({compareBtnLable: 'X'});
+    if (this.props.compareBtnLable === 'Compare') {
+      this.props.changeCompareBtnLable('X');
       this.props.changeChartCount(2);
     } else {
-      this.setState({compareBtnLable: 'Compare'});
+      this.props.changeCompareBtnLable('Compare');
       this.props.changeChartCount(1);
     }
   }
@@ -22,7 +23,7 @@ export default class CompareButton extends Component {
     return (
       <div className = {styles.comparisonBtn}>
         <button className="btn btn--on-light btn--square" onClick= {this.compareClickHandler.bind(this)}>
-            <span>{this.state.compareBtnLable}</span>
+            <span>{this.props.compareBtnLable}</span>
         </button>
       </div>
     );

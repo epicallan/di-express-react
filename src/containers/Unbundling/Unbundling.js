@@ -15,7 +15,8 @@ import {
   updateComparisonSelectOptions,
   changeChartCount,
   changeTreeMapDepth,
-  changeTreeMapDepthComparison
+  changeTreeMapDepthComparison,
+  changeCompareBtnLable
 } from 'redux/modules/unbundling';
 
 @asyncConnect([{
@@ -39,6 +40,7 @@ import {
     apiRequestComparison: state.unbundling.apiRequestComparison,
     selectOptions: state.unbundling.selectOptions,
     selectOptionsComparison: state.unbundling.selectOptionsComparison,
+    compareBtnLable: state.unbundling.compareBtnLable
   }),
   dispatch => ({ actions: bindActionCreators({
     load,
@@ -48,6 +50,7 @@ import {
     updateComparisonSelectOptions,
     changeChartCount,
     changeTreeMapDepth,
+    changeCompareBtnLable,
     changeTreeMapDepthComparison
   }, dispatch)})
 )
@@ -62,7 +65,8 @@ export default class Unbundling extends Component {
     comparisonData: PropTypes.object,
     selectOptionsComparison: PropTypes.object,
     treeMapDepthMain: PropTypes.number.isRequired,
-    treeMapDepthComparison: PropTypes.number
+    treeMapDepthComparison: PropTypes.number,
+    compareBtnLable: PropTypes.string.isRequired
   }
 
   render() {
@@ -77,6 +81,7 @@ export default class Unbundling extends Component {
       data,
       treeMapDepthMain,
       treeMapDepthComparison,
+      compareBtnLable,
       comparisonData
     } = this.props;
     const chartClass = chartCount === 2 ? 'col-md-6' : 'col-md-12';
@@ -111,7 +116,11 @@ export default class Unbundling extends Component {
                 );
               }
             })()}
-            <CompareButton changeChartCount = {actions.changeChartCount} />
+            <CompareButton
+              changeChartCount = {actions.changeChartCount}
+              changeCompareBtnLable = {actions.changeCompareBtnLable}
+              compareBtnLable = {compareBtnLable}
+               />
           </header>
           <section className= {cx('row')}>
             <div className = {chartClass} >
