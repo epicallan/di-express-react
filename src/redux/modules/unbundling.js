@@ -163,8 +163,10 @@ export default function reducer(state = initialState, action = {}) {
       };
     case HYDRATE: {
       const store = getFromSessionStorage(action.hydrateKey);
+      // if (state.treeMapDepthMain !== 0 ) state.treeMapDepthMain -= 1; // hack
+      // if (state.treeMapDepthComparison !== 0 ) state.treeMapDepthComparison -= 1; // hack
       return {
-        ...store
+        ...store, treeMapDepthMain: state.treeMapDepthMain, treeMapDepthComparison: state.treeMapDepthComparison
       };
     }
     default:

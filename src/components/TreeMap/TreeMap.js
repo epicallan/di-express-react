@@ -41,6 +41,8 @@ export default class TreeMap extends Component {
   }
 
   componentWillUpdate(nextProps) {
+    this.treeMapDepth = nextProps.treeMapDepth; // hack
+    console.log('treeMapDepth', nextProps.treeMapDepth);
     this.draw(nextProps.data);
   }
 
@@ -48,7 +50,7 @@ export default class TreeMap extends Component {
     // treeMapDepth only changes when you click on a node
     // when we interact with only the select menu options we stay with in the region
     // type / treeMapDepth, which is what we want.
-    const type = this.nodeClassCodes[this.props.treeMapDepth];
+    const type = this.nodeClassCodes[this.treeMapDepth];
     // if (this.treeMapDepth) console.log('type not zero', type);
     const code = obj.region || obj.id;
     return 'node ' + type + '-' + code;
@@ -116,8 +118,8 @@ export default class TreeMap extends Component {
       const category = this.nodeClassCodes[treeMapDepth];
       match[category] = node.id;
     }
-    this.treeMapDepth = treeMapDepth; // internal treeMapDepth should be in sync with the global
-    if (node['donor-recipient-type'] !== 'recipient' && this.treeMapDepth < this.nodeClassCodes.length - 1) this.treeMapDepth ++;
+    const depth = treeMapDepth; // internal treeMapDepth should be in sync with the global
+    if (node['donor-recipient-type'] !== 'recipient' && depth < this.nodeClassCodes.length - 1) this.treeMapDepth ++;
     group._id = this.treeMapDepth ? '$' + this.nodeClassCodes[this.treeMapDepth] : '$id-from';
     return {match, group};
   }
@@ -174,7 +176,6 @@ export default class TreeMap extends Component {
     this.treemap
         .size([width, height])
         .ratio(height / width * 0.9 * (1 + Math.sqrt(5)));
-    console.log('treeMapDepth', this.props.treeMapDepth);
     this.node // May need to be refactored TODO
         .data(this.treemap.nodes)
         .call(this.positionNode)
