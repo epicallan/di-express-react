@@ -134,7 +134,7 @@ export default class Unbundling extends Component {
                       treeMapType = {2}
                       treeMapDepth = {treeMapDepthComparison}
                       data = {comparisonData}
-                      changeTreeMapDepth = {actions.changeTreeMapDepth}
+                      changeTreeMapDepth = {actions.changeTreeMapDepthComparison}
                       updateSelectOptions = {actions.updateComparisonSelectOptions}
                       apiRequest = {apiRequestComparison}
                       loadData = {actions.loadComparisonData}

@@ -28,7 +28,7 @@ export default class TreeMap extends Component {
     this.node = null; // d3 instance of a treemap node (the square box)
     this.treeMapHolder = null; // will contain d3 object of the treeMapHolder dom node
     // Hack i want to be able to mutate this.props.treeMapDepth with in the component by incrementing it but
-    // i cant coz its readonly
+    // i cant coz its readonly, henec i assign it to an instance variable
     this.treeMapDepth = this.props.treeMapDepth;
     this.treeMapRefName = 'treeMap-' + this.props.treeMapType;
     // these class codes are
@@ -37,7 +37,6 @@ export default class TreeMap extends Component {
   }
 
   componentDidMount() {
-    /* eslint-disable no-unused-expressions*/
     this.draw(this.props.data);
   }
 
@@ -107,6 +106,7 @@ export default class TreeMap extends Component {
    * @return {[type]}      [description]
    */
   matchAndGroupAPIObjBuilder = (node) => {
+    /* eslint-disable no-unused-expressions*/
     const {treeMapDepth, apiRequest} = this.props;
     // const depth = treeMapDepth;
     const {match, group} = apiRequest;
@@ -161,7 +161,7 @@ export default class TreeMap extends Component {
     const margin = {top: 50, right: 20, bottom: 0, left: 20};
     const width = parentWidth;
     let height = window.innerHeight - 200 || 340 - margin.top - margin.bottom;
-    if (height > 450) height = 450;
+    if (height > 400) height = 400;
 
     this.treeMapHolder
         .style({
