@@ -15,7 +15,8 @@ const CHANGE_TREE_MAP_DEPTH = 'unbundling/CHANGE_TREE_MAP_DEPTH';
 const CHANGE_TREE_MAP_DEPTH_COMPARISON = 'unbundling/CHANGE_TREE_MAP_DEPTH_COMPARISON';
 const CHANGE_COMPARE_BUTTON_LABLE = 'unbundling/CHANGE_COMPARE_BUTTON_LABLE';
 const HYDRATE = 'unbundling/HYDRATE';
-// const PERSIST = 'unbundling/PERSIST';
+const UPDATE_CACHE_KEYS = 'unbundling/UPDATE_CACHE_KEYS';
+
 import {getFromSessionStorage, storeInSessionStorage} from '../cache';
 
 const initialState = {
@@ -155,6 +156,11 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         chartCount: 1,
       };
+    case UPDATE_CACHE_KEYS:
+      return {
+        ...state,
+        cacheKeys: action.cacheKeys
+      };
     case HYDRATE: {
       const store = getFromSessionStorage(action.hydrateKey);
       return {
@@ -250,12 +256,12 @@ export function changeCompareBtnLable(compareBtnLable) {
   };
 }
 
-// export function cacheStore(cacheKey) {
-//   return {
-//     type: PERSIST,
-//     cacheKey
-//   };
-// }
+export function updateCacheKeys(cacheKeys) {
+  return {
+    type: UPDATE_CACHE_KEYS,
+    cacheKeys
+  };
+}
 
 export function hydrateStore(cacheKey) {
   return {

@@ -174,7 +174,7 @@ export default class TreeMap extends Component {
     this.treemap
         .size([width, height])
         .ratio(height / width * 0.9 * (1 + Math.sqrt(5)));
-
+    console.log('treeMapDepth', this.props.treeMapDepth);
     this.node // May need to be refactored TODO
         .data(this.treemap.nodes)
         .call(this.positionNode)

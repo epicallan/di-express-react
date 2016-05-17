@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import Helmet from 'react-helmet';
 import { asyncConnect } from 'redux-async-connect';
-import {TreeMap, UnbundlingMenu, CompareButton} from '../../components';
+import {TreeMap, UnbundlingMenu, CompareButton, BackButton} from '../../components';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import cx from 'classnames';
@@ -16,7 +16,9 @@ import {
   changeChartCount,
   changeTreeMapDepth,
   changeTreeMapDepthComparison,
-  changeCompareBtnLable
+  changeCompareBtnLable,
+  hydrateStore,
+  updateCacheKeys
 } from 'redux/modules/unbundling';
 
 @asyncConnect([{
@@ -40,7 +42,8 @@ import {
     apiRequestComparison: state.unbundling.apiRequestComparison,
     selectOptions: state.unbundling.selectOptions,
     selectOptionsComparison: state.unbundling.selectOptionsComparison,
-    compareBtnLable: state.unbundling.compareBtnLable
+    compareBtnLable: state.unbundling.compareBtnLable,
+    cacheKeys: state.unbundling.cacheKeys
   }),
   dispatch => ({ actions: bindActionCreators({
     load,
@@ -51,7 +54,9 @@ import {
     changeChartCount,
     changeTreeMapDepth,
     changeCompareBtnLable,
-    changeTreeMapDepthComparison
+    changeTreeMapDepthComparison,
+    updateCacheKeys,
+    hydrateStore
   }, dispatch)})
 )
 export default class Unbundling extends Component {
@@ -66,7 +71,8 @@ export default class Unbundling extends Component {
     selectOptionsComparison: PropTypes.object,
     treeMapDepthMain: PropTypes.number.isRequired,
     treeMapDepthComparison: PropTypes.number,
-    compareBtnLable: PropTypes.string.isRequired
+    compareBtnLable: PropTypes.string.isRequired,
+    cacheKeys: PropTypes.array.isRequired,
   }
 
   render() {
@@ -82,7 +88,8 @@ export default class Unbundling extends Component {
       treeMapDepthMain,
       treeMapDepthComparison,
       compareBtnLable,
-      comparisonData
+      comparisonData,
+      cacheKeys
     } = this.props;
     const chartClass = chartCount === 2 ? 'col-md-6' : 'col-md-12';
     return (
@@ -120,6 +127,11 @@ export default class Unbundling extends Component {
               changeChartCount = {actions.changeChartCount}
               changeCompareBtnLable = {actions.changeCompareBtnLable}
               compareBtnLable = {compareBtnLable}
+               />
+             <BackButton
+               cacheKeys = {cacheKeys}
+               hydrateStore ={actions.hydrateStore}
+               updateCacheKeys = {actions.updateCacheKeys}
                />
           </header>
           <section className= {cx('row')}>

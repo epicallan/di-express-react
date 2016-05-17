@@ -12,3 +12,4 @@ export ProgressBar from './ProgressBar/ProgressBar';
 export TreeMap from './TreeMap/TreeMap';
 export UnbundlingMenu from './UnbundlingMenu/UnbundlingMenu';
 export CompareButton from './CompareButton/CompareButton';
+export BackButton from './BackButton/BackButton';

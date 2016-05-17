@@ -7,7 +7,7 @@
  * @return {object}
  */
 function flattenData(treemapData) {
-  if (!treemapData) return [];
+  if (!treemapData || !treemapData.children) return treemapData;
   const children = treemapData.children.map(obj => {
     delete obj.parent;
     return obj;
