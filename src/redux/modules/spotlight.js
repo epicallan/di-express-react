@@ -4,6 +4,7 @@ const LOAD_FAIL = 'spotlight/LOAD_FAIL';
 const BASE = 'spotlight/BASE';
 const BASE_SUCCESS = 'spotlight/BASE_SUCCESS';
 const BASE_FAIL = 'spotlight/BASE_FAIL';
+import {cacheSpotlightData} from '../cache';
 
 const initialState = {
   loaded: false,
@@ -38,6 +39,8 @@ export default function reducer(state = initialState, action = {}) {
         baseLoading: true
       };
     case LOAD_SUCCESS:
+      // storeInSessionStorage(action, state);
+      cacheSpotlightData(action);
       return {
         ...state,
         loading: false,
@@ -87,9 +90,11 @@ export function isBaseLoaded(globalState) {
  * @return {object}
  */
 export function load(indicator = '/spotlight/uganda-poverty-headcount') {
+  const indicatorName = indicator.split('/')[2];
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    indicator: indicator.split('/')[2],
+    indicator: indicatorName,
+    apiRequest: indicator,
     promise: (client) => client.get(indicator)
   };
 }

@@ -16,7 +16,7 @@ const CHANGE_TREE_MAP_DEPTH_COMPARISON = 'unbundling/CHANGE_TREE_MAP_DEPTH_COMPA
 const CHANGE_COMPARE_BUTTON_LABLE = 'unbundling/CHANGE_COMPARE_BUTTON_LABLE';
 const HYDRATE = 'unbundling/HYDRATE';
 // const PERSIST = 'unbundling/PERSIST';
-import {getFromSessionStorage} from '../cache';
+import {getFromSessionStorage, storeInSessionStorage} from '../cache';
 
 const initialState = {
   loaded: false,
@@ -99,7 +99,7 @@ export default function reducer(state = initialState, action = {}) {
         optionLoading: true
       };
     case LOAD_SUCCESS:
-      // storeInSessionStorage(action.cacheKey, state); // cache previous state
+      storeInSessionStorage(action, state);
       return {
         ...state,
         loading: false,
