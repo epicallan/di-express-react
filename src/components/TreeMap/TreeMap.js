@@ -40,6 +40,18 @@ export default class TreeMap extends Component {
     this.draw(this.props.data);
   }
 
+  shouldComponentUpdate() {
+    // dont render untill we have the right treeMapDepth
+    // console.log('nextProps treeMapDeth', nextProps.treeMapDepth);
+    // console.log('final treeMapDeth', this.treeMapDepth);
+    // if (this.treeMapDepth !== nextProps.treeMapDepth) {
+    //   console.log('skipped render');
+    //   return false;
+    // }
+    console.log('new render', this.treeMapDepth);
+    return true;
+  }
+
   componentWillUpdate(nextProps) {
     const {data, treeMapDepth} = nextProps;
     this.treeMapDepth = treeMapDepth;
@@ -98,9 +110,9 @@ export default class TreeMap extends Component {
     // building match and group objects for api request object
     const apiRequestObj = this.matchAndGroupAPIObjBuilder(node);
     // actions.updateAPIRequestObject(apiRequestObj);
-    if (this.treeMapDepth) this.props.changeTreeMapDepth(this.treeMapDepth); // update incase we have changed
     // globaly update apiRequestObj
     this.props.loadData(apiRequestObj);   // make request to API for new data
+    if (this.treeMapDepth) this.props.changeTreeMapDepth(this.treeMapDepth); // update incase we have changed
   }
   /**
    * creates api request object based on the clicked treemap node
@@ -118,10 +130,11 @@ export default class TreeMap extends Component {
       const category = this.nodeClassCodes[this.treeMapDepth];
       match[category] = node.id;
     }
-    console.log('current treeMapDeth', this.treeMapDepth);
+    // console.log('current treeMapDeth', this.treeMapDepth);
     if (node['donor-recipient-type'] !== 'recipient' && this.treeMapDepth < this.nodeClassCodes.length - 1) this.treeMapDepth ++;
     group._id = this.treeMapDepth ? '$' + this.nodeClassCodes[this.treeMapDepth] : '$id-from';
-    console.log('final treeMapDeth', this.treeMapDepth);
+    // console.log('current treeMapDeth', this.props.treeMapDepth);
+    // console.log('final treeMapDeth', this.treeMapDepth);
     return {match, group};
   }
 

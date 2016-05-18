@@ -63,7 +63,8 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         cacheKeys: [...state.cacheKeys, action.cacheKey],
-        selectOptionsComparison: Object.assign({}, state.selectOptionsComparison, action.selectOptionsComparison)
+        // Remember the action is called selectOptions not selectOptionsComparison
+        selectOptionsComparison: Object.assign({}, state.selectOptionsComparison, action.selectOptions)
       };
     }
     case CHANGE_TREE_MAP_DEPTH: {

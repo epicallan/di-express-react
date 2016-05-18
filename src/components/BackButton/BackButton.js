@@ -1,4 +1,5 @@
 import React, {PropTypes, Component} from 'react';
+import cx from 'classnames';
 
 export default class BackButton extends Component {
   static propTypes = {
@@ -18,9 +19,10 @@ export default class BackButton extends Component {
   }
   render() {
     const styles = require('./BackButton.scss');
+    const visible = this.props.cacheKeys.length ? 'show' : 'hide'; // TODO show only on hover
     return (
-      <div className={styles.back}>
-        <i className={styles.navigateleft} onClick={this.backClickHandler}></i>
+      <div className={cx(styles.back, visible)}>
+        <i className={cx(styles.navigateleft, 'fa', 'fa-chevron-left')} onClick={this.backClickHandler}></i>
       </div>
     );
   }
