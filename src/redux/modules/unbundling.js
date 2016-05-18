@@ -51,14 +51,18 @@ export default function reducer(state = initialState, action = {}) {
       };
     }
     case SELECT_OPTIONS: {
+      storeInSessionStorage(action, state); // cache current state
       return {
         ...state,
+        cacheKeys: [...state.cacheKeys, action.cacheKey],
         selectOptions: Object.assign({}, state.selectOptions, action.selectOptions)
       };
     }
     case SELECT_OPTIONS_COMPARISON: {
+      storeInSessionStorage(action, state);
       return {
         ...state,
+        cacheKeys: [...state.cacheKeys, action.cacheKey],
         selectOptionsComparison: Object.assign({}, state.selectOptionsComparison, action.selectOptionsComparison)
       };
     }
@@ -100,24 +104,20 @@ export default function reducer(state = initialState, action = {}) {
         optionLoading: true
       };
     case LOAD_SUCCESS:
-      storeInSessionStorage(action, state);
       return {
         ...state,
         loading: false,
         loaded: true,
-        cacheKeys: [...state.cacheKeys, action.cacheKey],
         data: action.result,
         apiRequestMain: action.apiRequest
       };
     case LOAD_COMPARISON_SUCCESS:
-      // storeInSessionStorage(action, state); // cache current state
       return {
         ...state,
         chartCount: 2,
         comparisonLoading: false,
         comparisonLoaded: true,
         comparisonData: action.result,
-        cacheKeys: [...state.cacheKeys, action.cacheKey],
         apiRequestComparison: action.apiRequest
       };
     case OPTION_SUCCESS:
@@ -163,10 +163,10 @@ export default function reducer(state = initialState, action = {}) {
       };
     case HYDRATE: {
       const store = getFromSessionStorage(action.hydrateKey);
-      // if (state.treeMapDepthMain !== 0 ) state.treeMapDepthMain -= 1; // hack
-      // if (state.treeMapDepthComparison !== 0 ) state.treeMapDepthComparison -= 1; // hack
+      if (store.treeMapDepthMain !== 0 ) store.treeMapDepthMain -= 1; // hack
+      if (store.treeMapDepthComparison !== 0 ) store.treeMapDepthComparison -= 1; // hack
       return {
-        ...store, treeMapDepthMain: state.treeMapDepthMain, treeMapDepthComparison: state.treeMapDepthComparison
+        ...store
       };
     }
     default:
@@ -191,12 +191,10 @@ export function load(
     group: {_id: '$id-to', total: {'$sum': '$value'}}
   },
   types = [LOAD, LOAD_SUCCESS, LOAD_FAIL] ) {
-  const date = new Date();
   return {
     types,
     promise: (client) => client.post('unbundling', {data: apiRequest}),
-    apiRequest,
-    cacheKey: date.toISOString()
+    apiRequest
   };
 }
 
@@ -223,18 +221,17 @@ export function changeChartCount(count) {
  * @param  {object} selectOptions
  * @return {object}
  */
-export function updateSelectOptions(selectOptions ) {
+export function updateSelectOptions(selectOptions, type = SELECT_OPTIONS) {
+  const date = new Date();
   return {
-    type: SELECT_OPTIONS,
+    type,
+    cacheKey: date.toISOString(),
     selectOptions: selectOptions
   };
 }
 
 export function updateComparisonSelectOptions(selectOptions) {
-  return {
-    type: SELECT_OPTIONS_COMPARISON,
-    selectOptionsComparison: selectOptions
-  };
+  return updateSelectOptions(selectOptions, SELECT_OPTIONS_COMPARISON);
 }
 
 export function changeTreeMapDepth(treeMapDepthMain) {

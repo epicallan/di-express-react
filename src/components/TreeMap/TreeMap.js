@@ -41,9 +41,9 @@ export default class TreeMap extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    this.treeMapDepth = nextProps.treeMapDepth; // hack
-    console.log('treeMapDepth', nextProps.treeMapDepth);
-    this.draw(nextProps.data);
+    const {data, treeMapDepth} = nextProps;
+    this.treeMapDepth = treeMapDepth;
+    this.draw(data);
   }
 
   getNodeClass = (obj) => {
@@ -98,8 +98,8 @@ export default class TreeMap extends Component {
     // building match and group objects for api request object
     const apiRequestObj = this.matchAndGroupAPIObjBuilder(node);
     // actions.updateAPIRequestObject(apiRequestObj);
-    // globaly update apiRequestObj
     if (this.treeMapDepth) this.props.changeTreeMapDepth(this.treeMapDepth); // update incase we have changed
+    // globaly update apiRequestObj
     this.props.loadData(apiRequestObj);   // make request to API for new data
   }
   /**
@@ -109,18 +109,19 @@ export default class TreeMap extends Component {
    */
   matchAndGroupAPIObjBuilder = (node) => {
     /* eslint-disable no-unused-expressions*/
-    const {treeMapDepth, apiRequest} = this.props;
+    const {apiRequest} = this.props;
     // const depth = treeMapDepth;
     const {match, group} = apiRequest;
     if (node.type === 'country') {
       node['donor-recipient-type'] === 'recipient' ? match['id-to'] = node.id : match['id-from'] = node.id;
     } else {
-      const category = this.nodeClassCodes[treeMapDepth];
+      const category = this.nodeClassCodes[this.treeMapDepth];
       match[category] = node.id;
     }
-    const depth = treeMapDepth; // internal treeMapDepth should be in sync with the global
-    if (node['donor-recipient-type'] !== 'recipient' && depth < this.nodeClassCodes.length - 1) this.treeMapDepth ++;
+    console.log('current treeMapDeth', this.treeMapDepth);
+    if (node['donor-recipient-type'] !== 'recipient' && this.treeMapDepth < this.nodeClassCodes.length - 1) this.treeMapDepth ++;
     group._id = this.treeMapDepth ? '$' + this.nodeClassCodes[this.treeMapDepth] : '$id-from';
+    console.log('final treeMapDeth', this.treeMapDepth);
     return {match, group};
   }
 

@@ -17,7 +17,7 @@ function flattenData(treemapData) {
     children
   };
 }
-
+// TODO limit how many objects we can cache
 export function storeInSessionStorage(action, store) {
   // there is mutation of the treemap data going on??
   // I need to investigate it could be a bug with my Redux set up
@@ -25,8 +25,9 @@ export function storeInSessionStorage(action, store) {
   if (__CLIENT__) {
     // store payload and api request
     // console.log(action.apiRequest, action.result);
-    const currentPayload = flattenData(action.result);
+    /* const currentPayload = flattenData(action.result);
     sessionStorage.setItem(JSON.stringify(action.apiRequest), JSON.stringify(currentPayload)); // storing current apiRequest and
+    */
     // previous state data
     const mainData = flattenData(store.data);
     const comparisonData = flattenData(store.comparisonData);
