@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {load} from 'redux/modules/spotlight';
 import Legend from '../Legend/Legend';
 import ProgressBar from '../ProgressBar/ProgressBar';
-import Themes from '../Themes/Themes';
+import SpotlightThemesMenu from '../SpotlightThemesMenu/SpotlightThemesMenu';
 import {bindActionCreators} from 'redux';
 import {update} from 'redux/modules/profile';
 import Maps from '../Maps/Maps';
@@ -68,7 +68,7 @@ export default class Spotlight extends Component {
         <ProgressBar />
         <div className= {styles.spotlight}>
           <section className= {styles.mapSupport}>
-            <Themes
+            <SpotlightThemesMenu
               indicator= {indicator}
               clickHandler={this.updateMapClickHandler}
               themes = {themes} />

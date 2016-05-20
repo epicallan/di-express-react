@@ -6,7 +6,6 @@
  */
 export Spotlight from './Spotlight/Spotlight';
 export Legend from './Legend/Legend';
-export Themes from './Themes/Themes';
 export District from './District/District';
 export ProgressBar from './ProgressBar/ProgressBar';
 export TreeMap from './TreeMap/TreeMap';

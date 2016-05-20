@@ -4,7 +4,7 @@ const LOAD_FAIL = 'spotlight/LOAD_FAIL';
 const BASE = 'spotlight/BASE';
 const BASE_SUCCESS = 'spotlight/BASE_SUCCESS';
 const BASE_FAIL = 'spotlight/BASE_FAIL';
-import {cacheSpotlightData} from '../cache';
+// import {cacheSpotlightData} from '../cache';
 
 const initialState = {
   loaded: false,
@@ -40,7 +40,7 @@ export default function reducer(state = initialState, action = {}) {
       };
     case LOAD_SUCCESS:
       // storeInSessionStorage(action, state);
-      cacheSpotlightData(action);
+      // cacheSpotlightData(action); // TODO re-enable later
       return {
         ...state,
         loading: false,

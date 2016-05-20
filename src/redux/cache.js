@@ -39,7 +39,7 @@ export function storeInSessionStorage(action, store) {
 export function cacheSpotlightData(action) {
   if (__CLIENT__) {
     // store payload and api request
-    // console.log(action.apiRequest, action.result);
+    // check for number of keys
     sessionStorage.setItem(JSON.stringify(action.apiRequest), JSON.stringify(action.result));
   }
 }

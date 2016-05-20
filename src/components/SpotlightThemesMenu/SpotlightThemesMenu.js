@@ -12,7 +12,7 @@ export default class Themes extends Component {
   themeName = () => this.props.themes.
                 find(theme => theme.slug === this.props.indicator).name
   render() {
-    const styles = require('./Themes.scss');
+    const styles = require('./SpotlightThemesMenu.scss');
     const menu = this.props.themes.map(
       item => (
         <NavItem
