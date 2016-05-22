@@ -8,9 +8,9 @@ import styles from './Maps.scss';
 
 export default class Map extends Component {
   static propTypes = {
-    options: PropTypes.object,
+    options: PropTypes.object.isRequired,
     mapData: PropTypes.object.isRequired,
-    year: PropTypes.number.isRequired
+    currentYear: PropTypes.string.isRequired
   }
 
   constructor(props) {
@@ -24,7 +24,7 @@ export default class Map extends Component {
 
   componentWillUpdate(nextProps) {
     // updates map with new data from the spotlight store
-    this.map.updateChoropleth(nextProps.mapData[nextProps.year]);
+    this.map.updateChoropleth(nextProps.mapData[nextProps.currentYear]);
   }
 
   // datamap options

@@ -35,26 +35,29 @@ function leanThemeIndicatorObjs(indicators) {
  * getThemeIndicators adds theme indicators to themes
  * @param  {[type]} themes   the overall themes
  * @param  {array} concepts contains various theme indicators
- * @return {array}          themes with indicators
+ * @return {object} themes with indicators
  */
 export function getThemeIndicators(themes, concepts) {
-  return themes.map((theme) => {
+  const themesObjects = {};
+  themes.forEach((theme) => {
     // get all the themes indicators
     const indicators = concepts.filter(concept =>
       concept.type === 'simple' && concept['map-theme'] === theme.id);
     // clean up the indicator objects so that they have less fields
     const cleanedUpIndicators = leanThemeIndicatorObjs(indicators);
     // create an array in which the indicators are an object in a theme array.
-    const themesObj = { indicators: [], theme: {} };
+    const themeObj = { indicators: [], main: {} };
+
     cleanedUpIndicators.forEach(indicator => {
       if (indicator.slug !== theme.default) {
-        themesObj.indicators.push(indicator);
+        themeObj.indicators.push(indicator);
       } else {
-        themesObj.theme = indicator;
+        themeObj.main = indicator;
       }
     });
-    return themesObj;
+    Object.assign(themesObjects, {[theme.id]: themeObj});
   });
+  return themesObjects;
 }
 /**
  * saveOptionsData saves all the various options data

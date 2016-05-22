@@ -6,7 +6,8 @@ import {getThemeIndicators} from '../spotlightJob.js';
 describe('adding theme-indicators to theme', () => {
   it('should return themes with indicators', () =>{
     const themesWithIndicators = getThemeIndicators(themes, concepts);
-    expect(themesWithIndicators).to.be.an('array');
-    expect(themesWithIndicators[0].indicators).to.have.length.above(1);
+    // console.log('themes', themesWithIndicators);
+    expect(themesWithIndicators).to.be.an('object');
+    expect(themesWithIndicators['uganda-poverty'].indicators).to.have.length.above(1);
   });
 });

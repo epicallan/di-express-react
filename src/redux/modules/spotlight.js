@@ -25,7 +25,7 @@ function convertIntoMapDataObject(data) {
   Object.keys(data).forEach(year => {
     const mapYearData = {};
     data[year].forEach(row => {
-      Object.assign({[row.id]: row.color}, mapYearData);
+      Object.assign(mapYearData, {[row.id]: row.color}); // copying object into mapYearData object
     });
     mapData[year] = mapYearData;
   });
@@ -53,7 +53,7 @@ export default function reducer(state = initialState, action = {}) {
         loaded: true,
         indicator: action.indicator,
         ...action.result,
-        year: action.result.years[0],
+        currentYear: action.result.years[0],
         mapData: convertIntoMapDataObject(action.result.data),
         error: null
       };
@@ -61,6 +61,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         ...action.result,
+        currentTheme: Object.keys(action.result.themes)[0], // TODO I am making an assumption that themes array will always be arranged this way.
         baseLoading: false,
         baseLoaded: true
       };

@@ -16,13 +16,14 @@ import cx from 'classnames';
     loaded: state.spotlight.loaded,
     mapData: state.spotlight.mapData,
     data: state.spotlight.data,
-    year: state.spotlight.year,
+    currentYear: state.spotlight.currentYear,
     entities: state.spotlight.entities,
     domain: state.spotlight.domain,
     range: state.spotlight.range,
     indicator: state.spotlight.indicator,
     defaultFill: state.spotlight.defaultFill,
-    themes: state.spotlight.themes
+    themes: state.spotlight.themes,
+    currentTheme: state.spotlight.currentTheme
   }),
   dispatch => ({ actions: bindActionCreators({update, load}, dispatch)})
 )
@@ -30,27 +31,28 @@ export default class Spotlight extends Component {
 
   static propTypes = {
     mapData: PropTypes.object.isRequired,
-    data: PropTypes.array.isRequired,
+    data: PropTypes.object.isRequired,
     entities: PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired,
     indicator: PropTypes.string,
     defaultFill: PropTypes.string,
     domain: PropTypes.array,
-    themes: PropTypes.array.isRequired,
+    currentTheme: PropTypes.string.isRequired,
+    themes: PropTypes.object.isRequired,
     range: PropTypes.array.isRequired,
     loaded: PropTypes.bool.isRequired,
-    year: PropTypes.number.isRequired
+    currentYear: PropTypes.string.isRequired
   };
 
   mapOptions = {
     done: (datamap) => {
       // initial render
-      const {actions, entities, data, indicator, mapData, year} = this.props;
-      datamap.updateChoropleth(mapData[year]);
+      const {actions, entities, data, indicator, mapData, currentYear} = this.props;
+      datamap.updateChoropleth(mapData[currentYear]);
       mapMouseHandlers(datamap, {
         update: actions.update,
         entities,
-        data,
+        data: data[currentYear],
         indicator
       });
     }
@@ -61,12 +63,12 @@ export default class Spotlight extends Component {
     this.props.actions.load(`/spotlight/${indicator}`);
   }
 
-  indicatorData = () => this.props.themes.find(theme => theme.slug === this.props.indicator);
+  mainThemeMetaData = (themes, indicator) => themes.find(obj => obj.theme.slug === indicator);
 
   render() {
     const styles = require('./Spotlight.scss');
-    const {heading, description} = this.indicatorData();
-    const { defaultFill, range, domain, indicator, themes} = this.props;
+    const { defaultFill, range, domain, indicator, themes, currentTheme, mapData, currentYear} = this.props;
+    const {heading, description} = themes[currentTheme].main;
     return (
       <div>
         <ProgressBar />
@@ -75,6 +77,7 @@ export default class Spotlight extends Component {
             <SpotlightThemesMenu
               indicator= {indicator}
               clickHandler={this.updateMapClickHandler}
+              currentTheme = {currentTheme}
               themes = {themes} />
             <article className = {styles.description}>
               <h3>{heading}</h3>
@@ -87,7 +90,7 @@ export default class Spotlight extends Component {
               indicator= {indicator} />
             <div id="tooltip" className={cx(styles.tooltip, 'hidden')}></div>
           </section>
-          <Maps options = {this.mapOptions} mapData = {this.props.mapData}/>
+          <Maps options = {this.mapOptions} mapData = {mapData} currentYear = {currentYear} />
         </div>
       </div>
     );

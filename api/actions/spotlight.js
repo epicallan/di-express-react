@@ -11,6 +11,17 @@ class SpotlightAction {
     return get(DI_API, indicatorDataApi);
   }
 
+  /**
+   * spotlightBaseData: resturns data that is used in all most every spotlight map
+   * such as entities & themes
+   * @return {object}
+   */
+  async spotlightBaseData() {
+    const baseData = await getFromRedis('spotlight');
+    delete baseData.colorRamp; // we dont need this key for baseData
+    return baseData;
+  }
+
   spotlightData(indicatorDataRaw, baseData ) {
     const indicatorData = indicatorDataRaw.data;
     const metaData = indicatorDataRaw.meta[0];
