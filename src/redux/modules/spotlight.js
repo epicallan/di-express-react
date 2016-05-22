@@ -52,6 +52,7 @@ export default function reducer(state = initialState, action = {}) {
         loading: false,
         loaded: true,
         indicator: action.indicator,
+        currentTheme: action.currentTheme,
         ...action.result,
         currentYear: action.result.years[0],
         mapData: convertIntoMapDataObject(action.result.data),
@@ -95,12 +96,13 @@ export function isBaseLoaded(globalState) {
  * @param  {string} indicator api-url part
  * @return {object}
  */
-export function load(indicator = '/spotlight/uganda-poverty-headcount') {
+export function load(indicator = '/spotlight/uganda-poverty-headcount', currentTheme = 'uganda-poverty') {
   const indicatorName = indicator.split('/')[2];
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
     indicator: indicatorName,
     apiRequest: indicator,
+    currentTheme,
     promise: (client) => client.get(indicator)
   };
 }
