@@ -7,13 +7,19 @@ export default class SpotlightThemesMenu extends Component {
     themes: PropTypes.object.isRequired,
     indicator: PropTypes.string.isRequired,
     currentTheme: PropTypes.string.isRequired,
-    clickHandler: PropTypes.func.isRequired
+    loadData: PropTypes.func.isRequired
   };
 
-  // themeName = (themes, indicator) => themes.find(theme => theme.slug === this.props.indicator).name
+  clickHandler = () => {
+    const {loadData} = this.props;
+    console.log(indicator);
+    // dispatch action for new data on mouse event
+    // loadData(`/spotlight/${indicator}`);
+  }
+
   render() {
     const styles = require('./SpotlightThemesMenu.scss');
-    const {currentTheme, indicator, clickHandler, themes} = this.props;
+    const {currentTheme, indicator, themes} = this.props;
     const menu = Object.keys(themes).map(theme => {
       const mainTheme = themes[theme].main;
       return (
@@ -30,19 +36,17 @@ export default class SpotlightThemesMenu extends Component {
         <Nav
           bsStyle="pills"
           activeKey={indicator}
-          onSelect={clickHandler}
+          onSelect={this.clickHandler.bind(this)}
           className={cx(styles.themes, styles.main)}>
           {menu}
         </Nav>
         <Nav
           bsStyle="pills"
-          id="override-sub"
-          className={styles.sub}
           className={cx(styles.themes, styles.sub)}>
           <NavItem
             eventKey={indicator}
             title={indicator}>
-            {currentTheme.name}
+            {currentTheme}
           </NavItem>
         </Nav>
       </div>

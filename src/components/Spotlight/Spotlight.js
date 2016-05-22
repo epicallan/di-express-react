@@ -58,16 +58,18 @@ export default class Spotlight extends Component {
     }
   };
 
-  updateMapClickHandler = (indicator) =>{
-    // dispatch action for new data on mouse event
-    this.props.actions.load(`/spotlight/${indicator}`);
-  }
-
-  mainThemeMetaData = (themes, indicator) => themes.find(obj => obj.theme.slug === indicator);
-
   render() {
     const styles = require('./Spotlight.scss');
-    const { defaultFill, range, domain, indicator, themes, currentTheme, mapData, currentYear} = this.props;
+    const {
+      defaultFill,
+      range,
+      domain,
+      indicator,
+      themes,
+      currentTheme,
+      mapData,
+      currentYear,
+      actions} = this.props;
     const {heading, description} = themes[currentTheme].main;
     return (
       <div>
@@ -76,7 +78,7 @@ export default class Spotlight extends Component {
           <section className= {styles.mapSupport}>
             <SpotlightThemesMenu
               indicator= {indicator}
-              clickHandler={this.updateMapClickHandler}
+              loadData={actions.load}
               currentTheme = {currentTheme}
               themes = {themes} />
             <article className = {styles.description}>

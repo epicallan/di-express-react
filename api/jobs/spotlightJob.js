@@ -52,7 +52,7 @@ export function getThemeIndicators(themes, concepts) {
       if (indicator.slug !== theme.default) {
         themeObj.indicators.push(indicator);
       } else {
-        themeObj.main = indicator;
+        themeObj.main = Object.assign(indicator, theme);
       }
     });
     Object.assign(themesObjects, {[theme.id]: themeObj});
