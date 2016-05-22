@@ -13,16 +13,22 @@ const initialState = {
   baseLoading: true,
   defaultFill: '#bbb'
 };
-
-// exported for testing purposes
-export function getMapData(data) {
-  let mapData = {};
-  data.forEach(row => {
-    const obj = {};
-    obj[row.id] = row.color;
-    mapData = Object.assign({}, obj, mapData);
+/**
+ * [convertIntoMapDataObject converts data from api into mapData for dataMap
+ * this function is here instead of having it in the components to avoid having to recall it
+ * when we need data for a specific year]
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
+function convertIntoMapDataObject(data) {
+  const mapData = {};
+  Object.keys(data).forEach(year => {
+    const mapYearData = {};
+    data[year].forEach(row => {
+      Object.assign({[row.id]: row.color}, mapYearData);
+    });
+    mapData[year] = mapYearData;
   });
-  // console.log(data);
   return mapData;
 }
 
@@ -46,10 +52,9 @@ export default function reducer(state = initialState, action = {}) {
         loading: false,
         loaded: true,
         indicator: action.indicator,
-        domain: action.result.domain,
-        range: action.result.range,
-        data: action.result.data,
-        mapData: getMapData(action.result.data),
+        ...action.result,
+        year: action.result.years[0],
+        mapData: convertIntoMapDataObject(action.result.data),
         error: null
       };
     case BASE_SUCCESS:

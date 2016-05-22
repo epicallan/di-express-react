@@ -16,6 +16,7 @@ import cx from 'classnames';
     loaded: state.spotlight.loaded,
     mapData: state.spotlight.mapData,
     data: state.spotlight.data,
+    year: state.spotlight.year,
     entities: state.spotlight.entities,
     domain: state.spotlight.domain,
     range: state.spotlight.range,
@@ -37,12 +38,15 @@ export default class Spotlight extends Component {
     domain: PropTypes.array,
     themes: PropTypes.array.isRequired,
     range: PropTypes.array.isRequired,
-    loaded: PropTypes.bool.isRequired
+    loaded: PropTypes.bool.isRequired,
+    year: PropTypes.number.isRequired
   };
+
   mapOptions = {
     done: (datamap) => {
-      const {actions, entities, data, indicator, mapData} = this.props;
-      datamap.updateChoropleth(mapData);
+      // initial render
+      const {actions, entities, data, indicator, mapData, year} = this.props;
+      datamap.updateChoropleth(mapData[year]);
       mapMouseHandlers(datamap, {
         update: actions.update,
         entities,

@@ -1,0 +1,38 @@
+[
+  {
+    "_id": "56d9b82b738445190860a32d",
+    "id": "uganda-poverty",
+    "name": "Poverty",
+    "default": "uganda-poverty-headcount"
+  },
+  {
+    "_id": "56d9b82b738445190860a32e",
+    "id": "uganda-pop",
+    "name": "Population",
+    "default": "uganda-urban-pop"
+  },
+  {
+    "_id": "56d9b82b738445190860a32f",
+    "id": "uganda-education",
+    "name": "Education",
+    "default": "uganda-primary-educ-funding"
+  },
+  {
+    "_id": "56d9b82b738445190860a330",
+    "id": "uganda-health",
+    "name": "Health",
+    "default": "uganda-overall-health"
+  },
+  {
+    "_id": "56d9b82b738445190860a331",
+    "id": "uganda-wash",
+    "name": "Water and sanitation",
+    "default": "uganda-rural-safe-water"
+  },
+  {
+    "_id": "56d9b82b738445190860a332",
+    "id": "uganda-dist-resource",
+    "name": "District public resources",
+    "default": "uganda-local-percent"
+  }
+]
