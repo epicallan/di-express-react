@@ -4,6 +4,7 @@ import {
     App,
     Uganda,
     NotFound,
+    About,
     Profile,
     Unbundling
   } from 'containers';
@@ -20,6 +21,7 @@ export default () => {
       <IndexRoute component={Uganda} />
       <Route path="district/:name" component={Profile}/>
       <Route path="unbundling" component={Unbundling}/>
+      <Route path="about" component={About}/>
       <Route path="*" component={NotFound} status={404} />
     </Route>
   );

@@ -42,10 +42,7 @@ export default class App extends Component {
               <LinkContainer to="/unbundling">
                 <NavItem eventKey={2}>Unbundling Aid</NavItem>
               </LinkContainer>
-              <LinkContainer to="/uganda">
-                <NavItem eventKey={3}>DOWNLOAD DATA</NavItem>
-              </LinkContainer>
-              <LinkContainer to="/uganda">
+              <LinkContainer to="/about">
                 <NavItem eventKey={4}>ABOUT</NavItem>
               </LinkContainer>
             </Nav>
