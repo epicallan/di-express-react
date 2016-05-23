@@ -1,7 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {load} from 'redux/modules/spotlight';
+import {load, updateCurrentYear} from 'redux/modules/spotlight';
 import Legend from '../Legend/Legend';
+import YearSlider from '../YearSlider/YearSlider';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import SpotlightThemesMenu from '../SpotlightThemesMenu/SpotlightThemesMenu';
 import {bindActionCreators} from 'redux';
@@ -23,9 +24,10 @@ import cx from 'classnames';
     indicator: state.spotlight.indicator,
     defaultFill: state.spotlight.defaultFill,
     themes: state.spotlight.themes,
+    years: state.spotlight.years,
     currentTheme: state.spotlight.currentTheme
   }),
-  dispatch => ({ actions: bindActionCreators({update, load}, dispatch)})
+  dispatch => ({ actions: bindActionCreators({update, load, updateCurrentYear}, dispatch)})
 )
 export default class Spotlight extends Component {
 
@@ -41,7 +43,8 @@ export default class Spotlight extends Component {
     themes: PropTypes.object.isRequired,
     range: PropTypes.array.isRequired,
     loaded: PropTypes.bool.isRequired,
-    currentYear: PropTypes.string.isRequired
+    currentYear: PropTypes.string.isRequired,
+    years: PropTypes.array.isRequired
   };
 
   mapOptions = {
@@ -69,6 +72,7 @@ export default class Spotlight extends Component {
       currentTheme,
       mapData,
       currentYear,
+      years,
       actions} = this.props;
     const {heading, description} = themes[currentTheme].main;
     return (
@@ -93,6 +97,23 @@ export default class Spotlight extends Component {
             <div id="tooltip" className={cx(styles.tooltip, 'hidden')}></div>
           </section>
           <Maps options = {this.mapOptions} mapData = {mapData} currentYear = {currentYear} />
+          {
+            (()=>{
+              if (years.length > 1) {
+                return (
+                  <div className = "row">
+                    <div className = "col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-6">
+                      <YearSlider
+                        updateCurrentYear = {actions.updateCurrentYear}
+                        currentYear = {currentYear}
+                        years = {years}
+                        />
+                    </div>
+                  </div>
+                );
+              }
+            })()
+          }
         </div>
       </div>
     );

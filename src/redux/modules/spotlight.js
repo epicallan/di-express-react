@@ -4,6 +4,7 @@ const LOAD_FAIL = 'spotlight/LOAD_FAIL';
 const BASE = 'spotlight/BASE';
 const BASE_SUCCESS = 'spotlight/BASE_SUCCESS';
 const BASE_FAIL = 'spotlight/BASE_FAIL';
+const UPDATE_YEAR = 'spotlight/UPDATE_YEAR';
 // import {cacheSpotlightData} from '../cache';
 
 const initialState = {
@@ -34,6 +35,11 @@ function convertIntoMapDataObject(data) {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case UPDATE_YEAR:
+      return {
+        ...state,
+        currentYear: action.currentYear
+      };
     case LOAD:
       return {
         ...state,
@@ -54,7 +60,7 @@ export default function reducer(state = initialState, action = {}) {
         indicator: action.indicator,
         currentTheme: action.currentTheme,
         ...action.result,
-        currentYear: action.result.years[0],
+        currentYear: action.result.years[0].toString(),
         mapData: convertIntoMapDataObject(action.result.data),
         error: null
       };
@@ -114,5 +120,12 @@ export function loadBaseData() {
   return {
     types: [BASE, BASE_SUCCESS, BASE_FAIL],
     promise: (client) => client.get('/spotlight/base')
+  };
+}
+
+export function updateCurrentYear(currentYear) {
+  return {
+    type: UPDATE_YEAR,
+    currentYear: currentYear.toString()
   };
 }

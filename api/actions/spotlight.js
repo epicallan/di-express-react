@@ -31,8 +31,14 @@ class SpotlightAction {
       data: choroplethData,
       domain: this.getIndicatorDomain(metaData),
       range: scale.range(),
-      years: Object.keys(choroplethData)
+      years: this.getDataYears(choroplethData)
     };
+  }
+
+  getDataYears(data) {
+    const years = Object.keys(data);
+    const numericalYears = years.map(year => parseInt(year, 10));
+    return numericalYears.sort((a, b) => a - b);
   }
 
   getIndicatorDomain(meta) {
