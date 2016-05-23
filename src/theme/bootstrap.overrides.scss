@@ -9,3 +9,16 @@
   position: relative;
   padding-left: 0px;
 }
+.btn-toolbar .btn-group, .btn-toolbar {
+    float: none;
+}
+.open > .btn-default.dropdown-toggle:hover, .open > .btn-default.dropdown-toggle:focus, .open > .btn-default.dropdown-toggle.visited {
+    color: white;
+    background-color: #1F1E1D;
+    border-color: #1F1E1D;
+}
+.open > .btn-default.dropdown-toggle, .btn-default:active:focus, {
+  color: white;
+  background-color: #1F1E1D;
+  border-color: #1F1E1D;
+}

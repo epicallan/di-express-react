@@ -11,14 +11,11 @@
     color: $primary-black;
   }
 }
-.sub{
-  background-color:$primary-black;
-  li{
-    text-align: center;
-    width: 100%;
-    background-color:$primary-black;
-  }
+.subMenu{
+  background-color:  $primary-black;
 }
-.sub>li> a:hover, .sub>li> a:focus {
-  background-color:$primary-black;
+.dropDown, .dropDown:hover, .dropDown:active,.dropDown:focus, .dropDown:visited{
+  background-color: $primary-black;
+  color: white;
+  border-color: $primary-black;
 }

@@ -97,11 +97,11 @@ export default class Spotlight extends Component {
             <div id="tooltip" className={cx(styles.tooltip, 'hidden')}></div>
           </section>
           <Maps options = {this.mapOptions} mapData = {mapData} currentYear = {currentYear} />
+          <div className ={cx('row', styles.slider)}>
           {
             (()=>{
               if (years.length > 1) {
                 return (
-                  <div className = "row">
                     <div className = "col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-6">
                       <YearSlider
                         updateCurrentYear = {actions.updateCurrentYear}
@@ -109,11 +109,11 @@ export default class Spotlight extends Component {
                         years = {years}
                         />
                     </div>
-                  </div>
                 );
               }
             })()
           }
+        </div>
         </div>
       </div>
     );

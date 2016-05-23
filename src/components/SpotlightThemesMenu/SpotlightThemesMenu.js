@@ -49,11 +49,22 @@ export default class SpotlightThemesMenu extends Component {
       );
     });
   }
+
+  currentThemeObjName = (currentTheme, themes, indicator) => {
+    const themeObj = themes[currentTheme];
+    // the current themeObj can be the main object or part of the themes indicators
+    // console.log(themeObj.main);
+    if (themeObj.main.slug === indicator) return themeObj.main.name;
+    return themeObj.indicators.find(obj => obj.slug === indicator ).name;
+  }
+
   render() {
     const styles = require('./SpotlightThemesMenu.scss');
     const {indicator, themes, currentTheme} = this.props;
     const mainMenu = this.mainMenuItems(themes);
     const subMenu = this.subMenuItems(themes, currentTheme);
+    const currentThemeObjName = this.currentThemeObjName(currentTheme, themes, indicator);
+    // console.log('name', currentThemeObjName);
     return (
       <div className ="text-center">
         <Nav
@@ -63,13 +74,13 @@ export default class SpotlightThemesMenu extends Component {
           className={cx(styles.themes, styles.main)}>
           {mainMenu}
         </Nav>
-        <ButtonToolbar>
+        <ButtonToolbar className={cx(styles.subMenu)}>
           <DropdownButton
             bsStyle= "default"
-            title={indicator}
+            title= {currentThemeObjName}
             activekey={indicator}
             id = {currentTheme}
-            className={cx(styles.themes, styles.sub)}
+            className = {styles.dropDown}
             onSelect={this.themeIndicatorsClickHandler}
             >
             {subMenu}

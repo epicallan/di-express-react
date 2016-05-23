@@ -10,8 +10,17 @@ export default class YearSlider extends Component {
     currentYear: PropTypes.string.isRequired
   }
 
+  componentDidMount() {
+    this.rangeHandle = document.getElementsByClassName('rangeslider__handle')[0];
+    // this.rangeHandle = document.getElementsByClassName('rangeHandle__handle');X
+    this.rangeHandle.innerHTML = `<span>${this.props.currentYear}</span>`;
+  }
+
   handleChange = (year) => {
+    // this.rangeHandle = document.getElementsByClassName('rangeslider__handle');
+    // console.log('in handler', this.rangeHandle);
     this.props.updateCurrentYear(year);
+    this.rangeHandle.innerHTML = `<span>${year}</span>`;
   }
 
   render() {
@@ -22,13 +31,18 @@ export default class YearSlider extends Component {
     const value = parseInt(currentYear, 10);
     return (
       <article>
-					<Slider
-						min = {min}
-						max = {max}
+        <div className = "row">
+          <div className = "col-md-6"><p>{min}</p></div>
+          <div className = "col-md-6"><p className="text-right">{max}</p></div>
+        </div>
+        <div className= "row">
+          <Slider
+            min = {min}
+            max = {max}
             value = {value}
             step = {1}
-						onChange={this.handleChange} />
-					<div className="value">{value}</div>
+            onChange={this.handleChange} />
+        </div>
       </article>
     );
   }

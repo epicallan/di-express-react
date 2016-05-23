@@ -20,16 +20,18 @@ export default class Map extends Component {
   // draw map when component loads
   componentDidMount() {
     this.draw(); // the very first map render happens in the done function.
+    console.log(this.map);
   }
 
   componentWillUpdate(nextProps) {
     // updates map with new data from the spotlight store
     this.map.updateChoropleth(nextProps.mapData[nextProps.currentYear]);
+    // update options
+    // this.map.options.done = doneFn;
   }
 
   // datamap options
   options = {
-    height: 900,
     responsive: true,
     projection: 'eckert3',
     setProjection: (element) => {
@@ -57,7 +59,8 @@ export default class Map extends Component {
     this.map = new Datamaps({
       element: this.refs.maps,
       ...mapOptions,
-      width: this.refs.maps.offsetWidth
+      width: this.refs.maps.offsetWidth,
+      height: 400
     });
   };
 

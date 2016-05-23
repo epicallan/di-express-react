@@ -4,22 +4,24 @@
 .rangeslider {
 	margin: 20px 0;
 	position: relative;
-  background: #e6e6e6;
+  background: #f5f5f5;
   .rangeslider__fill, .rangeslider__handle {
   	position: absolute;
   }
   &, .rangeslider__fill {
   	display: block;
   	box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.3);
+		cursor: pointer;
   }
   .rangeslider__handle {
     background: #fff;
-    border: 1px solid #ccc;
     cursor: pointer;
     display: inline-block;
     position: absolute;
+		background-color: #ba0c2f;
+		border-color: black;
     &:active {
-      background: #999;
+      background-color: #ba0c2f;
     }
   }
 }
@@ -28,19 +30,26 @@
  * Rangeslider - Horizontal slider
  */
 .rangeslider-horizontal {
-	height: 20px;
-	border-radius: 10px;
+	height: 15px;
+	border-radius: 0px;
 	.rangeslider__fill {
 		height: 100%;
-		background: #27ae60;
-		border-radius: 10px;
+		border-radius: 0px;
 		top: 0;
 	}
 	.rangeslider__handle {
 		width: 40px;
 		height: 40px;
 		border-radius: 40px;
-		top: -10px;
+		border-color: black;
+		top: -13px;
+		span{
+			margin-top: 1em;
+			display: inline-block;
+			margin-left: 0.5em;
+			color: white;
+			font:0.9em;
+		}
 	}
 }
 
@@ -54,7 +63,6 @@
 	background: none;
 	.rangeslider__fill {
 		width: 100%;
-		background: #27ae60;
 		box-shadow: none;
 		bottom: 0;
 	}

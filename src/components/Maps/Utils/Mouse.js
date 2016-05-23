@@ -7,6 +7,7 @@ import { browserHistory } from 'react-router';
 export const getTipTemplate = (node, data, entities, indicator) => {
   const mapObj = data.find(obj => obj.id === node.id);
   const entity = entities.find(obj => obj.id === node.id);
+  // const indicatorName =
   let template = '<span class="name">' + entity.name + '</span>';
   if (data) {
     template += '<em>' + indicator + ': ' + ' <b class="value">' + mapObj.value + '</b>' +
