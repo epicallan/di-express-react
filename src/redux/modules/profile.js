@@ -59,6 +59,7 @@ export function load(slug) {
     promise: (client) => client.get(`/profile/${slug}`)
   };
 }
+
 export function update(entity) {
   return {
     type: UPDATE,

@@ -86,18 +86,21 @@ export default function reducer(state = initialState, action = {}) {
         chartCount: action.chartCount,
         selectOptionsComparison: state.selectOptions,
         apiRequestComparison: state.apiRequestMain,
-        comparisonData: state.data
+        comparisonData: state.data,
+        comparisonLoaded: true
       };
     }
     case LOAD:
       return {
         ...state,
-        loading: true
+        loading: true,
+        loaded: false,
       };
     case LOAD_COMPARISON:
       return {
         ...state,
-        comparisonLoading: true
+        comparisonLoading: true,
+        comparisonLoaded: false,
       };
     case OPTION:
       return {

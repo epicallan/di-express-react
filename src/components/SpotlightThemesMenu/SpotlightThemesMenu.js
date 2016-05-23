@@ -7,7 +7,8 @@ export default class SpotlightThemesMenu extends Component {
     themes: PropTypes.object.isRequired,
     indicator: PropTypes.string.isRequired,
     currentTheme: PropTypes.string.isRequired,
-    loadData: PropTypes.func.isRequired
+    loadData: PropTypes.func.isRequired,
+    indicatorName: PropTypes.string.isRequired
   };
 
   mainThemesClickHandler = (event) => {
@@ -30,12 +31,6 @@ export default class SpotlightThemesMenu extends Component {
     });
   }
 
-  themeIndicatorsClickHandler = (indicator) => {
-    const {loadData, currentTheme} = this.props;
-    // dispatch action for new data on mouse event
-    loadData(`/spotlight/${indicator}`, currentTheme);
-  }
-
   subMenuItems = (themes, currentTheme) => {
     const indicators = themes[currentTheme].indicators;
     return indicators.map(theme => {
@@ -50,20 +45,17 @@ export default class SpotlightThemesMenu extends Component {
     });
   }
 
-  currentThemeObjName = (currentTheme, themes, indicator) => {
-    const themeObj = themes[currentTheme];
-    // the current themeObj can be the main object or part of the themes indicators
-    // console.log(themeObj.main);
-    if (themeObj.main.slug === indicator) return themeObj.main.name;
-    return themeObj.indicators.find(obj => obj.slug === indicator ).name;
+  themeIndicatorsClickHandler = (indicator) => {
+    const {loadData, currentTheme} = this.props;
+    // dispatch action for new data on mouse event
+    loadData(`/spotlight/${indicator}`, currentTheme);
   }
 
   render() {
     const styles = require('./SpotlightThemesMenu.scss');
-    const {indicator, themes, currentTheme} = this.props;
+    const {indicator, themes, currentTheme, indicatorName} = this.props;
     const mainMenu = this.mainMenuItems(themes);
     const subMenu = this.subMenuItems(themes, currentTheme);
-    const currentThemeObjName = this.currentThemeObjName(currentTheme, themes, indicator);
     // console.log('name', currentThemeObjName);
     return (
       <div className ="text-center">
@@ -77,7 +69,7 @@ export default class SpotlightThemesMenu extends Component {
         <ButtonToolbar className={cx(styles.subMenu)}>
           <DropdownButton
             bsStyle= "default"
-            title= {currentThemeObjName}
+            title= {indicatorName}
             activekey={indicator}
             id = {currentTheme}
             className = {styles.dropDown}

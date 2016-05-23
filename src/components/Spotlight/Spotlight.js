@@ -8,7 +8,6 @@ import SpotlightThemesMenu from '../SpotlightThemesMenu/SpotlightThemesMenu';
 import {bindActionCreators} from 'redux';
 import {update} from 'redux/modules/profile';
 import Maps from '../Maps/Maps';
-import {mapMouseHandlers} from '../Maps/Utils/Mouse';
 import cx from 'classnames';
 
 // attaching store to Component
@@ -47,43 +46,41 @@ export default class Spotlight extends Component {
     years: PropTypes.array.isRequired
   };
 
-  mapOptions = {
-    done: (datamap) => {
-      // initial render
-      const {actions, entities, data, indicator, mapData, currentYear} = this.props;
-      datamap.updateChoropleth(mapData[currentYear]);
-      mapMouseHandlers(datamap, {
-        update: actions.update,
-        entities,
-        data: data[currentYear],
-        indicator
-      });
-    }
-  };
+  currentThemeObj = (currentTheme, themes, indicator) => {
+    const themeObj = themes[currentTheme];
+    // the current themeObj can be the main object or part of the themes indicators
+    if (themeObj.main.slug === indicator) return themeObj.main;
+    return themeObj.indicators.find(obj => obj.slug === indicator );
+  }
 
   render() {
     const styles = require('./Spotlight.scss');
     const {
+      loaded,
       defaultFill,
       range,
       domain,
       indicator,
       themes,
+      entities,
+      data,
       currentTheme,
       mapData,
       currentYear,
       years,
       actions} = this.props;
-    const {heading, description} = themes[currentTheme].main;
+    const currentIndicator = this.currentThemeObj(currentTheme, themes, indicator);
+    const {heading, description, name} = currentIndicator;
     return (
       <div>
-        <ProgressBar />
+        <ProgressBar loaded = {loaded} />
         <div className= {styles.spotlight}>
           <section className= {styles.mapSupport}>
             <SpotlightThemesMenu
               indicator= {indicator}
               loadData={actions.load}
               currentTheme = {currentTheme}
+              indicatorName = {name}
               themes = {themes} />
             <article className = {styles.description}>
               <h3>{heading}</h3>
@@ -96,7 +93,13 @@ export default class Spotlight extends Component {
               indicator= {indicator} />
             <div id="tooltip" className={cx(styles.tooltip, 'hidden')}></div>
           </section>
-          <Maps options = {this.mapOptions} mapData = {mapData} currentYear = {currentYear} />
+          <Maps
+            mapData = {mapData}
+            currentYear = {currentYear}
+            data = {data}
+            entities={entities}
+            indicatorName = {name}
+            updateToDistrictProfile ={actions.update} />
           <div className ={cx('row', styles.slider)}>
           {
             (()=>{

@@ -1,12 +1,6 @@
 import React, { Component, PropTypes} from 'react';
 import ProgressBarPlus from 'react-progress-bar-plus';
-import {connect} from 'react-redux';
 
-@connect(
-  state => ({
-    loaded: state.spotlight.loaded
-  })
-)
 export default class ProgressBar extends Component {
   static propTypes = {
     loaded: PropTypes.bool.isRequired

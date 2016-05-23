@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import Helmet from 'react-helmet';
 import { asyncConnect } from 'redux-async-connect';
-import {TreeMap, UnbundlingMenu, CompareButton, BackButton} from '../../components';
+import {TreeMap, UnbundlingMenu, CompareButton, BackButton, ProgressBar} from '../../components';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import cx from 'classnames';
@@ -35,6 +35,8 @@ import {
   state => ({
     chartCount: state.unbundling.chartCount,
     data: state.unbundling.data,
+    loaded: state.unbundling.loaded,
+    comparisonLoaded: state.unbundling.comparisonLoaded,
     treeMapDepthMain: state.unbundling.treeMapDepthMain,
     treeMapDepthComparison: state.unbundling.treeMapDepthComparison,
     comparisonData: state.unbundling.comparisonData,
@@ -73,6 +75,8 @@ export default class Unbundling extends Component {
     treeMapDepthComparison: PropTypes.number,
     compareBtnLable: PropTypes.string.isRequired,
     cacheKeys: PropTypes.array.isRequired,
+    loaded: PropTypes.bool.isRequired,
+    comparisonLoaded: PropTypes.bool.isRequired
   }
 
   render() {
@@ -89,6 +93,8 @@ export default class Unbundling extends Component {
       treeMapDepthComparison,
       compareBtnLable,
       comparisonData,
+      comparisonLoaded,
+      loaded,
       cacheKeys
     } = this.props;
     const chartClass = chartCount === 2 ? 'col-md-6' : 'col-md-12';
@@ -99,6 +105,7 @@ export default class Unbundling extends Component {
           <header className= {cx('row', styles.header)}>
             <h1 className="text-center"> Unbundling aid </h1>
             <div className = {cx(chartClass, styles.menuContainer)}>
+              <ProgressBar loaded = {loaded} />
               <UnbundlingMenu
                 menuType = {1}
                 selectOptions = {selectOptions}
@@ -112,6 +119,7 @@ export default class Unbundling extends Component {
               if (this.props.chartCount === 2) {
                 return (
                   <div className= {cx(chartClass, styles.menuContainer)} ref="comparisonMenu">
+                    <ProgressBar loaded = {comparisonLoaded} />
                     <UnbundlingMenu
                       menuType = {2}
                       selectOptions = {selectOptionsComparison}

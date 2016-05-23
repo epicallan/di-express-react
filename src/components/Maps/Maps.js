@@ -3,14 +3,18 @@ import React, {Component, PropTypes} from 'react';
 import Datamaps from 'datamaps';
 // import {throwError} from '../../utils/errorHandling';
 import 'topojson';
+import {mapMouseHandlers} from '../Maps/Utils/Mouse';
 import styles from './Maps.scss';
 
 
 export default class Map extends Component {
   static propTypes = {
-    options: PropTypes.object.isRequired,
     mapData: PropTypes.object.isRequired,
-    currentYear: PropTypes.string.isRequired
+    data: PropTypes.object.isRequired,
+    currentYear: PropTypes.string.isRequired,
+    entities: PropTypes.array.isRequired,
+    indicatorName: PropTypes.string.isRequired,
+    updateToDistrictProfile: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -20,15 +24,26 @@ export default class Map extends Component {
   // draw map when component loads
   componentDidMount() {
     this.draw(); // the very first map render happens in the done function.
-    console.log(this.map);
   }
 
   componentWillUpdate(nextProps) {
+    // this.mapDoneCallback(this.map);
     // updates map with new data from the spotlight store
     this.map.updateChoropleth(nextProps.mapData[nextProps.currentYear]);
-    // update options
-    // this.map.options.done = doneFn;
+    this.mouseMapEvents(this.map, nextProps);
+    // console.log(this.map.options);
   }
+
+  mouseMapEvents = (datamap, props) => {
+    const {updateToDistrictProfile, entities, data, indicatorName, currentYear} = props;
+    mapMouseHandlers(datamap, {
+      update: updateToDistrictProfile,
+      entities,
+      data: data[currentYear],
+      indicatorName
+    });
+  }
+
 
   // datamap options
   options = {
@@ -55,10 +70,16 @@ export default class Map extends Component {
   }
 
   draw = () => {
-    const mapOptions = Object.assign({}, this.options, this.props.options);
+    const {mapData, currentYear} = this.props;
     this.map = new Datamaps({
       element: this.refs.maps,
-      ...mapOptions,
+      ...this.options,
+      done: (datamap) => {
+        // console.log('in done function');
+        // called on initial run
+        datamap.updateChoropleth(mapData[currentYear]);
+        this.mouseMapEvents(datamap, this.props);
+      },
       width: this.refs.maps.offsetWidth,
       height: 400
     });

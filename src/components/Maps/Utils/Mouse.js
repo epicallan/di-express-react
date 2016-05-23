@@ -1,16 +1,16 @@
 import d3 from 'd3-geo-projection';
 import {throwError} from '../../../utils/errorHandling';
-import { browserHistory } from 'react-router';
+// import { browserHistory } from 'react-router';
 /**
  * Mouse handling functions
  */
-export const getTipTemplate = (node, data, entities, indicator) => {
+export const getTipTemplate = (node, data, entities, indicatorName) => {
   const mapObj = data.find(obj => obj.id === node.id);
   const entity = entities.find(obj => obj.id === node.id);
   // const indicatorName =
   let template = '<span class="name">' + entity.name + '</span>';
   if (data) {
-    template += '<em>' + indicator + ': ' + ' <b class="value">' + mapObj.value + '</b>' +
+    template += '<em style="margin-left: 0.5em">' + indicatorName + ': ' + ' <b class="value">' + mapObj.value + '</b>' +
                   ' in ' + mapObj.year + '</em>';
   } else {
     template += '<em>No data</em>';
@@ -31,7 +31,7 @@ export const getTipPosition = (svgSize, tooltipSize, datamap) => {
   return pos;
 };
 
-export const mapMouseHandlers = (datamap, {update, entities, data, indicator}) => {
+export const mapMouseHandlers = (datamap, {entities, data, indicatorName}) => {
   /* eslint-disable func-names*/
   const tooltip = d3.select('#tooltip') || throwError('missing tooltip selector');
   let svgSize = null;
@@ -48,12 +48,14 @@ export const mapMouseHandlers = (datamap, {update, entities, data, indicator}) =
     if (Math.abs(mouseDownPosition[0] - mouseUpPosition[0]) > 3 ||
         Math.abs(mouseDownPosition[1] - mouseUpPosition[1]) > 3) return;
     const selected = entities.find(obj => obj.id === node.id);
+    console.log('selected entity', selected);
     // create region / country url
     if (!selected.slug) return;
     // dsitpatch update to profile store
-    update(selected);
+    // console.log('update', update);
+    // update(selected);
     // go to district page
-    browserHistory.push(`/district/${selected.slug}`);
+    // browserHistory.push(`/district/${selected.slug}`);
   })
   .on('mousemove', () => {
     if (tooltip.classed('hidden')) return;
@@ -62,7 +64,7 @@ export const mapMouseHandlers = (datamap, {update, entities, data, indicator}) =
   })
   .on('mouseover', function(datum) {
     const node = d3.select(this);
-    tooltip.classed('hidden', false).html(getTipTemplate(datum, data, entities, indicator));
+    tooltip.classed('hidden', false).html(getTipTemplate(datum, data, entities, indicatorName));
     svgSize = datamap.svg.node().getBoundingClientRect();
     tooltipSize = tooltip.node().getBoundingClientRect();
     node.style('fill', d3.hsl(node.style('fill')).darker(0.5));
