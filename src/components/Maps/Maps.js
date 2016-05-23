@@ -1,27 +1,32 @@
 import d3 from 'd3-geo-projection';
 import React, {Component, PropTypes} from 'react';
 import Datamaps from 'datamaps';
-import {throwError} from '../../utils/errorHandling';
+// import {throwError} from '../../utils/errorHandling';
 import 'topojson';
 import styles from './Maps.scss';
 
 
 export default class Map extends Component {
   static propTypes = {
-    options: PropTypes.object
+    options: PropTypes.object.isRequired,
+    mapData: PropTypes.object.isRequired,
+    currentYear: PropTypes.string.isRequired
+  }
+
+  constructor(props) {
+    super(props);
+    this.map = null;
   }
   // draw map when component loads
   componentDidMount() {
-    this.draw();
+    this.draw(); // the very first map render happens in the done function.
   }
 
   componentWillUpdate(nextProps) {
-    if (!nextProps.mapData) throwError('component doesnt have new data for update');
     // updates map with new data from the spotlight store
-    this.map.updateChoropleth(nextProps.mapData);
+    this.map.updateChoropleth(nextProps.mapData[nextProps.currentYear]);
   }
 
-  map = null;
   // datamap options
   options = {
     height: 900,
@@ -55,6 +60,7 @@ export default class Map extends Component {
       width: this.refs.maps.offsetWidth
     });
   };
+
   render() {
     return (
       <section id="maps" ref="maps" className={styles.maps} />

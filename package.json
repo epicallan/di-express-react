@@ -1,9 +1,9 @@
 {
   "name": "di-datahub",
-  "description": "Example of an isomorphic (universal) webapp using react redux and hot reloading",
+  "description": "An isomorphic (universal) webapp using react redux and hot reloading for di-datahub",
   "author": "http://github.com/epicallan",
   "license": "MIT",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/epicallan/di-express-react"
@@ -121,6 +121,7 @@
     "invariant": "^2.2.0",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
+    "lodash": "^4.12.0",
     "lru-memoize": "^1.0.0",
     "map-props": "^1.0.0",
     "multireducer": "^2.0.0",

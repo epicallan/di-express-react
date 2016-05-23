@@ -50,7 +50,18 @@
   "concept": "uganda-poverty-headcount"
 }, {
   "id": "d220",
-  "year": 2014,
+  "year": 2015,
   "value": 36.6,
+  "concept": "uganda-poverty-headcount"
+},
+{
+  "id": "d316",
+  "year": 2015,
+  "value": 74.45,
+  "concept": "uganda-poverty-headcount"
+}, {
+  "id": "d218",
+  "year": 2015,
+  "value": 52.82,
   "concept": "uganda-poverty-headcount"
 }]

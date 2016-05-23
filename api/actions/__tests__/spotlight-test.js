@@ -19,10 +19,17 @@ describe('spotlightAction', function() {
     const color = scale(43);
     expect(color).to.equal('#900924');
   });
+
+  it('should group indicator data by year', () => {
+    const groupedData = spotlightAction.groupIndicatorData(indicatorData);
+    expect(groupedData).to.be.an('object');
+    expect(groupedData[2015]).to.have.length.above(2);
+  });
+
   it('should create data for updating the chorolepth', () => {
     // simplified scale function
     const scale = value => value * 0.5;
     const obj = spotlightAction.choroplethUpdateData(indicatorData, scale);
-    expect(obj[0].color).to.equal(37);
+    expect(obj[2014][0].color).to.equal(37);
   });
 });
