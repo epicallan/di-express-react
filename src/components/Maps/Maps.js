@@ -29,7 +29,8 @@ export default class Map extends Component {
   componentWillUpdate(nextProps) {
     // this.mapDoneCallback(this.map);
     // updates map with new data from the spotlight store
-    this.map.updateChoropleth(nextProps.mapData[nextProps.currentYear]);
+    // this.map.options.fills.defaultFill = '#bbb';
+    this.map.updateChoropleth(nextProps.mapData[nextProps.currentYear], {reset: true});
     this.mouseMapEvents(this.map, nextProps);
     // console.log(this.map.options);
   }

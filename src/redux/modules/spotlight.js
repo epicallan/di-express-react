@@ -11,8 +11,7 @@ const initialState = {
   loaded: false,
   loading: true,
   baseLoaded: false,
-  baseLoading: true,
-  defaultFill: '#bbb'
+  baseLoading: true
 };
 /**
  * [convertIntoMapDataObject converts data from api into mapData for dataMap

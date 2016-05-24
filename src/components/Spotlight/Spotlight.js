@@ -105,7 +105,7 @@ export default class Spotlight extends Component {
             (()=>{
               if (years.length > 1) {
                 return (
-                    <div className = "col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-6">
+                    <div className = "col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12">
                       <YearSlider
                         updateCurrentYear = {actions.updateCurrentYear}
                         currentYear = {currentYear}
