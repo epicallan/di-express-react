@@ -9,24 +9,12 @@
 
 This project was built on top of this [starter kit](https://github.com/erikras/react-redux-universal-hot-example)
 
-## Tips
-unbundling API post signture based on the heroku di-api app
-  ```
-  {
-      "match": {
-          "year":2013,
-          "id-to":"NG"
-      },
-      "group":{
-          "_id":"$id-from",
-          "total":{"$sum":"$value"}
-      }
-  }
-  ```
-## TODO / Good to have
-- Cache some of the data on the server via redis.
-- Cache data on the client via session storage eg color ramp and themes data
+## TODO
+- ~~Cache some of the data on the server via redis~~.
+- ~~Cache data on the client via session storage eg color ramp and themes data~~
+- making map component more re-usable
 - deploy branch not working as should!!!
+- Clean up and empty session storage cache for unbundling aid data
 
 ## Installation
 
