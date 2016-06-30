@@ -3,11 +3,15 @@ FROM node:latest
 RUN mkdir /src
 
 WORKDIR /src
-ADD . /src
+COPY . /src
+
+# Provides cached layer for node_modules
+COPY package.json /tmp/
+RUN cd /tmp && npm install
+RUN cp -a /tmp/node_modules /src/
+
 ENV NODE_ENV production
-RUN npm install -g pm2
-RUN npm install --production
 
-EXPOSE 8000
+EXPOSE 9090 3030
 
-CMD npm start
+CMD ["npm start"]

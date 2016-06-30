@@ -24,8 +24,8 @@ npm install
 
 ## Running Dev Server
 
-```bash
-npm run dev
+```
+  npm run dev
 ```
 
 The first time it may take a little while to generate the first `webpack-assets.json` and complain with a few dozen `[webpack-isomorphic-tools] (waiting for the first Webpack build to finish)` printouts, but be patient. Give it 30 seconds.
@@ -50,6 +50,7 @@ DevTools are not enabled during production.
 npm run build
 npm run start
 ```
+
 ## Explanation
 
 What initially gets run is `bin/server.js`, which does little more than enable ES6 and ES7 awesomeness in the
@@ -84,8 +85,6 @@ The middleware, [`clientMiddleware.js`](https://github.com/epicallan/di-express-
 2. To allow some actions to pass a "promise generator", a function that takes the API client and returns a promise. Such actions require three action types, the `REQUEST` action that initiates the data loading, and a `SUCCESS` and `FAILURE` action that will be fired depending on the result of the promise. There are other ways to accomplish this, some discussed [here](https://github.com/rackt/redux/issues/99), which you may prefer, but to the author of this example, the middleware way feels cleanest.
 
 
-
-
 #### Images
 
 Now it's possible to render the image both on client and server. Please refer to issue [#39](https://github.com/epicallan/di-express-react/issues/39) for more detail discussion, the usage would be like below (super easy):
@@ -110,29 +109,6 @@ Then you set the `className` of your element to match one of the CSS classes in 
 <div className={styles.mySection}> ... </div>
 ```
 
-#### Alternative to Local Styles
-
-If you'd like to use plain inline styles this is possible with a few modifications to your webpack configuration.
-
-**1. Configure Isomorphic Tools to Accept CSS**
-
-In `webpack-isomorphic-tools.js` add **css** to the list of style module extensions
-
-```javascript
-    style_modules: {
-      extensions: ['less','scss','css'],
-```
-
-**2. Add a CSS loader to webpack dev config**
-
-In `dev.config.js` modify **module loaders** to include a test and loader for css
-
-```javascript
-  module: {
-    loaders: [
-      { test: /\.css$/, loader: 'style-loader!css-loader'},
-```
-
 **3. Add a CSS loader to the webpack prod config**
 
 You must use the **ExtractTextPlugin** in this loader. In `prod.config.js` modify **module loaders** to include a test and loader for css
@@ -152,22 +128,6 @@ require('aModule/dist/style.css');
 ...
 ```
 
-**NOTE** In order to use this method with **scss or less** files one more modification must be made. In both `dev.config.js` and `prod.config.js` in the loaders for less and scss files remove
-
-1. `modules`
-2. `localIdentName...`
-
-Before:
-```javascript
-{ test: /\.less$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!less?outputStyle=expanded&sourceMap' },
-```
-After:
-```javascript
-{ test: /\.less$/, loader: 'style!css?importLoaders=2&sourceMap!autoprefixer?browsers=last 2 version!less?outputStyle=expanded&sourceMap' },
-```
-
-After this modification to both loaders you will be able to use scss and less files in the same way as css files.
-
 #### Unit Tests
 
 The project uses [Mocha](https://mochajs.org/) to run your unit tests, it uses [Karma](http://karma-runner.github.io/0.13/index.html) as the test runner, it enables the feature that you are able to render your tests to the browser (e.g: Firefox, Chrome etc.), which means you are able to use the [Test Utilities](http://facebook.github.io/react/docs/test-utils.html) from Facebook api like `renderIntoDocument()`.
@@ -180,10 +140,16 @@ To keep watching your test suites that you are working on, just set `singleRun: 
 
 To get this project to work on Heroku, you need to:
 
-1. Remove the `"PORT": 8080` line from the `betterScripts` / `start-prod` section of `package.json`.
+1. Remove the `"PORT": 9090` line from the `betterScripts` / `start-prod` section of `package.json`.
 2. `heroku config:set NODE_ENV=production`
 3. `heroku config:set NODE_PATH=./src`
 4. `heroku config:set NPM_CONFIG_PRODUCTION=false`
   * This is to enable webpack to run the build on deploy.
 
 The first deploy might take a while, but after that your `node_modules` dir should be cached.
+
+## Deployment as Docker container
+```
+docker build -t dh .
+docker run -p 9090:9090 -p 3030:3030  -v /home/di/dh/dh.git:/src --name dh-app -d dh
+```
