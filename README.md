@@ -5,10 +5,6 @@
 [![devDependency Status](https://david-dm.org/epicallan/di-express-react/dev-status.svg?style=flat-square)](https://david-dm.org/epicallan/di-express-react#info=devDependencies)
 ---
 
-## About
-
-This project was built on top of this [starter kit](https://github.com/erikras/react-redux-universal-hot-example)
-
 ## TODO
 - ~~Cache some of the data on the server via redis~~.
 - ~~Cache data on the client via session storage eg color ramp and themes data~~
